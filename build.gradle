@@ -71,5 +71,6 @@ dependencies {
 
     annotationProcessor "com.querydsl:querydsl-apt:4.2.1:general"
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+    annotationProcessor "org.projectlombok:lombok"
     annotationProcessor "javax.annotation:javax.annotation-api"
 }

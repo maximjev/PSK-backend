@@ -40,10 +40,6 @@ repositories {
 compileJava {
     sourceCompatibility = 11
     targetCompatibility = 11
-    options.compilerArgs = [
-            '-Amapstruct.unmappedTargetPolicy=ERROR',
-            '-Amapstruct.defaultComponentModel=spring'
-    ]
 }
 dependencyManagement {
     resolutionStrategy {

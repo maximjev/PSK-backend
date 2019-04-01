@@ -88,7 +88,7 @@ public class SwaggerConfig {
     @Bean
     public SecurityConfiguration security() {
         return SecurityConfigurationBuilder.builder()
-                .clientId("swagger-client")
+                .clientId("swagger")
                 .clientSecret("swagger-secret")
                 .realm("swagger")
                 .appName("swagger")

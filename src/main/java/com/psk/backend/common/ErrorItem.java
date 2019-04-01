@@ -1,17 +1,18 @@
 package com.psk.backend.common;
 
 import com.querydsl.core.annotations.QueryEmbeddable;
-import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.slf4j.Logger;
+import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonProperty;
+import org.pojomatic.annotations.AutoProperty;
 
-import static org.slf4j.LoggerFactory.getLogger;
+import static org.codehaus.jackson.annotate.JsonAutoDetect.Visibility.NONE;
 
 @QueryEmbeddable
-@EqualsAndHashCode
+@AutoProperty
+@JsonAutoDetect(getterVisibility = NONE, fieldVisibility = NONE, isGetterVisibility = NONE, setterVisibility = NONE)
 @ToString
-public class ErrorItem {
-    private static final Logger LOG = getLogger(ErrorItem.class);
+public class ErrorItem extends Exception {
 
     private Error reason;
     private String description;
@@ -20,12 +21,13 @@ public class ErrorItem {
     }
 
     public ErrorItem(Error reason, Exception ex) {
+        super(ex.getMessage());
         this.reason = reason;
         this.description = ex.getMessage();
-        LOG.debug(ex.getMessage(), ex);
     }
 
     public ErrorItem(Error reason, String description) {
+        super(description);
         this.reason = reason;
         this.description = description;
     }
@@ -35,10 +37,12 @@ public class ErrorItem {
         this.description = null;
     }
 
+    @JsonProperty
     public Error getReason() {
         return reason;
     }
 
+    @JsonProperty
     public String getDescription() {
         return description;
     }

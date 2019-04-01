@@ -39,7 +39,7 @@ public class SwaggerConfig {
                 .build()
                 .directModelSubstitute(LocalTime.class, String.class)
                 .securityContexts(of(securityContext()))
-                .securitySchemes(of(securitySchema()))
+                //.securitySchemes(of(securitySchema()))
                 .useDefaultResponseMessages(false)
                 .genericModelSubstitutes(ResponseEntity.class)
                 .ignoredParameterTypes(Authentication.class)
@@ -62,7 +62,7 @@ public class SwaggerConfig {
         return new ApiInfo(
                 "PSK API",
                 "",
-                "0.1.0",
+                "1.0",
                 "",
                 new Contact("", "", ""),
                 "",
@@ -74,7 +74,8 @@ public class SwaggerConfig {
         var grantType = new AuthorizationCodeGrantBuilder()
                 .tokenEndpoint(new TokenEndpoint("/api/oauth/token", "oauthtoken"))
                 .tokenRequestEndpoint(
-                        new TokenRequestEndpoint("/api/oauth/authorize", "swagger", passwordEncoder.encode("swagger-secret")))
+                        new TokenRequestEndpoint("/api/oauth/authorize", "swagger",
+                                passwordEncoder.encode("swagger-secret")))
                 .build();
 
         return new OAuthBuilder()

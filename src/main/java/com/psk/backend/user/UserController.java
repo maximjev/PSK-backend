@@ -25,6 +25,7 @@ public class UserController {
     }
 
     @CommonErrors
+    @ApiOperation(value = "Get paged user list", response = UserListView.class)
     @GetMapping
     public Page<UserListView> getAll(Pageable page) {
         return service.users(page);

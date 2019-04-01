@@ -1,4 +1,4 @@
-FROM openjdk:11 AS builder
+FROM openjdk:11-jdk-slim AS builder
 WORKDIR /app
 
 COPY gradlew /app
@@ -9,8 +9,9 @@ RUN ./gradlew build || return 0
 
 COPY . .
 RUN ./gradlew build
+RUN mv /app/build/libs/backend-1.0-SNAPSHOT.jar /app/build/libs/backend.jar
 
-FROM openjdk:11 as runner
+FROM openjdk:11-jdk-slim as runner
 
 WORKDIR /app
 

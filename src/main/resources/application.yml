@@ -3,6 +3,23 @@ spring:
     mongodb:
       database: psk-db
 
+logging:
+  level:
+    com.psk.backend: DEBUG
+
 server:
   servlet:
     context-path: /api
+
+app:
+  security:
+    jwt:
+      key: mif-psk-key
+    oauth2:
+      web:
+        client: mif-psk
+        secret: mif-psk-secret
+      swagger:
+        client: swagger
+        secret: swagger-secret
+        redirect-uri: http://localhost:8080/api/webjars/springfox-swagger-ui/oauth2-redirect.html

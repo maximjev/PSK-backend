@@ -5,6 +5,7 @@ import com.psk.backend.common.EntityId;
 import com.psk.backend.user.value.NewUserForm;
 import com.psk.backend.user.value.UserListView;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import static org.springframework.http.ResponseEntity.unprocessableEntity;
 @RequestMapping("/user")
 public class UserController {
 
+    @Autowired
     private final UserControllerService service;
 
     public UserController(UserControllerService service) {

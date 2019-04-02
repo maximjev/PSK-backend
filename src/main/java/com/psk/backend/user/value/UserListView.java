@@ -1,6 +1,5 @@
 package com.psk.backend.user.value;
 
-import com.psk.backend.user.User;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,7 +16,7 @@ public class UserListView {
     private String name;
     private String surname;
     private String email;
-    private User.UserRole role;
+    private String role;
     private LocalDateTime createdAt;
-    private User.UserStatus status;
+    private String status;
 }

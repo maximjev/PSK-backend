@@ -1,6 +1,6 @@
 package com.psk.backend.user.value;
 
-import com.psk.backend.user.User;
+import com.psk.backend.user.validation.ValidUserRole;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,11 +13,17 @@ import javax.validation.constraints.NotEmpty;
 @ToString
 @EqualsAndHashCode
 public class NewUserForm {
+
     @NotEmpty
     private String name;
+
     @NotEmpty
     private String surname;
+
     @NotEmpty
     private String email;
-    private User.UserRole role;
+
+    @NotEmpty
+    @ValidUserRole
+    private String role;
 }

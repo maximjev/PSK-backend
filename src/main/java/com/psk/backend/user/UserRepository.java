@@ -13,9 +13,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+import static com.psk.backend.common.EntityId.entityId;
 import static com.psk.backend.common.Error.USER_NOT_FOUND;
-import static com.psk.backend.user.User.UserRole.ROLE_ORGANIZER;
-import static com.psk.backend.user.User.UserRole.ROLE_USER;
+import static com.psk.backend.user.UserRole.ROLE_ORGANIZER;
+import static com.psk.backend.user.UserRole.ROLE_USER;
 import static io.atlassian.fugue.Try.failure;
 import static io.atlassian.fugue.Try.successful;
 import static java.util.Optional.ofNullable;
@@ -36,8 +37,7 @@ public class UserRepository {
 
 
     public Page<UserListView> list(Pageable page) {
-        var conditions = new Criteria()
-                .orOperator(where("role").is(ROLE_USER), where("role").is(ROLE_ORGANIZER));
+        var conditions = new Criteria().orOperator(where("role").is(ROLE_USER), where("role").is(ROLE_ORGANIZER));
 
         var total = mongoOperations.count(query(conditions), User.class);
 
@@ -56,11 +56,11 @@ public class UserRepository {
     public Try<EntityId> insert(NewUserForm form) {
         User user = userMapper.create(form);
         mongoOperations.insert(user);
-        return successful(EntityId.entityId(user.getId()));
+        return successful(entityId(user.getId()));
     }
 
     public Optional<User> findByUsername(String username) {
-        return ofNullable(mongoOperations.findOne(query(where("username").is(username)), User.class));
+        return ofNullable(mongoOperations.findOne(query(where("email").is(username)), User.class));
     }
 
     public Try<User> findById(String id) {

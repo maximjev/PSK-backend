@@ -1,0 +1,5 @@
+spring:
+  mongodb:
+    embedded:
+      version: 4.0.6
+      features: SYNC_DELAY, NO_HTTP_INTERFACE_ARG

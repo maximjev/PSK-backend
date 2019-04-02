@@ -16,14 +16,6 @@ import java.time.LocalDateTime;
 @Setter
 public class User {
 
-    public enum UserRole {
-        ROLE_USER, ROLE_ADMIN, ROLE_ORGANIZER
-    }
-
-    public enum UserStatus {
-        VERIFICATION_PENDING, ACTIVE
-    }
-
     @Id
     private String id;
     private String name;
@@ -35,4 +27,8 @@ public class User {
 
     @CreatedDate
     private LocalDateTime createdAt;
+
+    public boolean isActive() {
+        return UserStatus.ACTIVE == status;
+    }
 }

@@ -1,9 +1,9 @@
 package com.psk.backend.config;
 
 import com.google.common.collect.ImmutableList;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,6 +18,7 @@ import springfox.documentation.swagger.web.SecurityConfiguration;
 import springfox.documentation.swagger.web.SecurityConfigurationBuilder;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import javax.annotation.Resource;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -28,8 +29,11 @@ import static java.util.List.of;
 @EnableSwagger2
 public class SwaggerConfig {
 
-    @Autowired
+    @Resource
     private PasswordEncoder passwordEncoder;
+
+    @Resource
+    private Environment environment;
 
     @Bean
     public Docket swagger() {
@@ -39,7 +43,7 @@ public class SwaggerConfig {
                 .build()
                 .directModelSubstitute(LocalTime.class, String.class)
                 .securityContexts(of(securityContext()))
-                //.securitySchemes(of(securitySchema()))
+                .securitySchemes(of(securitySchema()))
                 .useDefaultResponseMessages(false)
                 .genericModelSubstitutes(ResponseEntity.class)
                 .ignoredParameterTypes(Authentication.class)
@@ -74,8 +78,9 @@ public class SwaggerConfig {
         var grantType = new AuthorizationCodeGrantBuilder()
                 .tokenEndpoint(new TokenEndpoint("/api/oauth/token", "oauthtoken"))
                 .tokenRequestEndpoint(
-                        new TokenRequestEndpoint("/api/oauth/authorize", "swagger",
-                                passwordEncoder.encode("swagger-secret")))
+                        new TokenRequestEndpoint("/api/oauth/authorize",
+                                environment.getRequiredProperty("app.security.oauth2.swagger.client"),
+                                passwordEncoder.encode(environment.getRequiredProperty("app.security.oauth2.swagger.secret"))))
                 .build();
 
         return new OAuthBuilder()
@@ -83,14 +88,15 @@ public class SwaggerConfig {
                 .grantTypes(List.of(grantType))
                 .scopes(List.of(authorizationScope()))
                 .build();
-
     }
 
     @Bean
     public SecurityConfiguration security() {
         return SecurityConfigurationBuilder.builder()
-                .clientId("swagger")
-                .clientSecret("swagger-secret")
+                .clientId(environment.getRequiredProperty("app.security.oauth2.swagger.client"))
+                .clientSecret(environment.getRequiredProperty("app.security.oauth2.swagger.secret"))
+                .scopeSeparator(" ")
+                .useBasicAuthenticationWithAccessCodeGrant(true)
                 .realm("swagger")
                 .appName("swagger")
                 .build();

@@ -19,6 +19,7 @@ public class ResourceSecurityConfig extends ResourceServerConfigurerAdapter {
                 .antMatchers("/swagger-resources/**").permitAll()
                 .antMatchers("/v2/api-docs").permitAll()
                 .antMatchers("/favicon.ico").permitAll()
+                .antMatchers("/user").permitAll()
                 .anyRequest().authenticated();
     }
 

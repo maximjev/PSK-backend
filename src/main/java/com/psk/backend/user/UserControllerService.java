@@ -2,6 +2,8 @@ package com.psk.backend.user;
 
 import com.psk.backend.common.EntityId;
 import com.psk.backend.user.value.NewUserForm;
+import com.psk.backend.user.value.PasswordForm;
+import com.psk.backend.user.value.UpdateUserForm;
 import com.psk.backend.user.value.UserListView;
 import io.atlassian.fugue.Try;
 import org.springframework.data.domain.Page;
@@ -26,4 +28,6 @@ public class UserControllerService {
     public Try<EntityId> create(NewUserForm form) {
         return createUserService.create(form);
     }
+    public Try<EntityId> update(UpdateUserForm form) { return userRepository.update(form); }
+    public Try<EntityId> enterPassword(PasswordForm form) { return createUserService.enterPassword(form); }
 }

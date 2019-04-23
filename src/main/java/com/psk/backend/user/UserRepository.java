@@ -2,6 +2,7 @@ package com.psk.backend.user;
 
 import com.psk.backend.common.EntityId;
 import com.psk.backend.user.value.NewUserForm;
+import com.psk.backend.user.value.UpdateUserForm;
 import com.psk.backend.user.value.UserListView;
 import io.atlassian.fugue.Try;
 import org.springframework.data.domain.Page;
@@ -58,6 +59,10 @@ public class UserRepository {
         mongoOperations.insert(user);
         return successful(entityId(user.getId()));
     }
+    public Try<EntityId> save(User user) {
+        mongoOperations.save(user);
+        return successful(entityId(user.getId()));
+    }
 
     public Optional<User> findByUsername(String username) {
         return ofNullable(mongoOperations.findOne(query(where("email").is(username)), User.class));
@@ -71,4 +76,19 @@ public class UserRepository {
                 .map(Try::successful)
                 .orElseGet(() -> failure(USER_NOT_FOUND.entity(User.class.getName(), id)));
     }
+
+    public Optional<User> getById(String id) {
+        return ofNullable(mongoOperations.findOne(query(where("id").is(id)), User.class));
+    }
+
+
+    public Try<EntityId> update(UpdateUserForm form) {
+        User user = getById(form.getId()).get();
+        user.setEmail(form.getEmail());
+        user.setName(form.getName());
+        user.setSurname(form.getSurname());
+        mongoOperations.save(user);
+        return successful(entityId(user.getId()));
+    }
+
 }

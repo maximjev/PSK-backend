@@ -13,6 +13,13 @@ public enum Error {
         }
     },
 
+    USER_EXISTS {
+        @Override
+        public String message() {
+            return "User with id %s is already registered";
+        }
+    },
+
     OBJECT_NOT_FOUND {
         @Override
         public String message() {

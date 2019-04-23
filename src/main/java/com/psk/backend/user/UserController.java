@@ -3,6 +3,8 @@ package com.psk.backend.user;
 import com.psk.backend.common.CommonErrors;
 import com.psk.backend.common.EntityId;
 import com.psk.backend.user.value.NewUserForm;
+import com.psk.backend.user.value.PasswordForm;
+import com.psk.backend.user.value.UpdateUserForm;
 import com.psk.backend.user.value.UserListView;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,4 +41,20 @@ public class UserController {
     public ResponseEntity<?> create(@Valid @RequestBody NewUserForm form) {
         return service.create(form).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
     }
+
+    @ApiOperation(value = "Update user's details", response = EntityId.class)
+    @CommonErrors
+    @PostMapping("/update")
+    public ResponseEntity<?> update(@Valid @RequestBody UpdateUserForm form) {
+        return service.update(form).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
+    }
+
+    @ApiOperation(value = "Enter password", response = EntityId.class)
+    @CommonErrors
+    @PostMapping("/password")
+    public  ResponseEntity<?> changeUserPassword( @Valid @RequestBody PasswordForm form) {
+        return service.enterPassword(form).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
+
+    }
+
 }

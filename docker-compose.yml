@@ -1,0 +1,19 @@
+version: '3'
+services:
+
+  fe:
+    image: pskdev.azurecr.io/frontend:latest
+    container_name: psk_frontend
+    ports:
+      - 4200:80
+  db:
+    image: mongo:4.0
+    container_name: db
+    ports:
+      - 27017:27017
+    volumes:
+      - db_mongo_data:/data/db
+
+volumes:
+  db_mongo_data:
+    driver: local

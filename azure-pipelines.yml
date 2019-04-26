@@ -11,7 +11,7 @@ pool:
 
 variables:
   dockerId: 'pskdev'
-  imageName: 'backend:$(build.buildId)'
+  imageName: 'backend'
 
 steps:
   - script: |

@@ -1,5 +1,5 @@
 spring:
   data:
     mongodb:
-      host: psk-db.azurewebsites.net
+      host: 13.86.236.76
       port: 27017

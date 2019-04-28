@@ -12,6 +12,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @ApiResponses({
         @ApiResponse(code = 401, message = "Unauthorized"),
+        @ApiResponse(code = 403, message = "Forbidden"),
         @ApiResponse(code = 404, message = "Entity not found"),
         @ApiResponse(code = 422, response = ErrorItem.class, message = "Error while processing request")
 })

@@ -15,7 +15,7 @@ services:
       - 80:80
   db:
     image: mongo:4.0
-    container_name: fe_db
+    container_name: db
     ports:
       - 27017:27017
     volumes:

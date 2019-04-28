@@ -1,13 +1,6 @@
 version: '3'
 services:
 
-  backend:
-    image: pskdev.azurecr.io/backend:latest
-    container_name: psk_backend
-    environment:
-      - SPRING_PROFILES_ACTIVE=demo
-    ports:
-      - 8080:8080
   fe:
     image: pskdev.azurecr.io/frontend:latest
     container_name: psk_frontend

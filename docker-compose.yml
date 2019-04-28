@@ -12,7 +12,7 @@ services:
     image: pskdev.azurecr.io/frontend:latest
     container_name: psk_frontend
     ports:
-      - 4200:80
+      - 80:80
   db:
     image: mongo:4.0
     container_name: fe_db

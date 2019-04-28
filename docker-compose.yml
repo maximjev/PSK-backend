@@ -19,8 +19,4 @@ services:
     ports:
       - 27017:27017
     volumes:
-      - db_mongo_data:/data/db
-
-volumes:
-  db_mongo_data:
-    driver: local
+      - /data/mongo:/data/db

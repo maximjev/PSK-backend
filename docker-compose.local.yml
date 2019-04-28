@@ -1,8 +1,21 @@
 version: '3'
 services:
+
+  backend:
+    image: pskdev.azurecr.io/backend:latest
+    container_name: psk_backend
+    environment:
+      - SPRING_PROFILES_ACTIVE=demo
+    ports:
+      - 8080:8080
+  fe:
+    image: pskdev.azurecr.io/frontend:latest
+    container_name: psk_frontend
+    ports:
+      - 4200:80
   db:
     image: mongo:4.0
-    container_name: db
+    container_name: fe_db
     ports:
       - 27017:27017
     volumes:

@@ -28,10 +28,17 @@ public class ConfirmationKeyRepository {
     public Optional<ConfirmationKey> getById(String id) {
         return ofNullable(mongoOperations.findOne(query(where("id").is(id)), ConfirmationKey.class));
     }
-    public Try<EntityId> invalidate(String keyId){
-       ConfirmationKey key = getById(keyId).get();
+    public Optional<ConfirmationKey> getByToken(String token) {
+        return ofNullable(mongoOperations.findOne(query(where("token").is(token)), ConfirmationKey.class));
+    }
+    public Try<EntityId> invalidate(String token){
+       ConfirmationKey key = getByToken(token).get();
        key.setValid(false);
        mongoOperations.save(key);
        return successful(entityId(key.getId()));
+    }
+    public Try<EntityId> save(ConfirmationKey key) {
+        mongoOperations.save(key);
+        return successful(entityId(key.getId()));
     }
 }

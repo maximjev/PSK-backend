@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import static org.springframework.http.ResponseEntity.unprocessableEntity;
@@ -37,7 +38,7 @@ public class UserController {
 
     @ApiOperation(value = "Create user", response = EntityId.class)
     @CommonErrors
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<?> create(@Valid @RequestBody NewUserForm form) {
         return service.create(form).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
     }
@@ -49,12 +50,18 @@ public class UserController {
         return service.update(form).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
     }
 
-    @ApiOperation(value = "Enter password", response = EntityId.class)
+    @ApiOperation(value = "Reset password", response = EntityId.class)
     @CommonErrors
-    @PostMapping("/password")
-    public  ResponseEntity<?> changeUserPassword( @Valid @RequestBody PasswordForm form) {
-        return service.enterPassword(form).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
+    @PostMapping("/resetPassword")
+    public  ResponseEntity<?> changeUserPassword(HttpServletRequest request, @RequestParam("email") String userEmail) {
+        return service.resetPassword(userEmail).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
 
+    }
+    @ApiOperation(value = "Save password", response = EntityId.class)
+    @CommonErrors
+    @PostMapping("/savePassword")
+    public ResponseEntity<?> update(@Valid @RequestBody PasswordForm form) {
+        return service.savePassword(form).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
     }
 
 }

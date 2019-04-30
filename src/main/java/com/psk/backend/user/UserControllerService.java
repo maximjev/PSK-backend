@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Service
 public class UserControllerService {
 
@@ -29,5 +31,6 @@ public class UserControllerService {
         return createUserService.create(form);
     }
     public Try<EntityId> update(UpdateUserForm form) { return userRepository.update(form); }
-    public Try<EntityId> enterPassword(PasswordForm form) { return createUserService.enterPassword(form); }
+    public Try<EntityId> savePassword(PasswordForm form) { return createUserService.savePassword(form); }
+    public Try<EntityId> resetPassword(String email) { return createUserService.resetPassword(email); }
 }

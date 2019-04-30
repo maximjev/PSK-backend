@@ -14,7 +14,10 @@ import javax.validation.constraints.NotEmpty;
 public class PasswordForm {
 
     @NotEmpty
-    private String keyId;
+    private String token;
+
+    @NotEmpty
+    private String userID;
 
     @NotEmpty
     private String password;

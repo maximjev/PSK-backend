@@ -19,6 +19,18 @@ public enum Error {
             return "User with id %s is already registered";
         }
     },
+    INVALID_EMAIL {
+        @Override
+        public String message() {
+            return "User with id %s is already registered";
+        }
+    },
+    INVALID_TOKEN {
+        @Override
+        public String message() {
+            return "User with id %s is already registered";
+        }
+    },
 
     OBJECT_NOT_FOUND {
         @Override

@@ -1,6 +1,7 @@
 package com.psk.backend.user;
 
 import com.psk.backend.common.EntityId;
+import com.psk.backend.user.validation.ValidationService;
 import com.psk.backend.user.value.NewUserForm;
 import com.psk.backend.user.value.UpdateUserForm;
 import com.psk.backend.user.value.UserListView;
@@ -12,9 +13,11 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static com.psk.backend.common.EntityId.entityId;
+import static com.psk.backend.common.Error.INVALID_EMAIL;
 import static com.psk.backend.common.Error.USER_NOT_FOUND;
 import static com.psk.backend.user.UserRole.ROLE_ORGANIZER;
 import static com.psk.backend.user.UserRole.ROLE_USER;
@@ -84,9 +87,11 @@ public class UserRepository {
 
     public Try<EntityId> update(UpdateUserForm form) {
         User user = getById(form.getId()).get();
-        user.setEmail(form.getEmail());
-        user.setName(form.getName());
-        user.setSurname(form.getSurname());
+        if(!ValidationService.isNullOrEmpty(form.getEmail()) && !ValidationService.validateEmail(form.getEmail()))
+            return failure(INVALID_EMAIL.entity(form.getEmail()));
+        else user.setEmail(form.getEmail());
+        if (!ValidationService.isNullOrEmpty(form.getName())) user.setName(form.getName());
+        if (!ValidationService.isNullOrEmpty(form.getSurname())) user.setName(form.getSurname());
         mongoOperations.save(user);
         return successful(entityId(user.getId()));
     }

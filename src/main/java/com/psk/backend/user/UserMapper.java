@@ -2,11 +2,11 @@ package com.psk.backend.user;
 
 import com.psk.backend.config.BaseMapperConfig;
 import com.psk.backend.user.value.NewUserForm;
-import com.psk.backend.user.value.UpdateUserForm;
 import com.psk.backend.user.value.UserListView;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
 
 import javax.annotation.Resource;
 

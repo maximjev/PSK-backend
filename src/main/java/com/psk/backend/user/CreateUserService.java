@@ -13,9 +13,7 @@ import javax.annotation.Resource;
 import java.util.Optional;
 
 import static com.psk.backend.common.EntityId.entityId;
-import static com.psk.backend.common.Error.UNEXPECTED_ERROR;
-import static com.psk.backend.common.Error.USER_EXISTS;
-import static com.psk.backend.common.Error.USER_NOT_FOUND;
+import static com.psk.backend.common.Error.*;
 import static com.psk.backend.user.UserStatus.ACTIVE;
 import static io.atlassian.fugue.Try.failure;
 import static io.atlassian.fugue.Try.successful;
@@ -44,15 +42,15 @@ public class CreateUserService {
         userRepository.insert(form);
         User user = userRepository.findByUsername(form.getEmail()).get();
         resetPassword(user.getEmail());
-        return successful(entityId("User created"));
+        return successful(entityId(user.getId()));
     }
 
     public Try<EntityId> savePassword(PasswordForm form) {
         if (confirmationKeyService.getConfirmationKeyByToken(form.getToken()).isEmpty())
-            return failure(UNEXPECTED_ERROR.entity("invalid token"));
+            return failure(INVALID_TOKEN.entity(form.getToken()));
         ConfirmationKey key = confirmationKeyService.getConfirmationKeyByToken(form.getToken()).get();
         if (!confirmationKeyService.validatePasswordResetToken(key))
-            return failure(UNEXPECTED_ERROR.entity("invalid token"));
+            return failure(INVALID_TOKEN.entity(key.getToken()));
         User user = userRepository.getById(key.getId()).get();
         user.setPassword(passwordEncoder.encode(form.getPassword()));
         user.setStatus(ACTIVE);

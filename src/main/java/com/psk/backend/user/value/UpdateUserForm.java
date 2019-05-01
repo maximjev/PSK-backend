@@ -17,16 +17,12 @@ public class UpdateUserForm {
     @NotEmpty
     private String id;
 
-    @NotEmpty
     private String name;
 
-    @NotEmpty
     private String surname;
 
-    @NotEmpty
     private String email;
 
-    @NotEmpty
-    @ValidUserRole
-    private String role;
+
+
 }

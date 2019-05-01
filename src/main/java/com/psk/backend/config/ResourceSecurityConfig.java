@@ -21,7 +21,7 @@ public class ResourceSecurityConfig extends ResourceServerConfigurerAdapter {
                 .antMatchers("/favicon.ico").permitAll()
                 .antMatchers("/user").permitAll()
                 .antMatchers("/user/resetPassword").permitAll()
-                .antMatchers("/user/changePassword").permitAll()
+                .antMatchers("/user/savePassword").permitAll()
                 .anyRequest().authenticated();
     }
 

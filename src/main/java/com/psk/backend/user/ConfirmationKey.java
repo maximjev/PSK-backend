@@ -25,6 +25,14 @@ public class ConfirmationKey {
 
     public ConfirmationKey(String id){
         this.id = id;
+        valid = true;
         token = UUID.randomUUID().toString();
+        validTill = LocalDateTime.now().plusDays(1);
+    }
+    public boolean isValid(){
+        if (validTill.isBefore(LocalDateTime.now()) || !valid) {
+            return false;
+        }
+        return true;
     }
 }

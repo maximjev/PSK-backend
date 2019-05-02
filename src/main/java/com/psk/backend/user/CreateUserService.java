@@ -4,6 +4,7 @@ import com.psk.backend.common.EntityId;
 import com.psk.backend.user.value.NewUserForm;
 import com.psk.backend.user.value.PasswordForm;
 import io.atlassian.fugue.Try;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,13 +27,15 @@ public class CreateUserService {
     protected PasswordEncoder passwordEncoder;
 
     private final UserRepository userRepository;
-    private final ConfirmationKeyService confirmationKeyService;
+    private final ConfirmationKeyRepository keyRepository;
     private final EmailService emailService;
+    @Value("${app.url}")
+    private String url;
 
-    public CreateUserService(UserRepository userRepository, ConfirmationKeyService confirmationKeyService, EmailService emailService) {
+    public CreateUserService(UserRepository userRepository, EmailService emailService, ConfirmationKeyRepository keyRepository) {
         this.userRepository = userRepository;
-        this.confirmationKeyService = confirmationKeyService;
         this.emailService = emailService;
+        this.keyRepository = keyRepository;
     }
 
     // TODO: insert user to db, create confirmation key and send it to user email
@@ -46,16 +49,16 @@ public class CreateUserService {
     }
 
     public Try<EntityId> savePassword(PasswordForm form) {
-        if (confirmationKeyService.getConfirmationKeyByToken(form.getToken()).isEmpty())
+        if (keyRepository.getByToken(form.getToken()).isEmpty())
             return failure(INVALID_TOKEN.entity(form.getToken()));
-        ConfirmationKey key = confirmationKeyService.getConfirmationKeyByToken(form.getToken()).get();
-        if (!confirmationKeyService.validatePasswordResetToken(key))
+        ConfirmationKey key = keyRepository.getByToken(form.getToken()).get();
+        if (!key.isValid())
             return failure(INVALID_TOKEN.entity(key.getToken()));
         User user = userRepository.getById(key.getId()).get();
         user.setPassword(passwordEncoder.encode(form.getPassword()));
         user.setStatus(ACTIVE);
         userRepository.save(user);
-        confirmationKeyService.invalidate(form.getToken());
+        keyRepository.invalidate(form.getToken());
         return successful(entityId(user.getId()));
     }
 
@@ -63,8 +66,9 @@ public class CreateUserService {
     public Try<EntityId> resetPassword(String email) {
         Optional<User> user = userRepository.findByUsername(email);
         if (user.isEmpty()) return failure(USER_NOT_FOUND.entity(email));
-        ConfirmationKey key = confirmationKeyService.generateConfirmationKey(user.get().getId());
-        emailService.send(emailService.constructResetTokenEmail("localhost:8000", key.getToken(), user.get()));
+        ConfirmationKey key = new ConfirmationKey(user.get().getId());
+        keyRepository.save(key);
+        emailService.send(emailService.constructResetTokenEmail(url, key.getToken(), user.get()));
         return successful(entityId(user.get().getId()));
     }
 

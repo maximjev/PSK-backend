@@ -45,9 +45,9 @@ public class UserController {
 
     @ApiOperation(value = "Update user's details", response = EntityId.class)
     @CommonErrors
-    @PostMapping("/update")
-    public ResponseEntity<?> update(@Valid @RequestBody UpdateUserForm form) {
-        return service.update(form).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
+    @PutMapping("/{userId}")
+    public ResponseEntity<?> update(@PathVariable String userId, @Valid @RequestBody UpdateUserForm form) {
+        return service.update(userId, form).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
     }
 
     @ApiOperation(value = "Reset password", response = EntityId.class)

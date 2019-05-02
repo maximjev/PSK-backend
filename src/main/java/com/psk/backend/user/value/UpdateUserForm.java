@@ -13,16 +13,8 @@ import javax.validation.constraints.NotEmpty;
 @ToString
 @EqualsAndHashCode
 public class UpdateUserForm {
-
     @NotEmpty
-    private String id;
-
     private String name;
-
+    @NotEmpty
     private String surname;
-
-    private String email;
-
-
-
 }

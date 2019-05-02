@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
 @Getter
@@ -20,7 +21,7 @@ public class NewUserForm {
     @NotEmpty
     private String surname;
 
-    @NotEmpty
+    @Email
     private String email;
 
     @NotEmpty

@@ -30,7 +30,7 @@ public class UserControllerService {
     public Try<EntityId> create(NewUserForm form) {
         return createUserService.create(form);
     }
-    public Try<EntityId> update(UpdateUserForm form) { return userRepository.update(form); }
+    public Try<EntityId> update(String userId, UpdateUserForm form) { return userRepository.update(userId, form); }
     public Try<EntityId> savePassword(PasswordForm form) { return createUserService.savePassword(form); }
     public Try<EntityId> resetPassword(String email) { return createUserService.resetPassword(email); }
 }

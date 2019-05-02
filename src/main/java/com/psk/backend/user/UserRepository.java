@@ -1,7 +1,6 @@
 package com.psk.backend.user;
 
 import com.psk.backend.common.EntityId;
-import com.psk.backend.user.validation.ValidationService;
 import com.psk.backend.user.value.NewUserForm;
 import com.psk.backend.user.value.UpdateUserForm;
 import com.psk.backend.user.value.UserListView;
@@ -85,15 +84,11 @@ public class UserRepository {
     }
 
 
-    public Try<EntityId> update(UpdateUserForm form) {
-        User user = getById(form.getId()).get();
-        if(!ValidationService.isNullOrEmpty(form.getEmail()) && !ValidationService.validateEmail(form.getEmail()))
-            return failure(INVALID_EMAIL.entity(form.getEmail()));
-        else user.setEmail(form.getEmail());
-        if (!ValidationService.isNullOrEmpty(form.getName())) user.setName(form.getName());
-        if (!ValidationService.isNullOrEmpty(form.getSurname())) user.setName(form.getSurname());
-        mongoOperations.save(user);
-        return successful(entityId(user.getId()));
+    public Try<EntityId> update(String userId, UpdateUserForm form) {
+        return findById(userId).map(user -> {
+            user.setName(form.getName()); user.setSurname(form.getSurname());
+            mongoOperations.save(user);
+            return entityId(user.getId()); });
     }
 
 }

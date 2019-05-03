@@ -19,14 +19,13 @@ import java.util.UUID;
 public class ConfirmationKey {
     @Id
     private String id;
-    private String token;
+    private String userId;
     private boolean valid;
     private LocalDateTime validTill;
 
-    public ConfirmationKey(String id){
-        this.id = id;
+    public ConfirmationKey(String userId){
+        this.userId = userId;
         valid = true;
-        token = UUID.randomUUID().toString();
         validTill = LocalDateTime.now().plusDays(1);
     }
     public boolean isValid(){

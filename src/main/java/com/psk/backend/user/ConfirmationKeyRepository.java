@@ -4,13 +4,14 @@ import com.psk.backend.common.EntityId;
 
 import io.atlassian.fugue.Try;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 import static com.psk.backend.common.EntityId.entityId;
 import static com.psk.backend.common.Error.INVALID_TOKEN;
-import static com.psk.backend.common.Error.USER_NOT_FOUND;
 import static io.atlassian.fugue.Try.failure;
 import static io.atlassian.fugue.Try.successful;
 import static java.util.Optional.ofNullable;
@@ -31,25 +32,29 @@ public class ConfirmationKeyRepository {
     public Optional<ConfirmationKey> getById(String id) {
         return ofNullable(mongoOperations.findOne(query(where("id").is(id)), ConfirmationKey.class));
     }
-    public Optional<ConfirmationKey> getByToken(String token) {
-        return ofNullable(mongoOperations.findOne(query(where("token").is(token)), ConfirmationKey.class));
+    public Optional<ConfirmationKey> getByUserId(String userId) {
+        return ofNullable(mongoOperations.findOne(query(where("token").is(userId)), ConfirmationKey.class));
     }
     public Try<EntityId> invalidate(String token){
-        return findByToken(token).map(key -> {
+        return findById(token).map(key -> {
             key.setValid(false);
             mongoOperations.save(key);
             return entityId(key.getId());});
+    }
+    public Try<EntityId> removeByUserId(String userId){
+            mongoOperations.remove(new Query(Criteria.where("userId").is(userId)), ConfirmationKey.class);
+            return successful(entityId(userId));
     }
     public Try<EntityId> save(ConfirmationKey key) {
         mongoOperations.save(key);
         return successful(entityId(key.getId()));
     }
-    public Try<ConfirmationKey> findByToken(String token) {
+    public Try<ConfirmationKey> findById(String id) {
         return mongoOperations
                 .query(ConfirmationKey.class)
-                .matching(query(where("token").is(token)))
+                .matching(query(where("id").is(id)))
                 .one()
                 .map(Try::successful)
-                .orElseGet(() -> failure(INVALID_TOKEN.entity(ConfirmationKey.class.getName(), token)));
+                .orElseGet(() -> failure(INVALID_TOKEN.entity(ConfirmationKey.class.getName(), id)));
     }
 }

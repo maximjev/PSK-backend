@@ -13,22 +13,10 @@ public enum Error {
         }
     },
 
-    USER_EXISTS {
+    USER_CONFIRMATION_ERROR {
         @Override
         public String message() {
-            return "User with id %s is already registered";
-        }
-    },
-    INVALID_EMAIL {
-        @Override
-        public String message() {
-            return "User with id %s is already registered";
-        }
-    },
-    INVALID_TOKEN {
-        @Override
-        public String message() {
-            return "User with id %s is already registered";
+            return "Error confirming user %s ";
         }
     },
 

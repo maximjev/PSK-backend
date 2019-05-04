@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static com.psk.backend.common.EntityId.entityId;
-import static com.psk.backend.common.Error.INVALID_EMAIL;
 import static com.psk.backend.common.Error.USER_NOT_FOUND;
 import static com.psk.backend.user.UserRole.ROLE_ORGANIZER;
 import static com.psk.backend.user.UserRole.ROLE_USER;
@@ -78,17 +77,24 @@ public class UserRepository {
                 .map(Try::successful)
                 .orElseGet(() -> failure(USER_NOT_FOUND.entity(User.class.getName(), id)));
     }
-
-    public Optional<User> getById(String id) {
-        return ofNullable(mongoOperations.findOne(query(where("id").is(id)), User.class));
+    public Try<User> findByEmail(String email) {
+        return mongoOperations
+                .query(User.class)
+                .matching(query(where("email").is(email)))
+                .one()
+                .map(Try::successful)
+                .orElseGet(() -> failure(USER_NOT_FOUND.entity(email)));
     }
+
 
 
     public Try<EntityId> update(String userId, UpdateUserForm form) {
         return findById(userId).map(user -> {
-            user.setName(form.getName()); user.setSurname(form.getSurname());
+            user.setName(form.getName());
+            user.setSurname(form.getSurname());
             mongoOperations.save(user);
-            return entityId(user.getId()); });
+            return entityId(user.getId());
+        });
     }
 
 }

@@ -38,10 +38,9 @@ public class CreateUserService {
         this.keyRepository = keyRepository;
     }
 
-    // TODO: insert user to db, create confirmation key and send it to user email
     public Try<EntityId> create(NewUserForm form) {
         if (userRepository.findByUsername(form.getEmail()).isPresent())
-            return failure(USER_EXISTS.entity(User.class.getName(), form.getEmail()));
+            return failure(USER_CONFIRMATION_ERROR.entity(User.class.getName(), form.getEmail()));
         Try<EntityId> result = userRepository.insert(form);
         resetPassword(form.getEmail());
         return result;
@@ -49,32 +48,35 @@ public class CreateUserService {
 
     public Try<EntityId> savePassword(PasswordForm form) {
         Optional<ConfirmationKey> key = keyRepository.getById(form.getToken());
-        if (key.isEmpty() || !key.get().isValid() || !form.getUserID().equals(key.get().getUserId()))
-            return failure(INVALID_TOKEN.entity(form.getToken()));
-        Optional<User> user = userRepository.getById(form.getUserID());
-        if (user.isEmpty())
-            return failure(USER_NOT_FOUND.entity(form.getUserID()));
-        user.get().setPassword(passwordEncoder.encode(form.getPassword()));
-        user.get().setStatus(ACTIVE);
-        userRepository.save(user.get());
-        keyRepository.removeByUserId(form.getUserID());
-        return successful(entityId(form.getUserID()));
+        if (key.isEmpty() || !key.get().isValid())
+            return failure(USER_CONFIRMATION_ERROR.entity(form.getToken()));
+        return userRepository.findById(key.get().getUserId()).map(user -> {
+            user.setPassword(passwordEncoder.encode(form.getPassword()));
+            user.setStatus(ACTIVE);
+            userRepository.save(user);
+            keyRepository.removeByUserId(user.getId());
+            return entityId(user.getId());
+        });
     }
 
 
     public Try<EntityId> resetPassword(String email) {
-        Optional<User> user = userRepository.findByUsername(email);
-        if (user.isEmpty()) return failure(USER_NOT_FOUND.entity(email));
-        ConfirmationKey key = new ConfirmationKey(user.get().getId());
-        keyRepository.save(key);
-        emailService.sendEmail("Password setup", constructResetTokenLink(url, key.getId(), user.get()), email);
-        return successful(entityId(user.get().getId()));
+        return userRepository.findByEmail(email).map(user -> {
+            ConfirmationKey key = new ConfirmationKey(user.getId());
+            keyRepository.save(key);
+            emailService.sendEmail("Password setup", constructResetTokenLink(url, key.getId()), email);
+            return entityId(user.getId());
+        });
     }
 
     private String constructResetTokenLink(
-            String contextPath, String token, User user) {
-        return contextPath + "/user/changePassword?userId=" + user.getId() + "&token=" + token;
+            String contextPath, String token) {
+        return contextPath + "/user/changePassword?token=" + token;
     }
 
-
+    public Try<EntityId> isValid(String token) {
+        Try <ConfirmationKey> key = keyRepository.findById(token);
+        if (key.isFailure()) return failure(USER_CONFIRMATION_ERROR.entity(token));
+        return successful(entityId(token));
+    }
 }

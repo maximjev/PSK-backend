@@ -17,9 +17,6 @@ public class PasswordForm {
     private String token;
 
     @NotEmpty
-    private String userID;
-
-    @NotEmpty
     private String password;
 
 }

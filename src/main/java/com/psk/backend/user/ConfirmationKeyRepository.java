@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 import static com.psk.backend.common.EntityId.entityId;
-import static com.psk.backend.common.Error.INVALID_TOKEN;
+import static com.psk.backend.common.Error.USER_CONFIRMATION_ERROR;
 import static io.atlassian.fugue.Try.failure;
 import static io.atlassian.fugue.Try.successful;
 import static java.util.Optional.ofNullable;
@@ -25,22 +25,11 @@ public class ConfirmationKeyRepository {
     public ConfirmationKeyRepository(MongoOperations mongoOperations){
         this.mongoOperations = mongoOperations;
     }
-    public Try<EntityId> insert(ConfirmationKey key) {
-        mongoOperations.insert(key);
-        return successful(entityId(key.getId()));
-    }
+
     public Optional<ConfirmationKey> getById(String id) {
         return ofNullable(mongoOperations.findOne(query(where("id").is(id)), ConfirmationKey.class));
     }
-    public Optional<ConfirmationKey> getByUserId(String userId) {
-        return ofNullable(mongoOperations.findOne(query(where("token").is(userId)), ConfirmationKey.class));
-    }
-    public Try<EntityId> invalidate(String token){
-        return findById(token).map(key -> {
-            key.setValid(false);
-            mongoOperations.save(key);
-            return entityId(key.getId());});
-    }
+
     public Try<EntityId> removeByUserId(String userId){
             mongoOperations.remove(new Query(Criteria.where("userId").is(userId)), ConfirmationKey.class);
             return successful(entityId(userId));
@@ -55,6 +44,6 @@ public class ConfirmationKeyRepository {
                 .matching(query(where("id").is(id)))
                 .one()
                 .map(Try::successful)
-                .orElseGet(() -> failure(INVALID_TOKEN.entity(ConfirmationKey.class.getName(), id)));
+                .orElseGet(() -> failure(USER_CONFIRMATION_ERROR.entity(ConfirmationKey.class.getName(), id)));
     }
 }

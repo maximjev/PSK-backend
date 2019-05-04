@@ -63,6 +63,12 @@ public class UserController {
     public ResponseEntity<?> update(@Valid @RequestBody PasswordForm form) {
         return service.savePassword(form).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
     }
+    @ApiOperation(value = "Validate token", response = EntityId.class)
+    @CommonErrors
+    @GetMapping("/{token}")
+    public ResponseEntity<?> validateToken(@PathVariable String token) {
+        return service.isValid(token).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
+    }
 
 
 }

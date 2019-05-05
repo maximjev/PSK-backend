@@ -74,9 +74,10 @@ public class CreateUserService {
         return contextPath + "/user/changePassword?token=" + token;
     }
 
-    public Try<EntityId> isValid(String token) {
-        Try <ConfirmationKey> key = keyRepository.findById(token);
-        if (key.isFailure()) return failure(USER_CONFIRMATION_ERROR.entity(token));
-        return successful(entityId(token));
+    public Try<EntityId> isTokenValid(String token) {
+     Optional <ConfirmationKey> key = keyRepository.getById(token);
+     if (key.isEmpty() || !key.get().isValid())
+         return failure(USER_CONFIRMATION_ERROR.entity(token));
+     return successful(entityId(token));
     }
 }

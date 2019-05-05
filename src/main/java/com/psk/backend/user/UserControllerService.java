@@ -34,6 +34,6 @@ public class UserControllerService {
     public Try<EntityId> update(String userId, UpdateUserForm form) { return userRepository.update(userId, form); }
     public Try<EntityId> savePassword(PasswordForm form) { return createUserService.savePassword(form); }
     public Try<EntityId> resetPassword(String email) { return createUserService.resetPassword(email); }
-    public Try<EntityId> isValid(String token) { return createUserService.isValid(token); }
+    public Try<EntityId> isValid(String token) { return createUserService.isTokenValid(token); }
 
 }

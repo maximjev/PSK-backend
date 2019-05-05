@@ -20,18 +20,13 @@ public class ConfirmationKey {
     @Id
     private String id;
     private String userId;
-    private boolean valid;
     private LocalDateTime validTill;
 
     public ConfirmationKey(String userId){
         this.userId = userId;
-        valid = true;
         validTill = LocalDateTime.now().plusDays(1);
     }
     public boolean isValid(){
-        if (validTill.isBefore(LocalDateTime.now()) || !valid) {
-            return false;
-        }
-        return true;
+        return validTill.isAfter(LocalDateTime.now());
     }
 }

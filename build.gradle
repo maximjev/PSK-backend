@@ -57,6 +57,7 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
     compile("org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:${springSecurityOauth2}")
     compile "com.querydsl:querydsl-mongodb"
+    compile("org.springframework.boot:spring-boot-starter-mail")
     compile("com.google.guava:guava:${guavaVersion}")
     compile ("io.springfox:springfox-swagger2:${springfoxVersion}") {
         exclude module: 'mapstruct'

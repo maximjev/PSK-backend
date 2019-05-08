@@ -25,6 +25,7 @@ public class User {
     private UserRole role;
     private UserStatus status;
 
+
     @CreatedDate
     private LocalDateTime createdAt;
 

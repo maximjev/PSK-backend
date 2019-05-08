@@ -2,6 +2,20 @@ spring:
   data:
     mongodb:
       database: psk-db
+  mail:
+    default-encoding: UTF-8
+    host: smtp.gmail.com
+    username: pskvergai@gmail.com
+    password: funikulierius
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    protocol: smtp
+    test-connection: false
 
 logging:
   level:
@@ -23,3 +37,4 @@ app:
         client: swagger
         secret: swagger-secret
         redirect-uri: http://localhost:8080/api/webjars/springfox-swagger-ui/oauth2-redirect.html
+  url: http://localhost:8080

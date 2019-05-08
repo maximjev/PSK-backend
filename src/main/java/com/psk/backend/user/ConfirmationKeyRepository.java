@@ -30,9 +30,9 @@ public class ConfirmationKeyRepository {
         return ofNullable(mongoOperations.findOne(query(where("id").is(id)), ConfirmationKey.class));
     }
 
-    public Try<EntityId> removeByUserId(String userId){
-            mongoOperations.remove(new Query(Criteria.where("userId").is(userId)), ConfirmationKey.class);
-            return successful(entityId(userId));
+    public Try<EntityId> remove(ConfirmationKey key){
+                mongoOperations.remove(new Query(Criteria.where("userId").is(key.getUserId())), ConfirmationKey.class);
+                return successful(entityId(key.getId()));
     }
     public Try<EntityId> save(ConfirmationKey key) {
         mongoOperations.save(key);

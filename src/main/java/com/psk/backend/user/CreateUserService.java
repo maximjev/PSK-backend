@@ -39,22 +39,22 @@ public class CreateUserService {
     }
 
     public Try<EntityId> create(NewUserForm form) {
-        if (userRepository.findByUsername(form.getEmail()).isPresent())
+      if (userRepository.findByUsername(form.getEmail()).isPresent())
             return failure(USER_CONFIRMATION_ERROR.entity(User.class.getName(), form.getEmail()));
-        Try<EntityId> result = userRepository.insert(form);
-        resetPassword(form.getEmail());
-        return result;
+        userRepository.insert(form);
+        return resetPassword(form.getEmail());
     }
 
     public Try<EntityId> savePassword(PasswordForm form) {
         Optional<ConfirmationKey> key = keyRepository.getById(form.getToken());
         if (key.isEmpty() || !key.get().isValid())
             return failure(USER_CONFIRMATION_ERROR.entity(form.getToken()));
+
         return userRepository.findById(key.get().getUserId()).map(user -> {
             user.setPassword(passwordEncoder.encode(form.getPassword()));
             user.setStatus(ACTIVE);
             userRepository.save(user);
-            keyRepository.removeByUserId(user.getId());
+            keyRepository.remove(key.get());
             return entityId(user.getId());
         });
     }

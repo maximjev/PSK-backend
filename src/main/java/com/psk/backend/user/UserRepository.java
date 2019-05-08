@@ -68,6 +68,9 @@ public class UserRepository {
     public Optional<User> findByUsername(String username) {
         return ofNullable(mongoOperations.findOne(query(where("email").is(username)), User.class));
     }
+    public Optional<User> getById(String id) {
+        return ofNullable(mongoOperations.findOne(query(where("id").is(id)), User.class));
+    }
 
     public Try<User> findById(String id) {
         return mongoOperations

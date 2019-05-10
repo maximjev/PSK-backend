@@ -57,6 +57,7 @@ public class UserRepository {
 
     public Try<EntityId> insert(NewUserForm form) {
         User user = userMapper.create(form);
+
         mongoOperations.insert(user);
         return successful(entityId(user.getId()));
     }

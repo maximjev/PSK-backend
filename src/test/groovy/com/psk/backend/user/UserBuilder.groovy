@@ -6,7 +6,7 @@ import groovy.transform.builder.ExternalStrategy
 @Builder(builderStrategy = ExternalStrategy, forClass = User)
 class UserBuilder {
     UserBuilder() {
-        email('email')
+        email('email@email.com')
         password('password')
         name('name')
         surname('surname')
@@ -14,6 +14,6 @@ class UserBuilder {
     }
 
     static User user() {
-        new UserBuilder().build();
+        new UserBuilder().build()
     }
 }

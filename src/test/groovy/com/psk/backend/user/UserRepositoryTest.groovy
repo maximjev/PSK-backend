@@ -30,7 +30,7 @@ class UserRepositoryTest extends Specification {
                 name: "name",
                 surname: "surname",
                 role: "ROLE_USER",
-                email: "email"
+                email: "email@email.com"
         )
 
         when:
@@ -42,7 +42,7 @@ class UserRepositoryTest extends Specification {
 
         loaded.name == "name"
         loaded.surname == "surname"
-        loaded.email == "email"
+        loaded.email == "email@email.com"
         loaded.role == UserRole.ROLE_USER
     }
 

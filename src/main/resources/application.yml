@@ -37,4 +37,5 @@ app:
         client: swagger
         secret: swagger-secret
         redirect-uri: http://localhost:8080/api/webjars/springfox-swagger-ui/oauth2-redirect.html
+
   url: http://localhost:8080

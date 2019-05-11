@@ -8,13 +8,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-
 import javax.annotation.Resource;
-
 import java.util.Optional;
 
 import static com.psk.backend.common.EntityId.entityId;
-import static com.psk.backend.common.Error.*;
+import static com.psk.backend.common.Error.USER_CONFIRMATION_ERROR;
 import static com.psk.backend.user.UserStatus.ACTIVE;
 import static io.atlassian.fugue.Try.failure;
 import static io.atlassian.fugue.Try.successful;
@@ -39,7 +37,7 @@ public class CreateUserService {
     }
 
     public Try<EntityId> create(NewUserForm form) {
-      if (userRepository.findByUsername(form.getEmail()).isPresent())
+        if (userRepository.findByUsername(form.getEmail()).isPresent())
             return failure(USER_CONFIRMATION_ERROR.entity(User.class.getName(), form.getEmail()));
         userRepository.insert(form);
         return resetPassword(form.getEmail());
@@ -75,9 +73,10 @@ public class CreateUserService {
     }
 
     public Try<EntityId> isTokenValid(String token) {
-     Optional <ConfirmationKey> key = keyRepository.getById(token);
-     if (key.isEmpty() || !key.get().isValid())
-         return failure(USER_CONFIRMATION_ERROR.entity(token));
-     return successful(entityId(token));
+        Optional<ConfirmationKey> key = keyRepository.getById(token);
+        if (key.isEmpty() || !key.get().isValid()) {
+            return failure(USER_CONFIRMATION_ERROR.entity(token));
+        }
+        return successful(entityId(token));
     }
 }

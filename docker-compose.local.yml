@@ -3,14 +3,14 @@ services:
 
   fe:
     image: pskdev.azurecr.io/frontend:latest
-    container_name: psk_frontend
+    container_name: frontend
     ports:
       - 4200:80
     volumes:
-      - ./nginx-dev.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx-for-dev.conf:/etc/nginx/nginx.conf:ro
   db:
     image: mongo:4.0
-    container_name: fe_db
+    container_name: db
     ports:
       - 27017:27017
     volumes:

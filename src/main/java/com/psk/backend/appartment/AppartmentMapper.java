@@ -9,9 +9,9 @@ import org.mapstruct.MappingTarget;
 @Mapper(config = BaseMapperConfig.class)
 public interface AppartmentMapper {
 
-    public Appartment create(AppartmentForm form);
+    Appartment create(AppartmentForm form);
 
-    public AppartmentListView listView(Appartment appartment);
+    AppartmentListView listView(Appartment appartment);
 
-    public Appartment update(AppartmentForm form, @MappingTarget Appartment appartment);
+    Appartment update(AppartmentForm form, @MappingTarget Appartment appartment);
 }

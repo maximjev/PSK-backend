@@ -56,6 +56,7 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-data-mongodb'
     compile 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
     compile("org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:${springSecurityOauth2}")
+    compile('org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.0.1.RELEASE')
     compile "com.querydsl:querydsl-mongodb"
     compile("org.springframework.boot:spring-boot-starter-mail")
     compile("com.google.guava:guava:${guavaVersion}")
@@ -68,7 +69,13 @@ dependencies {
     compile "org.apache.commons:commons-lang3:3.7"
     compile "org.mapstruct:mapstruct-jdk8:${mapstructVersion}"
     compile "org.projectlombok:lombok"
+    compile('javax.xml.ws:jaxws-api:2.2.6')
     compile "org.pojomatic:pojomatic:${pojomaticVersion}"
+
+    compile('javax.xml.bind:jaxb-api:2.3.0')
+    compile('com.sun.xml.bind:jaxb-impl:2.3.0')
+    compile('com.sun.xml.bind:jaxb-core:2.3.0')
+    compile('javax.activation:activation:1.1')
 
     testCompile 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
     testCompile('org.springframework.boot:spring-boot-starter-test')

@@ -2,6 +2,7 @@ package com.psk.backend.user;
 
 import com.psk.backend.common.EntityId;
 import com.psk.backend.user.value.NewUserForm;
+import com.psk.backend.user.value.UpdateUserForm;
 import com.psk.backend.user.value.UserListView;
 import io.atlassian.fugue.Try;
 import org.springframework.data.domain.Page;
@@ -11,6 +12,7 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static com.psk.backend.common.EntityId.entityId;
@@ -55,12 +57,20 @@ public class UserRepository {
 
     public Try<EntityId> insert(NewUserForm form) {
         User user = userMapper.create(form);
+
         mongoOperations.insert(user);
+        return successful(entityId(user.getId()));
+    }
+    public Try<EntityId> save(User user) {
+        mongoOperations.save(user);
         return successful(entityId(user.getId()));
     }
 
     public Optional<User> findByUsername(String username) {
         return ofNullable(mongoOperations.findOne(query(where("email").is(username)), User.class));
+    }
+    public Optional<User> getById(String id) {
+        return ofNullable(mongoOperations.findOne(query(where("id").is(id)), User.class));
     }
 
     public Try<User> findById(String id) {
@@ -71,4 +81,24 @@ public class UserRepository {
                 .map(Try::successful)
                 .orElseGet(() -> failure(USER_NOT_FOUND.entity(User.class.getName(), id)));
     }
+    public Try<User> findByEmail(String email) {
+        return mongoOperations
+                .query(User.class)
+                .matching(query(where("email").is(email)))
+                .one()
+                .map(Try::successful)
+                .orElseGet(() -> failure(USER_NOT_FOUND.entity(email)));
+    }
+
+
+
+    public Try<EntityId> update(String userId, UpdateUserForm form) {
+        return findById(userId).map(user -> {
+            user.setName(form.getName());
+            user.setSurname(form.getSurname());
+            mongoOperations.save(user);
+            return entityId(user.getId());
+        });
+    }
+
 }

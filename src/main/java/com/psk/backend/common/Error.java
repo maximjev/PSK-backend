@@ -13,6 +13,13 @@ public enum Error {
         }
     },
 
+    USER_CONFIRMATION_ERROR {
+        @Override
+        public String message() {
+            return "Error confirming user %s ";
+        }
+    },
+
     OBJECT_NOT_FOUND {
         @Override
         public String message() {

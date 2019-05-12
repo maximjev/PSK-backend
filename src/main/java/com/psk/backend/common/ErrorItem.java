@@ -1,6 +1,5 @@
 package com.psk.backend.common;
 
-import com.querydsl.core.annotations.QueryEmbeddable;
 import lombok.ToString;
 import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonProperty;
@@ -8,7 +7,6 @@ import org.pojomatic.annotations.AutoProperty;
 
 import static org.codehaus.jackson.annotate.JsonAutoDetect.Visibility.NONE;
 
-@QueryEmbeddable
 @AutoProperty
 @JsonAutoDetect(getterVisibility = NONE, fieldVisibility = NONE, isGetterVisibility = NONE, setterVisibility = NONE)
 @ToString

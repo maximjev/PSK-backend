@@ -7,8 +7,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import springfox.documentation.builders.AuthorizationCodeGrantBuilder;
-import springfox.documentation.builders.OAuthBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
@@ -75,19 +73,10 @@ public class SwaggerConfig {
     }
 
     private OAuth securitySchema() {
-        var grantType = new AuthorizationCodeGrantBuilder()
-                .tokenEndpoint(new TokenEndpoint("/api/oauth/token", "oauthtoken"))
-                .tokenRequestEndpoint(
-                        new TokenRequestEndpoint("/api/oauth/authorize",
-                                environment.getRequiredProperty("app.security.oauth2.swagger.client"),
-                                passwordEncoder.encode(environment.getRequiredProperty("app.security.oauth2.swagger.secret"))))
-                .build();
-
-        return new OAuthBuilder()
-                .name("oauth")
-                .grantTypes(List.of(grantType))
-                .scopes(List.of(authorizationScope()))
-                .build();
+        AuthorizationScope authorizationScope = authorizationScope();
+        LoginEndpoint loginEndpoint = new LoginEndpoint("/api/oauth/authorize");
+        GrantType grantType = new ImplicitGrant(loginEndpoint, "access_token");
+        return new OAuth("oauth", of(authorizationScope), of(grantType));
     }
 
     @Bean

@@ -12,14 +12,15 @@ public class ResourceSecurityConfig extends ResourceServerConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http.httpBasic().and()
-                .authorizeRequests()
+        http.authorizeRequests()
+                .antMatchers("/oauth/token").permitAll()
                 .antMatchers("/swagger-ui.html").permitAll()
                 .antMatchers("/webjars/springfox-swagger-ui/**").permitAll()
                 .antMatchers("/swagger-resources/**").permitAll()
                 .antMatchers("/v2/api-docs").permitAll()
                 .antMatchers("/favicon.ico").permitAll()
-                .antMatchers("/user").permitAll()
+                .antMatchers("/user/resetPassword").permitAll()
+                .antMatchers("/user/savePassword").permitAll()
                 .anyRequest().authenticated();
     }
 

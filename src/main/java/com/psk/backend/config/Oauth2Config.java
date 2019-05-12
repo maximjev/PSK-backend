@@ -29,6 +29,7 @@ import java.util.List;
 public class Oauth2Config extends AuthorizationServerConfigurerAdapter {
 
     private static final String GRANT_TYPE_PASSWORD = "password";
+    private static final String IMPLICIT = "implicit";
     private static final String REFRESH_TOKEN = "refresh_token";
 
     @Resource
@@ -43,7 +44,8 @@ public class Oauth2Config extends AuthorizationServerConfigurerAdapter {
     @Resource
     private Environment environment;
 
-    @Value("${app.security.jwt.key}") String tokenKey;
+    @Value("${app.security.jwt.key}")
+    String tokenKey;
 
     @Bean
     public JwtAccessTokenConverter accessTokenConverter() {
@@ -87,7 +89,8 @@ public class Oauth2Config extends AuthorizationServerConfigurerAdapter {
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-        security.passwordEncoder(passwordEncoder);
+        security.passwordEncoder(passwordEncoder).
+                allowFormAuthenticationForClients();
     }
 
     @Override
@@ -95,13 +98,13 @@ public class Oauth2Config extends AuthorizationServerConfigurerAdapter {
         clients.inMemory()
                 .withClient(environment.getRequiredProperty("app.security.oauth2.web.client"))
                 .secret(passwordEncoder.encode(environment.getRequiredProperty("app.security.oauth2.web.secret")))
-                .authorizedGrantTypes(GRANT_TYPE_PASSWORD, REFRESH_TOKEN, "implicit")
+                .authorizedGrantTypes(GRANT_TYPE_PASSWORD, REFRESH_TOKEN)
                 .scopes("all")
                 .autoApprove(true)
                 .and()
                 .withClient(environment.getRequiredProperty("app.security.oauth2.swagger.client"))
                 .secret(passwordEncoder.encode(environment.getRequiredProperty("app.security.oauth2.swagger.secret")))
-                .authorizedGrantTypes("authorization_code")
+                .authorizedGrantTypes(REFRESH_TOKEN, IMPLICIT)
                 .redirectUris(environment.getRequiredProperty("app.security.oauth2.swagger.redirect-uri"))
                 .scopes("all")
 //                .authorities("ROLE_ADMIN")

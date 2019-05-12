@@ -3,6 +3,8 @@ package com.psk.backend.user;
 import com.psk.backend.common.CommonErrors;
 import com.psk.backend.common.EntityId;
 import com.psk.backend.user.value.NewUserForm;
+import com.psk.backend.user.value.PasswordForm;
+import com.psk.backend.user.value.UpdateUserForm;
 import com.psk.backend.user.value.UserListView;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import static org.springframework.http.ResponseEntity.unprocessableEntity;
@@ -35,8 +38,37 @@ public class UserController {
 
     @ApiOperation(value = "Create user", response = EntityId.class)
     @CommonErrors
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<?> create(@Valid @RequestBody NewUserForm form) {
         return service.create(form).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
     }
+
+    @ApiOperation(value = "Update user's details", response = EntityId.class)
+    @CommonErrors
+    @PutMapping("/{userId}")
+    public ResponseEntity<?> update(@PathVariable String userId, @Valid @RequestBody UpdateUserForm form) {
+        return service.update(userId, form).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
+    }
+
+    @ApiOperation(value = "Reset password", response = EntityId.class)
+    @CommonErrors
+    @PostMapping("/resetPassword")
+    public  ResponseEntity<?> changeUserPassword(HttpServletRequest request, @RequestParam("email") String userEmail) {
+        return service.resetPassword(userEmail).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
+
+    }
+    @ApiOperation(value = "Save password", response = EntityId.class)
+    @CommonErrors
+    @PostMapping("/savePassword")
+    public ResponseEntity<?> update(@Valid @RequestBody PasswordForm form) {
+        return service.savePassword(form).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
+    }
+    @ApiOperation(value = "Validate token", response = EntityId.class)
+    @CommonErrors
+    @GetMapping("/{token}")
+    public ResponseEntity<?> validateToken(@PathVariable String token) {
+        return service.isValid(token).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
+    }
+
+
 }

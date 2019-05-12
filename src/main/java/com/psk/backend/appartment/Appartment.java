@@ -1,9 +1,9 @@
-package com.psk.backend.user;
+package com.psk.backend.appartment;
 
-import lombok.EqualsAndHashCode;
+
+import com.psk.backend.user.AuditUser;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -11,21 +11,16 @@ import java.time.LocalDateTime;
 
 
 @Document
-@ToString
 @Getter
 @Setter
-@EqualsAndHashCode
-public class User {
+public class Appartment {
 
     @Id
     private String id;
-    private String name;
-    private String surname;
-    private String email;
-    private String password;
-    private UserRole role;
-    private UserStatus status;
 
+    private Address address;
+
+    private Integer size;
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -38,9 +33,4 @@ public class User {
 
     @LastModifiedBy
     private AuditUser updatedBy;
-
-
-    public boolean isActive() {
-        return UserStatus.ACTIVE == status;
-    }
 }

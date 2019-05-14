@@ -17,6 +17,6 @@ steps:
   - script: |
       docker build -t repo.treescale.com/$(imageName) .
       docker login -u $(dockerId) -p $(dockerPassword) repo.treescale.com
-      docker push repo.treescale.com/$(imageName)
+      docker push repo.treescale.com/$(imageName)/$(imageName)
     env:
       pswd: $(dockerPassword)

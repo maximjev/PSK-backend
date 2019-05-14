@@ -12,7 +12,6 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static com.psk.backend.common.EntityId.entityId;
@@ -57,6 +56,7 @@ public class UserRepository {
 
     public Try<EntityId> insert(NewUserForm form) {
         User user = userMapper.create(form);
+
         mongoOperations.insert(user);
         return successful(entityId(user.getId()));
     }

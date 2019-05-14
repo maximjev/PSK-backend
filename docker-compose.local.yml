@@ -2,7 +2,7 @@ version: '3'
 services:
 
   fe:
-    image: repo.treescale.com/pskdev/pskdev/frontend:latest
+    image: repo.treescale.com/pskdev/frontend:latest
     container_name: psk_frontend
     ports:
       - 4200:80

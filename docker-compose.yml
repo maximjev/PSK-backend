@@ -2,14 +2,14 @@ version: '3'
 services:
 
   backend:
-    image: repo.treescale.com/pskdev/pskdev/backend:latest
+    image: repo.treescale.com/pskdev/backend:latest
     container_name: backend
     environment:
       - SPRING_PROFILES_ACTIVE=prod
     ports:
       - 8080:8080
   fe:
-    image: repo.treescale.com/pskdev/pskdev/frontend:latest
+    image: repo.treescale.com/pskdev/frontend:latest
     container_name: fe
     ports:
       - 80:80

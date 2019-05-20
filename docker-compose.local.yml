@@ -3,14 +3,14 @@ services:
 
   fe:
     image: repo.treescale.com/pskdev/frontend:latest
-    container_name: psk_frontend
+    container_name: be_frontend
     ports:
       - 4200:80
     volumes:
       - ./nginx-for-dev.conf:/etc/nginx/nginx.conf:ro
   db:
     image: mongo:4.0
-    container_name: fe_db
+    container_name: be_db
     ports:
       - 27017:27017
     volumes:

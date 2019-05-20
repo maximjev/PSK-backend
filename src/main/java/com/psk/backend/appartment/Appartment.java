@@ -20,7 +20,7 @@ public class Appartment {
 
     private Address address;
 
-    private Integer size;
+    private Long size;
 
     @CreatedDate
     private LocalDateTime createdAt;

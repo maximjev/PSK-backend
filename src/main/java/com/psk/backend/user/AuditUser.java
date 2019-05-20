@@ -22,4 +22,8 @@ public class AuditUser {
     public static AuditUser of(User user) {
         return new AuditUser(user.getId(), user.getEmail(), user.getName() + " " + user.getSurname());
     }
+
+    public String toString() {
+        return this.getName();
+    }
 }

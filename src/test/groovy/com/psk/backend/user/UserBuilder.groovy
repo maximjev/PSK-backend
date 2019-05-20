@@ -10,10 +10,16 @@ class UserBuilder {
         password('password')
         name('name')
         surname('surname')
-        role(UserRole.ROLE_USER)
+        role(UserRole.ROLE_ADMIN)
     }
 
     static User user() {
         new UserBuilder().build()
+    }
+
+    static User user(String id) {
+        new UserBuilder(
+                id: id
+        ).build()
     }
 }

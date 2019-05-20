@@ -3,6 +3,7 @@ package com.psk.backend.appartment;
 import com.mongodb.client.result.DeleteResult;
 import com.psk.backend.appartment.value.AppartmentForm;
 import com.psk.backend.appartment.value.AppartmentListView;
+import com.psk.backend.appartment.value.AppartmentView;
 import com.psk.backend.common.EntityId;
 import io.atlassian.fugue.Try;
 import org.springframework.data.domain.Page;
@@ -78,5 +79,9 @@ public class AppartmentRepository {
                 .one()
                 .map(Try::successful)
                 .orElseGet(() -> failure(OBJECT_NOT_FOUND.entity(Appartment.class.getName(), id)));
+    }
+
+    public Try<AppartmentView> get(String id) {
+        return findById(id).map(appartmentMapper::view);
     }
 }

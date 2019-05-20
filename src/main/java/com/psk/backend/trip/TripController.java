@@ -1,13 +1,11 @@
-package com.psk.backend.appartment;
+package com.psk.backend.trip;
 
-
-import com.psk.backend.appartment.value.AppartmentForm;
-import com.psk.backend.appartment.value.AppartmentListView;
-import com.psk.backend.appartment.value.AppartmentView;
 import com.psk.backend.common.CommonErrors;
 import com.psk.backend.common.EntityId;
+import com.psk.backend.trip.value.TripForm;
+import com.psk.backend.trip.value.TripListView;
+import com.psk.backend.trip.value.TripView;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -18,44 +16,43 @@ import javax.validation.Valid;
 import static org.springframework.http.ResponseEntity.unprocessableEntity;
 
 @RestController
-@RequestMapping("/appartment")
-public class AppartmentController {
+@RequestMapping("trip")
+public class TripController {
 
-    @Autowired
-    private final AppartmentControllerService service;
+    private final TripControllerService service;
 
-    public AppartmentController(AppartmentControllerService service) {
+    public TripController(TripControllerService service) {
         this.service = service;
     }
 
     @CommonErrors
-    @ApiOperation(value = "Get paged appartment list", response = AppartmentListView.class)
+    @ApiOperation(value = "Get paged trip list", response = TripListView.class)
     @GetMapping
-    public Page<AppartmentListView> getAll(Pageable page) {
+    public Page<TripListView> getAll(Pageable page) {
         return service.list(page);
     }
 
-    @ApiOperation(value = "Create appartment", response = EntityId.class)
+    @ApiOperation(value = "Create trip", response = EntityId.class)
     @CommonErrors
     @PostMapping
-    public ResponseEntity<?> create(@Valid @RequestBody AppartmentForm form) {
+    public ResponseEntity<?> create(@Valid @RequestBody TripForm form) {
         return service.create(form).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
     }
 
-    @ApiOperation(value = "Get appartment", response = AppartmentView.class)
+    @ApiOperation(value = "Get trip", response = TripView.class)
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@PathVariable("id") String id) {
         return service.get(id).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
     }
 
-    @ApiOperation(value = "Update appartment", response = EntityId.class)
+    @ApiOperation(value = "Update trip", response = EntityId.class)
     @CommonErrors
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") String id, @Valid @RequestBody AppartmentForm form) {
+    public ResponseEntity<?> update(@PathVariable("id") String id, @Valid @RequestBody TripForm form) {
         return service.update(id, form).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
     }
 
-    @ApiOperation(value = "Delete appartment", response = EntityId.class)
+    @ApiOperation(value = "Delete trip", response = EntityId.class)
     @CommonErrors
     @DeleteMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable("id") String id) {

@@ -19,7 +19,7 @@ public class AppartmentControllerService {
         this.appartmentRepository = appartmentRepository;
     }
 
-    public Page<AppartmentListView> appartments(Pageable page) {
+    public Page<AppartmentListView> list(Pageable page) {
         return appartmentRepository.list(page);
     }
 

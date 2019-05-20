@@ -1,5 +1,6 @@
 package com.psk.backend.appartment.value;
 
+import com.psk.backend.common.address.AddressView;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,6 +13,6 @@ import lombok.ToString;
 @ToString
 public class AppartmentListView {
     private String id;
-    private AddressForm address;
+    private AddressView address;
     private Long size;
 }

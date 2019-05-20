@@ -19,5 +19,5 @@ public class AppartmentForm {
 
     @NotNull
     @Positive
-    private Integer size;
+    private Long size;
 }

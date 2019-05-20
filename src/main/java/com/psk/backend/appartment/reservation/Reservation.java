@@ -16,6 +16,8 @@ public class Reservation {
     @Id
     private String id;
 
+    private Long places;
+
     private LocalDateTime from;
 
     private LocalDateTime till;

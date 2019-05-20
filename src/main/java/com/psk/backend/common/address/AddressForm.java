@@ -1,4 +1,4 @@
-package com.psk.backend.appartment.value;
+package com.psk.backend.common.address;
 
 import lombok.Getter;
 import lombok.Setter;

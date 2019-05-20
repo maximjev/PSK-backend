@@ -7,6 +7,7 @@ import com.psk.backend.appartment.reservation.aggregations.QueryResultCount;
 import com.psk.backend.appartment.reservation.value.PlacementFilter;
 import com.psk.backend.appartment.reservation.value.PlacementResult;
 import com.psk.backend.appartment.reservation.value.ReservationListView;
+import com.psk.backend.common.EntityId;
 import io.atlassian.fugue.Try;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -16,6 +17,10 @@ import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Repository;
 
+import static com.psk.backend.common.EntityId.entityId;
+import static com.psk.backend.common.Error.OBJECT_NOT_FOUND;
+import static io.atlassian.fugue.Try.failure;
+import static io.atlassian.fugue.Try.successful;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
@@ -103,5 +108,26 @@ public class ReservationRepository {
             availablePlaces.calculateAvailablePlaces(a.getSize());
             return availablePlaces;
         });
+    }
+
+    public Try<EntityId> insert(Reservation entity) {
+        mongoOperations.insert(entity);
+        return successful(entityId(entity.getId()));
+    }
+
+    public Try<EntityId> updateByTripId(String tripId, Reservation newReservation) {
+        return findByTripId(tripId).map(a -> {
+            mongoOperations.save(mapper.update(newReservation, a));
+            return entityId(a.getId());
+        });
+    }
+
+    public Try<Reservation> findByTripId(String id) {
+        return mongoOperations
+                .query(Reservation.class)
+                .matching(query(where("tripId").is(id)))
+                .one()
+                .map(Try::successful)
+                .orElseGet(() -> failure(OBJECT_NOT_FOUND.entity(Reservation.class.getName(), id)));
     }
 }

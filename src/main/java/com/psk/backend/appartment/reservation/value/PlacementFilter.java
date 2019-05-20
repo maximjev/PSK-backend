@@ -10,4 +10,9 @@ import java.time.LocalDateTime;
 public class PlacementFilter {
     private LocalDateTime from;
     private LocalDateTime till;
+
+    public PlacementFilter(LocalDateTime from, LocalDateTime till) {
+        this.from = from;
+        this.till = till;
+    }
 }

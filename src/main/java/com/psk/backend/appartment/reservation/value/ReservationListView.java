@@ -14,7 +14,7 @@ public class ReservationListView {
     private String id;
     private Long places;
     private LocalDateTime from;
-    private LocalDateTime to;
+    private LocalDateTime till;
     private LocalDateTime createdAt;
     private String createdBy;
 }

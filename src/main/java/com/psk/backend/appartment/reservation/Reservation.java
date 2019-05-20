@@ -24,6 +24,8 @@ public class Reservation {
 
     private String appartmentId;
 
+    private String tripId;
+
     @CreatedDate
     private LocalDateTime createdAt;
 
@@ -35,4 +37,41 @@ public class Reservation {
 
     @LastModifiedBy
     private AuditUser updatedBy;
+
+    public static Builder builder() {
+        return new Reservation().new Builder();
+    }
+
+    public class Builder {
+        private Builder() {}
+
+        public Builder withPlaces(Long places) {
+            Reservation.this.places = places;
+            return this;
+        }
+
+        public Builder withAppartment(String appartment) {
+            Reservation.this.appartmentId = appartmentId;
+            return this;
+        }
+
+        public Builder from(LocalDateTime from) {
+            Reservation.this.from = from;
+            return this;
+        }
+
+        public Builder till(LocalDateTime till) {
+            Reservation.this.till = till;
+            return this;
+        }
+
+        public Builder withTrip(String trip) {
+            Reservation.this.tripId = trip;
+            return this;
+        }
+
+        public Reservation build() {
+            return Reservation.this;
+        }
+    }
 }

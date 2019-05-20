@@ -3,6 +3,7 @@ package com.psk.backend.appartment;
 
 import com.psk.backend.appartment.value.AppartmentForm;
 import com.psk.backend.appartment.value.AppartmentListView;
+import com.psk.backend.appartment.value.AppartmentView;
 import com.psk.backend.common.CommonErrors;
 import com.psk.backend.common.EntityId;
 import io.swagger.annotations.ApiOperation;
@@ -39,6 +40,12 @@ public class AppartmentController {
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody AppartmentForm form) {
         return service.create(form).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
+    }
+
+    @ApiOperation(value = "Get appartment", response = AppartmentView.class)
+    @GetMapping("/{id}")
+    public ResponseEntity<?> get(@PathVariable("id") String id) {
+        return service.get(id).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
     }
 
     @ApiOperation(value = "Update appartment", response = EntityId.class)

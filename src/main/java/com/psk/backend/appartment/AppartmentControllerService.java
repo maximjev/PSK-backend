@@ -3,6 +3,7 @@ package com.psk.backend.appartment;
 
 import com.psk.backend.appartment.value.AppartmentForm;
 import com.psk.backend.appartment.value.AppartmentListView;
+import com.psk.backend.appartment.value.AppartmentView;
 import com.psk.backend.common.EntityId;
 import io.atlassian.fugue.Try;
 import org.springframework.data.domain.Page;
@@ -28,6 +29,10 @@ public class AppartmentControllerService {
 
     public Try<EntityId> update(String id, AppartmentForm form) {
         return appartmentRepository.update(id, form);
+    }
+
+    public Try<AppartmentView> get(String id) {
+        return appartmentRepository.get(id);
     }
 
     public Try<EntityId> delete(String id) {

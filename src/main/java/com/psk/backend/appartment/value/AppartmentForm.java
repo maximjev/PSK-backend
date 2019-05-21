@@ -18,6 +18,8 @@ public class AppartmentForm {
 
     private AddressForm address;
 
+    private String name;
+
     @NotNull
     @Positive
     private Long size;

@@ -17,10 +17,16 @@ import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import static com.psk.backend.common.EntityId.entityId;
 import static com.psk.backend.common.Error.OBJECT_NOT_FOUND;
 import static io.atlassian.fugue.Try.failure;
 import static io.atlassian.fugue.Try.successful;
+import static java.util.Collections.max;
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
@@ -60,30 +66,38 @@ public class ReservationRepository {
 
     public Try<PlacementResult> availablePlaces(String appartmentId, PlacementFilter filter) {
         var conditions = new Criteria()
-                .and("appartmentId").is(appartmentId)
-                .orOperator(
-                        new Criteria().andOperator(
-                                where("from").lt(filter.getFrom()),
-                                where("till").lt(filter.getTill()),
-                                where("till").gt(filter.getFrom())
-                        ),
-                        new Criteria().andOperator(
-                                where("from").lt(filter.getFrom()),
-                                where("till").gt(filter.getTill())
-                        ),
-                        new Criteria().andOperator(
-                                where("from").lt(filter.getTill()),
-                                where("from").gt(filter.getFrom()),
-                                where("till").gt(filter.getTill())
-                        ),
-                        new Criteria().andOperator(
-                                where("from").gt(filter.getFrom()),
-                                where("till").lt(filter.getTill())
-                        )
-                );
+                .and("appartmentId").is(appartmentId);
+
+        var fullSetConditions = new Criteria().andOperator(
+                where("from").lt(filter.getFrom()),
+                where("till").gt(filter.getTill())
+        );
+
+        var intersectionConditions = new Criteria().orOperator(
+                new Criteria().andOperator(
+                        where("from").lt(filter.getFrom()),
+                        where("till").lt(filter.getTill()),
+                        where("till").gt(filter.getFrom())),
+                new Criteria().andOperator(
+                        where("from").lt(filter.getTill()),
+                        where("from").gt(filter.getFrom()),
+                        where("till").gt(filter.getTill())),
+                new Criteria().andOperator(
+                        where("from").gt(filter.getFrom()),
+                        where("till").lt(filter.getTill()))
+        );
+
+        var fullConditions = new Criteria().orOperator(
+                fullSetConditions,
+                intersectionConditions
+        );
+
+
+        Long totalPlaces = calculateTotalPlaces(new Criteria().andOperator(conditions, intersectionConditions));
 
         var countQueryOperations = ImmutableList.<AggregationOperation>builder()
                 .add(match(conditions))
+                .add(match(fullConditions))
                 .add(count().as("totalCount"))
                 .build();
 
@@ -93,6 +107,7 @@ public class ReservationRepository {
 
         var placesCountOperations = ImmutableList.<AggregationOperation>builder()
                 .add(match(conditions))
+                .add(match(fullSetConditions))
                 .add(group().sum("places").as("totalCount"))
                 .build();
 
@@ -101,13 +116,43 @@ public class ReservationRepository {
                 .getUniqueMappedResult();
 
         var availablePlaces = new PlacementResult(
-                placesCount != null ? placesCount.getTotalCount() : 0,
+                placesCount == null ? totalPlaces : placesCount.getTotalCount() + totalPlaces,
                 reservationCount != null ? reservationCount.getTotalCount() : 0);
 
         return appartmentRepository.findById(appartmentId).map(a -> {
             availablePlaces.calculateAvailablePlaces(a.getSize());
             return availablePlaces;
         });
+    }
+
+    private Long calculateTotalPlaces(Criteria conditions) {
+        var intersectedReservations = mongoOperations.find(query(conditions), Reservation.class);
+        Long totalPlaces = calculateUniqueNotIntersectingPlaces(intersectedReservations);
+
+        totalPlaces += intersectedReservations.stream()
+                .map(Reservation::getPlaces)
+                .reduce((p, sum) -> sum += p)
+                .orElse(0L);
+
+        return totalPlaces;
+    }
+
+    private Long calculateUniqueNotIntersectingPlaces(List<Reservation> reservations) {
+        Set<Reservation> reservationSet = new HashSet<>();
+
+        reservations.forEach(lr -> {
+            if (reservations.stream().noneMatch(rr -> rr.intersects(lr))) {
+                reservationSet.add(lr);
+            }
+        });
+        reservations.removeAll(reservationSet);
+
+        if (reservationSet.isEmpty()) {
+            return 0L;
+        } else {
+            long max = max(reservationSet, comparing(Reservation::getPlaces)).getPlaces();
+            return reservations.isEmpty() ? max : max(reservations, comparing(Reservation::getPlaces)).getPlaces() - max;
+        }
     }
 
     public Try<EntityId> insert(Reservation entity) {

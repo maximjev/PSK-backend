@@ -12,6 +12,7 @@ import lombok.ToString;
 @ToString
 public class AppartmentView {
     private String id;
+    private String name;
     private AddressForm address;
     private Long size;
 }

@@ -32,4 +32,14 @@ class ReservationBuilder {
                 .till(LocalDateTime.parse(till, formatter))
                 .build()
     }
+
+    static Reservation reservation(String id, String from, String till, Long places) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        new ReservationBuilder()
+                .id(id)
+                .from(LocalDateTime.parse(from, formatter))
+                .till(LocalDateTime.parse(till, formatter))
+                .places(places)
+                .build()
+    }
 }

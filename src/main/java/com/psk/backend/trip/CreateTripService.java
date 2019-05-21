@@ -1,6 +1,6 @@
 package com.psk.backend.trip;
 
-import com.psk.backend.appartment.reservation.Reservation;
+import com.psk.backend.appartment.reservation.ReservationMapper;
 import com.psk.backend.appartment.reservation.ReservationRepository;
 import com.psk.backend.appartment.reservation.value.PlacementFilter;
 import com.psk.backend.appartment.reservation.value.PlacementResult;
@@ -18,10 +18,14 @@ public class CreateTripService {
 
     private final TripRepository tripRepository;
     private final ReservationRepository reservationRepository;
+    private final ReservationMapper reservationMapper;
 
-    public CreateTripService(TripRepository tripRepository, ReservationRepository reservationRepository) {
+    public CreateTripService(TripRepository tripRepository,
+                             ReservationRepository reservationRepository,
+                             ReservationMapper reservationMapper) {
         this.tripRepository = tripRepository;
         this.reservationRepository = reservationRepository;
+        this.reservationMapper = reservationMapper;
     }
 
     public Try<EntityId> create(TripForm form) {
@@ -31,7 +35,7 @@ public class CreateTripService {
                 .flatMap(a -> validateReservation(a, form))
                 .flatMap(a -> tripRepository.insert(form))
                 .flatMap(entityId -> reservationRepository
-                        .insert(buildReservation(entityId.getId(), form))
+                        .insert(reservationMapper.fromTrip(form).withTrip(entityId.getId()))
                         .map(r -> entityId));
     }
 
@@ -41,7 +45,8 @@ public class CreateTripService {
                         new PlacementFilter(form.getReservationBegin(), form.getReservationEnd()))
                 .flatMap(a -> validateReservation(a, form))
                 .flatMap(a -> tripRepository.update(id, form))
-                .flatMap(entityId -> reservationRepository.updateByTripId(id, buildReservation(id, form))
+                .flatMap(entityId -> reservationRepository
+                        .updateByTripId(id, reservationMapper.fromTrip(form).withTrip(entityId.getId()))
                         .map(r -> entityId));
     }
 
@@ -51,15 +56,5 @@ public class CreateTripService {
         } else {
             return successful(result);
         }
-    }
-
-    private Reservation buildReservation(String tripId, TripForm form) {
-        return Reservation.builder()
-                .withTrip(tripId)
-                .from(form.getReservationBegin())
-                .till(form.getReservationEnd())
-                .withAppartment(form.getDestination())
-                .withPlaces((long) form.getUsers().size())
-                .build();
     }
 }

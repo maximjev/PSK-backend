@@ -1,6 +1,8 @@
 package com.psk.backend.appartment.reservation;
 
+import com.google.common.collect.Range;
 import com.psk.backend.user.AuditUser;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.*;
@@ -11,6 +13,7 @@ import java.time.LocalDateTime;
 @Document
 @Getter
 @Setter
+@EqualsAndHashCode(of = { "id", "places", "from", "till", "appartmentId", "tripId"})
 public class Reservation {
 
     @Id
@@ -38,40 +41,14 @@ public class Reservation {
     @LastModifiedBy
     private AuditUser updatedBy;
 
-    public static Builder builder() {
-        return new Reservation().new Builder();
+    public Reservation withTrip(String tripId) {
+        this.tripId = tripId;
+        return this;
     }
 
-    public class Builder {
-        private Builder() {}
 
-        public Builder withPlaces(Long places) {
-            Reservation.this.places = places;
-            return this;
-        }
-
-        public Builder withAppartment(String appartment) {
-            Reservation.this.appartmentId = appartmentId;
-            return this;
-        }
-
-        public Builder from(LocalDateTime from) {
-            Reservation.this.from = from;
-            return this;
-        }
-
-        public Builder till(LocalDateTime till) {
-            Reservation.this.till = till;
-            return this;
-        }
-
-        public Builder withTrip(String trip) {
-            Reservation.this.tripId = trip;
-            return this;
-        }
-
-        public Reservation build() {
-            return Reservation.this;
-        }
+    public boolean intersects(Reservation reservation) {
+        return !reservation.equals(this) && Range.closed(reservation.getFrom(), reservation.getTill())
+                .isConnected(Range.closed(this.from, this.till));
     }
 }

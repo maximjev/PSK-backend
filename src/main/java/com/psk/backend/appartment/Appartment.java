@@ -18,6 +18,8 @@ public class Appartment {
     @Id
     private String id;
 
+    private String name;
+
     private Address address;
 
     private Long size;

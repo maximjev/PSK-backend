@@ -456,7 +456,7 @@ class ReservationRepositoryTest extends Specification {
         placementResult.takenPlaces == expected.takenPlaces
     }
 
-    def "should calculate available places on three not intersecting two left three middle reservations"() {
+    def "should calculate available places on three not intersecting middle and two left intersecting reservations"() {
         setup:
         def appartment = appartment()
         def id = '123'
@@ -513,6 +513,40 @@ class ReservationRepositoryTest extends Specification {
                 LocalDateTime.of(2019, 1, 22, 12, 0)
         )
         def expected = new PlacementResult(4, 5)
+        expected.calculateAvailablePlaces(6)
+
+        when:
+        def result = repository.availablePlaces(id, filter)
+
+        then:
+        result.isSuccess()
+        def placementResult = result.getOrElse(null)
+        placementResult.availablePlaces == expected.availablePlaces
+        placementResult.reservations == expected.reservations
+        placementResult.takenPlaces == expected.takenPlaces
+    }
+
+    def "should calculate available places on three intersecting middle and one not intersecting right reservations"() {
+        setup:
+        def appartment = appartment()
+        def id = '123'
+        appartment.id = id
+        operations.insert(appartment, "appartment")
+
+
+        def reservations = [
+                reservation('1', '2019-01-09 12:00', '2019-01-12 12:00'),
+                reservation('2', '2019-01-11 13:00', '2019-01-14 13:00'),
+                reservation('3', '2019-01-16 13:00', '2019-01-18 13:00'),
+                reservation('4', '2019-01-19 13:00', '2019-01-24 13:00'),
+        ]
+        operations.insertAll(reservations)
+
+        def filter = new PlacementFilter(
+                LocalDateTime.of(2019, 1, 4, 12, 0),
+                LocalDateTime.of(2019, 1, 22, 12, 0)
+        )
+        def expected = new PlacementResult(4, 4)
         expected.calculateAvailablePlaces(6)
 
         when:

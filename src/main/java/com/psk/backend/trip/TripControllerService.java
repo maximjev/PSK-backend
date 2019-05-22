@@ -8,6 +8,9 @@ import io.atlassian.fugue.Try;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import java.time.LocalDateTime;
+import static com.psk.backend.common.Error.UNEXPECTED_ERROR;
+import static io.atlassian.fugue.Try.failure;
 
 @Service
 public class TripControllerService {
@@ -41,5 +44,12 @@ public class TripControllerService {
 
     public Try<EntityId> confirm(String id, String userId) { return repository.updateStatus(id, userId, TripUserStatus.CONFIRMED);}
 
-    public Try<EntityId> decline(String id, String userId) { return repository.updateStatus(id, userId, TripUserStatus.DECLINED);}
+    public Try<EntityId> decline(String id, String userId) {
+        return repository.findById(id).flatMap(trip -> {
+           if (trip.getDepartion().isAfter(LocalDateTime.now())) return repository.updateStatus(id, userId, TripUserStatus.DECLINED);
+           return failure(UNEXPECTED_ERROR.entity(id));
+        });
+    }
+
+    public Page<TripListView> listByUser(Pageable page, String userId) {return repository.listByUser(page, userId); }
 }

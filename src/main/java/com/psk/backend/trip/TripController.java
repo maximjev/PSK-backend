@@ -71,4 +71,10 @@ public class TripController {
     public ResponseEntity<?> decline(@PathVariable("id") String id, @PathVariable("userId") String userId) {
         return service.decline(id, userId).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
     }
+
+    @CommonErrors
+    @ApiOperation(value = "Get paged user's trip list", response = TripListView.class)
+    @GetMapping("/user/{userId}")
+    public Page<TripListView> getByUser(Pageable page, @PathVariable("userId") String userId) { return service.listByUser(page, userId); }
+
 }

@@ -101,4 +101,24 @@ public class TripRepository {
         });
     }
 
+
+
+    public Page<TripListView> listByUser(Pageable page, String userId) {
+        var conditions = new Criteria();
+
+        var total = mongoOperations.count(query(conditions), Trip.class);
+
+        var entities = mongoOperations.find(
+                query(conditions)
+                        .skip(page.getOffset())
+                        .limit(page.getPageSize()),
+                Trip.class)
+                .stream()
+                .filter(trip -> trip.getUsers().stream()
+                        .anyMatch(u -> u.getId().equals(userId)))
+                .map(mapper::listView)
+                .collect(toList());
+
+        return new PageImpl<>(entities, page, total);
+    }
 }

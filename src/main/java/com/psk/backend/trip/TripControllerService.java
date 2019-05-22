@@ -38,4 +38,8 @@ public class TripControllerService {
     public Try<EntityId> delete(String id) {
         return repository.delete(id);
     }
+
+    public Try<EntityId> confirm(String id, String userId) { return repository.updateStatus(id, userId, TripUserStatus.CONFIRMED);}
+
+    public Try<EntityId> decline(String id, String userId) { return repository.updateStatus(id, userId, TripUserStatus.DECLINED);}
 }

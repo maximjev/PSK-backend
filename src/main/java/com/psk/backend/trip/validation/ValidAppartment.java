@@ -1,13 +1,13 @@
 package com.psk.backend.trip.validation;
 
-import com.psk.backend.user.validation.ValidUserRoleValidator;
+
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.*;
 
 @Documented
-@Constraint(validatedBy = ValidUserRoleValidator.class)
+@Constraint(validatedBy = ValidAppartmentValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface ValidAppartment {

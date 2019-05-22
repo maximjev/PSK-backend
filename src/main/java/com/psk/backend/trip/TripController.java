@@ -58,4 +58,17 @@ public class TripController {
     public ResponseEntity<?> update(@PathVariable("id") String id) {
         return service.delete(id).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
     }
+
+    @ApiOperation(value = "Confirm trip", response = EntityId.class)
+    @CommonErrors
+    @PutMapping("/confirm/{id}/{userId}")
+    public ResponseEntity<?> confirm(@PathVariable("id") String id, @PathVariable("userId") String userId) {
+        return service.confirm(id, userId).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
+    }
+    @ApiOperation(value = "Decline trip", response = EntityId.class)
+    @CommonErrors
+    @PutMapping("/decline/{id}/{userId}")
+    public ResponseEntity<?> decline(@PathVariable("id") String id, @PathVariable("userId") String userId) {
+        return service.decline(id, userId).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
+    }
 }

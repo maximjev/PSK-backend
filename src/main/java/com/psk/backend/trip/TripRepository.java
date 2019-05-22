@@ -13,6 +13,8 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 import static com.psk.backend.common.EntityId.entityId;
 import static com.psk.backend.common.Error.OBJECT_NOT_FOUND;
 import static io.atlassian.fugue.Try.failure;
@@ -85,4 +87,18 @@ public class TripRepository {
     public Try<TripView> get(String id) {
         return findById(id).map(mapper::view);
     }
+
+
+    public Try<EntityId> updateStatus(String id, String userId, TripUserStatus status) {
+        return findById(id).flatMap(trip -> {
+            List <TripUser> users= trip.getUsers();
+            users.stream()
+                    .filter(u -> userId.equals(u.getId()))
+                    .forEach(u -> u.setStatus(status));
+            trip.setUsers(users);
+            mongoOperations.save(trip);
+            return successful(entityId(id));
+        });
+    }
+
 }

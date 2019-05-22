@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.mongodb.core.MongoOperations
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.test.context.ActiveProfiles
+import spock.lang.Ignore
 import spock.lang.Specification
 
 import javax.annotation.Resource
@@ -18,7 +19,7 @@ import static com.psk.backend.appartment.reservation.ReservationBuilder.reservat
 
 @SpringBootTest
 @ActiveProfiles("test")
-//@Ignore
+@Ignore
 class ReservationRepositoryTest extends Specification {
 
     @Resource

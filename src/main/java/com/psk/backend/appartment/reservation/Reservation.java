@@ -46,7 +46,6 @@ public class Reservation {
         return this;
     }
 
-
     public boolean intersects(Reservation reservation) {
         return !reservation.equals(this) && Range.closed(reservation.getFrom(), reservation.getTill())
                 .isConnected(Range.closed(this.from, this.till));

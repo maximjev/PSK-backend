@@ -89,8 +89,6 @@ public class UserRepository {
                 .orElseGet(() -> failure(USER_NOT_FOUND.entity(email)));
     }
 
-
-
     public Try<EntityId> update(String userId, UpdateUserForm form) {
         return findById(userId).map(user -> {
             user.setName(form.getName());

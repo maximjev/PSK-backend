@@ -1,17 +1,15 @@
 package com.psk.backend.trip.validation;
 
 
-import com.psk.backend.user.validation.ValidUserRoleValidator;
-
 import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.*;
 
 @Documented
-@Constraint(validatedBy = ValidUserRoleValidator.class)
+@Constraint(validatedBy = ValidUserValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface ValidUsers {
+public @interface ValidUser {
     String message() default "{com.psk.backend.user.validation" +
             ".ValidUsersValidator.message}";
 

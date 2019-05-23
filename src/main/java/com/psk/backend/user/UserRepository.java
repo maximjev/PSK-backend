@@ -4,6 +4,7 @@ import com.psk.backend.common.EntityId;
 import com.psk.backend.user.value.NewUserForm;
 import com.psk.backend.user.value.UpdateUserForm;
 import com.psk.backend.user.value.UserListView;
+import com.psk.backend.user.value.UserView;
 import io.atlassian.fugue.Try;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -96,6 +97,9 @@ public class UserRepository {
             mongoOperations.save(user);
             return entityId(user.getId());
         });
+    }
+    public Try<UserView> get(String id) {
+        return findById(id).map(userMapper::view);
     }
 
 }

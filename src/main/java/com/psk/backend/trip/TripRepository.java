@@ -13,6 +13,8 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 import static com.psk.backend.common.EntityId.entityId;
 import static com.psk.backend.common.Error.OBJECT_NOT_FOUND;
 import static io.atlassian.fugue.Try.failure;
@@ -31,6 +33,9 @@ public class TripRepository {
     public TripRepository(MongoOperations mongoOperations, TripMapper mapper) {
         this.mongoOperations = mongoOperations;
         this.mapper = mapper;
+    }
+    public List<Trip> getAllTrips(){
+        return mongoOperations.findAll(Trip.class);
     }
 
     public Page<TripListView> list(Pageable page) {
@@ -84,5 +89,42 @@ public class TripRepository {
 
     public Try<TripView> get(String id) {
         return findById(id).map(mapper::view);
+    }
+
+    public Try<EntityId> updateStatus(String id, String userId, TripUserStatus status) {
+        return findById(id).flatMap(trip -> {
+            List <TripUser> users= trip.getUsers();
+            users.stream()
+                    .filter(u -> userId.equals(u.getId()))
+                    .forEach(u -> u.setStatus(status));
+            mongoOperations.save(trip);
+            return successful(entityId(id));
+
+        });
+    }
+
+    public Page<TripListView> listByUser(Pageable page, String userId) {
+        var conditions = new Criteria();
+
+        var total = mongoOperations.count(query(conditions)
+                .addCriteria(where("users").elemMatch(Criteria.where("id").is(userId))),
+                Trip.class);
+
+        var entities = mongoOperations.find(
+                query(conditions)
+                        .addCriteria(where("users").elemMatch(Criteria.where("id").is(userId)))
+                        .skip(page.getPageSize() * page.getPageNumber())
+                        .limit(page.getPageSize()),
+                Trip.class)
+                .stream()
+                .map(mapper::listView)
+                .collect(toList());
+
+        return new PageImpl<>(entities, page, total);
+    }
+
+    public Try<EntityId> save(Trip trip){
+        mongoOperations.save(trip);
+        return successful(entityId(trip.getId()));
     }
 }

@@ -53,7 +53,7 @@ public class CreateTripService {
     }
 
     private Try<PlacementResult> validateReservation(PlacementResult result, TripForm form) {
-        if (result.getAvailablePlaces() >= form.getUsers().size()) {
+        if (result.getAvailablePlaces() <= form.getUsers().size()) {
             return failure(UNEXPECTED_ERROR.entity("Not enough space in appartment"));
         } else {
             return successful(result);

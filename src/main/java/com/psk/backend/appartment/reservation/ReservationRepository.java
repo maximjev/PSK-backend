@@ -54,7 +54,7 @@ public class ReservationRepository {
 
         var entities = mongoOperations.find(
                 query(conditions)
-                        .skip(page.getOffset())
+                        .skip(page.getPageSize() * page.getPageNumber())
                         .limit(page.getPageSize()),
                 Reservation.class)
                 .stream()

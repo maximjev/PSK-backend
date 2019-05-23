@@ -1,5 +1,8 @@
 package com.psk.backend.trip;
 
+import com.psk.backend.appartment.Address;
+import com.psk.backend.appartment.AppartmentRepository;
+import com.psk.backend.common.address.AddressView;
 import com.psk.backend.config.BaseMapperConfig;
 import com.psk.backend.trip.value.TripForm;
 import com.psk.backend.trip.value.TripListView;
@@ -19,8 +22,14 @@ public abstract class TripMapper {
     @Resource
     private UserRepository userRepository;
 
+    @Resource
+    private AppartmentRepository appartmentRepository;
+
+    @Mapping(target = "status", expression = "java(TripStatus.DRAFT)")
     abstract Trip create(TripForm form);
 
+    @Mapping(source = "source", target = "sourceAddress")
+    @Mapping(source = "destination", target = "destinationAddress")
     abstract TripListView listView(Trip trip);
 
     abstract TripView view(Trip trip);
@@ -36,4 +45,12 @@ public abstract class TripMapper {
 
     @Mapping(target = "status", expression = "java(TripUserStatus.CONFIRMATION_PENDING)")
     abstract TripUser user(User user);
+
+    public AddressView addressView(String appartmentId) {
+        return appartmentRepository.findById(appartmentId)
+                .map(a -> this.address(a.getAddress()))
+                .getOrElse(null);
+    }
+
+    public abstract AddressView address(Address address);
 }

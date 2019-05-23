@@ -6,6 +6,7 @@ import com.psk.backend.appartment.reservation.value.PlacementFilter;
 import com.psk.backend.appartment.reservation.value.PlacementResult;
 import com.psk.backend.common.EntityId;
 import com.psk.backend.trip.value.TripForm;
+import com.psk.backend.trip.value.TripUserForm;
 import io.atlassian.fugue.Try;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,7 @@ public class CreateTripService {
     }
 
     public Try<EntityId> create(TripForm form) {
+        form.getUsers().stream().filter(TripUserForm::isInAppartment).count();
         return reservationRepository
                 .availablePlaces(form.getDestination(),
                         new PlacementFilter(form.getReservationBegin(), form.getReservationEnd()))

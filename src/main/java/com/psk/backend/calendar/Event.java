@@ -1,4 +1,4 @@
-package com.psk.backend.calendars;
+package com.psk.backend.calendar;
 
 import java.time.LocalDateTime;
 import java.util.List;

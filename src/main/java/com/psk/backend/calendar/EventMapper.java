@@ -1,4 +1,4 @@
-package com.psk.backend.calendars;
+package com.psk.backend.calendar;
 
 import com.psk.backend.config.BaseMapperConfig;
 import com.psk.backend.user.User;

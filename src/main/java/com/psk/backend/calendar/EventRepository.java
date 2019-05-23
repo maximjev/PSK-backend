@@ -1,4 +1,4 @@
-package com.psk.backend.calendars;
+package com.psk.backend.calendar;
 
 import com.mongodb.client.result.DeleteResult;
 import com.psk.backend.common.EntityId;
@@ -9,9 +9,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Repository;
-import com.psk.backend.calendars.value.EventForm;
-import com.psk.backend.calendars.value.EventListView;
-import com.psk.backend.calendars.value.EventView;
+import com.psk.backend.calendar.value.EventForm;
+import com.psk.backend.calendar.value.EventListView;
+import com.psk.backend.calendar.value.EventView;
 
 import static com.psk.backend.common.EntityId.entityId;
 import static com.psk.backend.common.Error.OBJECT_NOT_FOUND;

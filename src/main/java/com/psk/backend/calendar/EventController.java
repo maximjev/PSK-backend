@@ -1,4 +1,4 @@
-package com.psk.backend.calendars;
+package com.psk.backend.calendar;
 
 import com.psk.backend.common.CommonErrors;
 import com.psk.backend.common.EntityId;
@@ -8,12 +8,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.psk.backend.calendars.value.EventForm;
-import com.psk.backend.calendars.value.EventListView;
-import com.psk.backend.calendars.value.EventView;
+import com.psk.backend.calendar.value.EventForm;
+import com.psk.backend.calendar.value.EventListView;
+import com.psk.backend.calendar.value.EventView;
 
 @RestController
-@RequestMapping("/calendars")
+@RequestMapping("/calendar")
 public class EventController {
 
     @Autowired

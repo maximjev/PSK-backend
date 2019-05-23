@@ -1,4 +1,4 @@
-package com.psk.backend.calendars;
+package com.psk.backend.calendar;
 
 import com.psk.backend.common.EntityId;
 import com.psk.backend.trip.value.EventForm;

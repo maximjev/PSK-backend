@@ -42,7 +42,7 @@ public class TripRepository {
 
         var entities = mongoOperations.find(
                 query(conditions)
-                        .skip(page.getOffset())
+                        .skip(page.getPageSize() * page.getPageNumber())
                         .limit(page.getPageSize()),
                 Trip.class)
                 .stream()

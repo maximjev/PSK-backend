@@ -45,7 +45,7 @@ public class UserRepository {
 
         var users = mongoOperations.find(
                 query(conditions)
-                        .skip(page.getOffset())
+                        .skip(page.getPageSize() * page.getPageNumber())
                         .limit(page.getPageSize()),
                 User.class)
                 .stream()

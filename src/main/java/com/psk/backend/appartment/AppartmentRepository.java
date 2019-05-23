@@ -39,7 +39,7 @@ public class AppartmentRepository {
 
         var appartments = mongoOperations.find(
                 query(conditions)
-                        .skip(page.getOffset())
+                        .skip(page.getPageSize() * page.getPageNumber())
                         .limit(page.getPageSize()),
                 Appartment.class)
                 .stream()

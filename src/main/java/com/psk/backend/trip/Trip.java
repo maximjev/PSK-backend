@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -22,11 +23,21 @@ public class Trip {
 
     private List<TripUser> users;
 
+    private TripStatus status;
+
     private LocalDateTime departion;
 
     private LocalDateTime reservationBegin;
 
     private LocalDateTime reservationEnd;
+
+    private String description;
+
+    private Expenses flight;
+
+    private Expenses hotel;
+
+    private BigDecimal otherExpenses;
 
     @CreatedDate
     private LocalDateTime createdAt;

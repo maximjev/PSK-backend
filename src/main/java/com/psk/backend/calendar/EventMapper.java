@@ -30,7 +30,7 @@ public abstract class EventMapper {
     public EventUser user(EventUserForm form) {
         return userRepository
                 .findById(form.getUserId()).map(u ->
-                        this.user(u).isAtEvent(form.isAtEvent())) //this.user(u).isInAppartment(form.isInAppartment()))
+                        this.user(u).isAtEvent(form.isAtEvent()))
                 .getOrElse(null);
     }
 

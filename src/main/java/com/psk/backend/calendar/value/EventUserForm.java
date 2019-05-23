@@ -11,5 +11,5 @@ public class EventUserForm {
     @ValidUser
     private String userId;
 
-    private boolean atEvent; //?
+    private boolean atEvent;
 }

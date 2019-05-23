@@ -108,9 +108,8 @@ public class TripRepository {
         var entities = mongoOperations.find(
                 query(conditions)
                         .addCriteria(where("users").elemMatch(Criteria.where("id").is(userId)))
-                        .skip(page.getOffset())
-                        .limit(page.getPageSize())
-                ,
+                        .skip(page.getPageSize() * page.getPageNumber())
+                        .limit(page.getPageSize()),
                 Trip.class)
                 .stream()
                 .map(mapper::listView)

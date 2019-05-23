@@ -88,20 +88,17 @@ public class TripRepository {
         return findById(id).map(mapper::view);
     }
 
-
     public Try<EntityId> updateStatus(String id, String userId, TripUserStatus status) {
         return findById(id).flatMap(trip -> {
             List <TripUser> users= trip.getUsers();
             users.stream()
                     .filter(u -> userId.equals(u.getId()))
                     .forEach(u -> u.setStatus(status));
-            trip.setUsers(users);
             mongoOperations.save(trip);
             return successful(entityId(id));
+
         });
     }
-
-
 
     public Page<TripListView> listByUser(Pageable page, String userId) {
         var conditions = new Criteria();
@@ -110,12 +107,12 @@ public class TripRepository {
 
         var entities = mongoOperations.find(
                 query(conditions)
+                        .addCriteria(where("users").elemMatch(Criteria.where("id").is(userId)))
                         .skip(page.getOffset())
-                        .limit(page.getPageSize()),
+                        .limit(page.getPageSize())
+                ,
                 Trip.class)
                 .stream()
-                .filter(trip -> trip.getUsers().stream()
-                        .anyMatch(u -> u.getId().equals(userId)))
                 .map(mapper::listView)
                 .collect(toList());
 

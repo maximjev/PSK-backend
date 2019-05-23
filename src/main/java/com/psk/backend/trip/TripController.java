@@ -61,13 +61,13 @@ public class TripController {
 
     @ApiOperation(value = "Confirm trip", response = EntityId.class)
     @CommonErrors
-    @PutMapping("/confirm/{id}/{userId}")
+    @PutMapping("/{id}/{userId}/confirm/")
     public ResponseEntity<?> confirm(@PathVariable("id") String id, @PathVariable("userId") String userId) {
         return service.confirm(id, userId).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
     }
     @ApiOperation(value = "Decline trip", response = EntityId.class)
     @CommonErrors
-    @PutMapping("/decline/{id}/{userId}")
+    @PutMapping("/{id}/{userId}/decline/")
     public ResponseEntity<?> decline(@PathVariable("id") String id, @PathVariable("userId") String userId) {
         return service.decline(id, userId).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
     }

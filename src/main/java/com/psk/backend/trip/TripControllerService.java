@@ -42,11 +42,20 @@ public class TripControllerService {
         return repository.delete(id);
     }
 
-    public Try<EntityId> confirm(String id, String userId) { return repository.updateStatus(id, userId, TripUserStatus.CONFIRMED);}
+    public Try<EntityId> confirm(String id, String userId) {
+        return repository.findById(id).flatMap(trip -> {
+            if (trip.getDepartion().isAfter(LocalDateTime.now())) {
+                return repository.updateStatus(id, userId, TripUserStatus.CONFIRMED);
+            }
+            return failure(UNEXPECTED_ERROR.entity(id));
+        });
+    }
 
     public Try<EntityId> decline(String id, String userId) {
         return repository.findById(id).flatMap(trip -> {
-           if (trip.getDepartion().isAfter(LocalDateTime.now())) return repository.updateStatus(id, userId, TripUserStatus.DECLINED);
+           if (trip.getDepartion().isAfter(LocalDateTime.now())) {
+               return repository.updateStatus(id, userId, TripUserStatus.DECLINED);
+           }
            return failure(UNEXPECTED_ERROR.entity(id));
         });
     }

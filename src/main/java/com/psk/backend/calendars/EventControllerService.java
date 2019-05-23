@@ -1,4 +1,4 @@
-package com.psk.backend.user;
+package com.psk.backend.calendars;
 
 import com.psk.backend.common.EntityId;
 import io.atlassian.fugue.Try;

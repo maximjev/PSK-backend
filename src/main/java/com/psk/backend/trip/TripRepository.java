@@ -34,6 +34,9 @@ public class TripRepository {
         this.mongoOperations = mongoOperations;
         this.mapper = mapper;
     }
+    public List<Trip> getAllTrips(){
+        return mongoOperations.findAll(Trip.class);
+    }
 
     public Page<TripListView> list(Pageable page) {
         var conditions = new Criteria();
@@ -103,7 +106,9 @@ public class TripRepository {
     public Page<TripListView> listByUser(Pageable page, String userId) {
         var conditions = new Criteria();
 
-        var total = mongoOperations.count(query(conditions), Trip.class);
+        var total = mongoOperations.count(query(conditions)
+                .addCriteria(where("users").elemMatch(Criteria.where("id").is(userId))),
+                Trip.class);
 
         var entities = mongoOperations.find(
                 query(conditions)
@@ -116,5 +121,10 @@ public class TripRepository {
                 .collect(toList());
 
         return new PageImpl<>(entities, page, total);
+    }
+
+    public Try<EntityId> save(Trip trip){
+        mongoOperations.save(trip);
+        return successful(entityId(trip.getId()));
     }
 }

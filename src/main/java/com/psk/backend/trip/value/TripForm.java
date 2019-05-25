@@ -40,11 +40,13 @@ public class TripForm {
     @NotNull
     private LocalDateTime departion;
 
-    @NotNull
     private LocalDateTime reservationBegin;
 
-    @NotNull
     private LocalDateTime reservationEnd;
+
+    private LocalDateTime arrival;
+
+    private boolean noReservation;
 
     @PositiveOrZero
     private BigDecimal otherExpenses;

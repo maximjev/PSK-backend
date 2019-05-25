@@ -29,6 +29,10 @@ public class Trip {
 
     private LocalDateTime departion;
 
+    private LocalDateTime arrival;
+
+    private boolean noReservation;
+
     private LocalDateTime reservationBegin;
 
     private LocalDateTime reservationEnd;
@@ -78,6 +82,9 @@ public class Trip {
 
     public Long getUserInAppartmentCount() {
         return getUsers().stream().filter(TripUser::isInAppartment).count();
+    }
 
+    public boolean hasReservation() {
+        return !this.noReservation;
     }
 }

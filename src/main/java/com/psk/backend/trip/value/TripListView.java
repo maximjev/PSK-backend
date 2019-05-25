@@ -18,4 +18,6 @@ public class TripListView {
     private LocalDateTime departion;
     private LocalDateTime reservationBegin;
     private LocalDateTime reservationEnd;
+
+    private LocalDateTime createdAt;
 }

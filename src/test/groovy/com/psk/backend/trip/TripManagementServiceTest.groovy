@@ -1,5 +1,6 @@
 package com.psk.backend.trip
 
+import com.psk.backend.appartment.Appartment
 import com.psk.backend.appartment.reservation.Reservation
 import com.psk.backend.appartment.reservation.ReservationRepository
 import com.psk.backend.trip.value.TripForm
@@ -21,7 +22,6 @@ import static java.time.LocalDateTime.of
 
 @SpringBootTest
 @ActiveProfiles("test")
-//@Ignore
 class TripManagementServiceTest extends Specification {
 
     @Resource
@@ -39,6 +39,7 @@ class TripManagementServiceTest extends Specification {
     def cleanup() {
         operations.remove(new Query(), Trip)
         operations.remove(new Query(), Reservation)
+        operations.remove(new Query(), Appartment)
         operations.remove(new Query(), User)
     }
 

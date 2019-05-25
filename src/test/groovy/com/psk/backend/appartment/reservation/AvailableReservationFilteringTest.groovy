@@ -3,7 +3,6 @@ package com.psk.backend.appartment.reservation
 import com.psk.backend.appartment.Appartment
 import com.psk.backend.appartment.reservation.value.PlacementFilter
 import com.psk.backend.appartment.reservation.value.PlacementResult
-import com.psk.backend.user.User
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.mongodb.core.MongoOperations
 import org.springframework.data.mongodb.core.query.Query
@@ -18,7 +17,6 @@ import static com.psk.backend.appartment.reservation.ReservationBuilder.reservat
 
 @SpringBootTest
 @ActiveProfiles("test")
-//@Ignore
 class AvailableReservationFilteringTest extends Specification {
 
     @Resource
@@ -27,7 +25,6 @@ class AvailableReservationFilteringTest extends Specification {
     @Resource
     ReservationRepository repository
 
-    User creator
 
     def cleanup() {
         operations.remove(new Query(), Reservation)

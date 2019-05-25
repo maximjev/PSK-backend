@@ -15,7 +15,6 @@ import static com.psk.backend.appartment.AppartmentBuilder.appartment
 
 @SpringBootTest
 @ActiveProfiles("test")
-//@Ignore
 class AppartmentRepositoryTest extends Specification {
 
     @Resource
@@ -33,8 +32,8 @@ class AppartmentRepositoryTest extends Specification {
         def form = new AppartmentForm(
                 address: new AddressForm(
                         city: 'Vilnius',
-                        street: 'Gedimino',
-                        appartmentNumber: '5'
+                        street: 'Naugarduko',
+                        appartmentNumber: '24'
                 ),
                 size: 6
         )
@@ -80,8 +79,8 @@ class AppartmentRepositoryTest extends Specification {
         def form = new AppartmentForm(
                 address: new AddressForm(
                         city: 'Vilnius',
-                        street: 'Gedimino',
-                        appartmentNumber: '5'
+                        street: 'Naugarduko',
+                        appartmentNumber: '24'
                 ),
                 size: 5
         )

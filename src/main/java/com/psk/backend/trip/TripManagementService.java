@@ -7,6 +7,7 @@ import com.psk.backend.appartment.reservation.value.PlacementResult;
 import com.psk.backend.common.EntityId;
 import com.psk.backend.trip.value.TripForm;
 import com.psk.backend.trip.value.TripMergeForm;
+import com.psk.backend.trip.value.TripUserForm;
 import io.atlassian.fugue.Try;
 import org.springframework.stereotype.Service;
 
@@ -63,11 +64,18 @@ public class TripManagementService {
     }
 
     private Try<PlacementResult> validateReservation(PlacementResult result, TripForm form) {
-        if ((result.getAvailablePlaces() >= form.getUserInAppartmentCount()) || form.isNoReservation()) {
+        if ((result.getAvailablePlaces() > getUserInAppartmentCount(form)) || form.isNoReservation()) {
             return successful(result);
         } else {
             return failure(UNEXPECTED_ERROR.entity("Not enough space in appartment"));
         }
+    }
+
+    public Long getUserInAppartmentCount(TripForm form) {
+        return form.getUsers()
+                .stream()
+                .filter(TripUserForm::isInAppartment)
+                .count();
     }
 
     public Try<EntityId> merge(TripMergeForm form) {

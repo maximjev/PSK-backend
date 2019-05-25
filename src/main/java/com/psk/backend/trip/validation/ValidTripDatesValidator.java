@@ -19,7 +19,7 @@ public class ValidTripDatesValidator implements ConstraintValidator<ValidTripDat
     public boolean isValid(TripForm value, ConstraintValidatorContext context) {
         if(value.isNoReservation()) {
             return value.getDepartion().isAfter(LocalDateTime.now())
-                    && value.getArrival().isBefore(value.getDepartion());
+                    && value.getArrival().isAfter(value.getDepartion());
         } else {
             return value.getDepartion().isAfter(LocalDateTime.now())
                     && value.getDepartion().isBefore(value.getReservationBegin())

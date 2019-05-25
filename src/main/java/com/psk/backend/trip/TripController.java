@@ -4,6 +4,7 @@ import com.psk.backend.common.CommonErrors;
 import com.psk.backend.common.EntityId;
 import com.psk.backend.trip.value.TripForm;
 import com.psk.backend.trip.value.TripListView;
+import com.psk.backend.trip.value.TripMergeForm;
 import com.psk.backend.trip.value.TripView;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.Page;
@@ -77,4 +78,18 @@ public class TripController {
     @GetMapping("/user/{userId}")
     public Page<TripListView> getByUser(Pageable page, @PathVariable("userId") String userId) { return service.listByUser(page, userId); }
 
+
+    @ApiOperation(value = "Get paged mergable trips", response = TripListView.class)
+    @CommonErrors
+    @GetMapping("/{id}/match")
+    public ResponseEntity<?> match(@PathVariable("id") String id, Pageable page) {
+        return service.match(id, page).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
+    }
+
+    @ApiOperation(value = "Merge trips", response = EntityId.class)
+    @CommonErrors
+    @PostMapping("/merge")
+    public ResponseEntity<?> merge(TripMergeForm form) {
+        return service.merge(form).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
+    }
 }

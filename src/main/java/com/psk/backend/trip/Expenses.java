@@ -12,4 +12,11 @@ import java.math.BigDecimal;
 public class Expenses {
     private Long count;
     private BigDecimal price;
+    private boolean isOrdered;
+
+    public void merge(Expenses other) {
+        this.count += other.getCount();
+        this.price = this.price.add(other.getPrice());
+        this.isOrdered = this.isOrdered && other.isOrdered();
+    }
 }

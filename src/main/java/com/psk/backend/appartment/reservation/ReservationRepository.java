@@ -2,6 +2,7 @@ package com.psk.backend.appartment.reservation;
 
 
 import com.google.common.collect.ImmutableList;
+import com.mongodb.client.result.DeleteResult;
 import com.psk.backend.appartment.AppartmentRepository;
 import com.psk.backend.appartment.reservation.aggregations.QueryResultCount;
 import com.psk.backend.appartment.reservation.value.PlacementFilter;
@@ -167,6 +168,15 @@ public class ReservationRepository {
         });
     }
 
+    public Try<EntityId> updatePlacesByTripId(String id, Long places) {
+        return findByTripId(id).map(r -> {
+            r.setPlaces(places);
+            mongoOperations.save(r);
+            return entityId(r.getId());
+        });
+    }
+
+
     public Try<Reservation> findByTripId(String id) {
         return mongoOperations
                 .query(Reservation.class)
@@ -174,5 +184,15 @@ public class ReservationRepository {
                 .one()
                 .map(Try::successful)
                 .orElseGet(() -> failure(OBJECT_NOT_FOUND.entity(Reservation.class.getName(), id)));
+    }
+
+    public Try<EntityId> deleteByTripId(String tripId) {
+        DeleteResult result = mongoOperations.remove(
+                query(where("tripId").is(tripId)),
+                Reservation.class
+        );
+        return result.getDeletedCount() > 0
+                ? successful(entityId(tripId))
+                : failure(OBJECT_NOT_FOUND.entity(tripId));
     }
 }

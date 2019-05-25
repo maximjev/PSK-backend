@@ -1,6 +1,6 @@
-package com.psk.backend.trip.validation;
+package com.psk.backend.common.validation;
 
-import com.psk.backend.appartment.AppartmentRepository;
+import com.psk.backend.trip.TripRepository;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -9,13 +9,13 @@ import javax.validation.ConstraintValidatorContext;
 
 
 @Component
-public class ValidAppartmentValidator implements ConstraintValidator<ValidAppartment, String> {
+public class ValidTripValidator implements ConstraintValidator<ValidTrip, String> {
 
     @Resource
-    private AppartmentRepository repository;
+    private TripRepository repository;
 
     @Override
-    public void initialize(ValidAppartment constraintAnnotation) {
+    public void initialize(ValidTrip constraintAnnotation) {
     }
 
     @Override

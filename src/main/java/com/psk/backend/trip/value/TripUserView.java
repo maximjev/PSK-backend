@@ -10,4 +10,5 @@ public class TripUserView {
     private String id;
     private String name;
     private String surname;
+    private boolean inAppartment;
 }

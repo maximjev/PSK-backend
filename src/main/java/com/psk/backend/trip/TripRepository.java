@@ -39,8 +39,24 @@ public class TripRepository {
     }
 
     public Page<TripListView> list(Pageable page) {
-        var conditions = new Criteria();
+        return listView(page, new Criteria());
+    }
 
+    public Try<Page<TripListView>> match(String id, Pageable page) {
+        return findById(id).flatMap(t -> {
+            Criteria criteria = new Criteria().orOperator(
+                    where("departion").lte(t.getDepartion().plusDays(1)),
+                    where("departion").gte(t.getDepartion().minusDays(1))
+            ).andOperator(
+                    where("status").is(TripStatus.DRAFT),
+                    where("source").is(t.getSource()),
+                    where("destination").is(t.getDestination()));
+
+            return successful(listView(page, criteria));
+        });
+    }
+
+    private Page<TripListView> listView(Pageable page, Criteria conditions) {
         var total = mongoOperations.count(query(conditions), Trip.class);
 
         var entities = mongoOperations.find(
@@ -59,6 +75,10 @@ public class TripRepository {
         Trip entity = mapper.create(form);
         mongoOperations.insert(entity);
         return successful(entityId(entity.getId()));
+    }
+
+    public Try<EntityId> save(Trip trip) {
+        return successful(entityId(mongoOperations.save(trip).getId()));
     }
 
     public Try<EntityId> update(String id, TripForm form) {

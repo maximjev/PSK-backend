@@ -13,6 +13,7 @@ public class TripView {
     private String id;
     private String name;
     private String source;
+    private boolean noReservation;
     private TripStatus status;
     private String destination;
     private LocalDateTime departion;

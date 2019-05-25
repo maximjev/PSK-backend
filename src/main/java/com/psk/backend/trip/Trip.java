@@ -29,6 +29,10 @@ public class Trip {
 
     private LocalDateTime departion;
 
+    private LocalDateTime arrival;
+
+    private boolean noReservation;
+
     private LocalDateTime reservationBegin;
 
     private LocalDateTime reservationEnd;
@@ -58,15 +62,37 @@ public class Trip {
     public boolean isMergeableWith(Trip other) {
         return this.departion.plusDays(1).isAfter(other.getDepartion())
                 && this.departion.minusDays(1).isBefore(other.getDepartion())
-                && this.source.equals(other.getDestination())
+                && this.source.equals(other.getSource())
                 && this.destination.equals(other.getDestination())
                 && this.status.equals(TripStatus.DRAFT);
     }
 
     public Trip merge(Trip other) {
         this.users.addAll(other.getUsers());
-        this.getFlight().merge(other.getFlight());
-        this.getHotel().merge(other.getHotel());
+
+        if (this.getReservationBegin() == null && this.getReservationEnd() == null) {
+            this.setReservationBegin(other.getReservationBegin());
+            this.setReservationEnd(other.getReservationEnd());
+        }
+
+        if (this.getFlight() != null) {
+            this.getFlight().merge(other.getFlight());
+        } else {
+            this.setFlight(other.getFlight());
+        }
+
+        if (this.getHotel() != null) {
+            this.getHotel().merge(other.getHotel());
+        } else {
+            this.setHotel(other.getHotel());
+        }
+
+        if (this.getCarRent() != null) {
+            this.getCarRent().merge(other.getCarRent());
+        } else {
+            this.setCarRent(other.getCarRent());
+        }
+
         StringBuilder builder = new StringBuilder();
         builder.append("First trip description:\n")
                 .append(this.getDescription())
@@ -78,6 +104,14 @@ public class Trip {
 
     public Long getUserInAppartmentCount() {
         return getUsers().stream().filter(TripUser::isInAppartment).count();
+    }
 
+    public boolean hasReservation() {
+        return !this.noReservation;
+    }
+
+    public void reservationAssigned() {
+        this.noReservation = false;
+        this.arrival = null;
     }
 }

@@ -35,6 +35,8 @@ public class TripForm {
 
     private ExpensesForm hotel;
 
+    private ExpensesForm carRent;
+
     @NotNull
     private LocalDateTime departion;
 

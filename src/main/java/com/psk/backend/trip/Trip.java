@@ -39,6 +39,8 @@ public class Trip {
 
     private Expenses hotel;
 
+    private Expenses carRent;
+
     private BigDecimal otherExpenses;
 
     @CreatedDate

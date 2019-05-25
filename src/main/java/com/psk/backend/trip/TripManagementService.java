@@ -71,7 +71,7 @@ public class TripManagementService {
         }
     }
 
-    public Long getUserInAppartmentCount(TripForm form) {
+    private Long getUserInAppartmentCount(TripForm form) {
         return form.getUsers()
                 .stream()
                 .filter(TripUserForm::isInAppartment)

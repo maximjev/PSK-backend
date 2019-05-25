@@ -33,6 +33,16 @@ class ReservationBuilder {
                 .build()
     }
 
+    static Reservation reservation(String id, String from, String till, String apparmentId) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        new ReservationBuilder()
+                .id(id)
+                .appartmentId(apparmentId)
+                .from(LocalDateTime.parse(from, formatter))
+                .till(LocalDateTime.parse(till, formatter))
+                .build()
+    }
+
     static Reservation reservation(String id, String from, String till, Long places) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         new ReservationBuilder()

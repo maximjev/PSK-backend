@@ -22,5 +22,5 @@ public class TripView {
     private ExpensesForm hotel;
     private ExpensesForm flight;
 
-    private List<TripUserView> users;
+    private List<TripUserForm> users;
 }

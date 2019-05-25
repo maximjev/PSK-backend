@@ -14,4 +14,8 @@ class AppartmentBuilder {
     static Appartment appartment() {
         new AppartmentBuilder().build()
     }
+
+    static Appartment appartment(String id) {
+        new AppartmentBuilder().id(id).build()
+    }
 }

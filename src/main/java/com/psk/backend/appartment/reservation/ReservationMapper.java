@@ -21,6 +21,7 @@ public abstract class ReservationMapper {
 
     @Mapping(source = "reservationBegin", target = "from")
     @Mapping(source = "reservationEnd", target = "till")
+    @Mapping(source = "destination", target = "appartmentId")
     @Mapping(expression = "java((long)form.getUsers()" +
             ".stream()" +
             ".filter(f -> f.isInAppartment())" +

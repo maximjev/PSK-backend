@@ -21,9 +21,11 @@ public class TripForm {
     @NotEmpty
     private String name;
 
+    @NotEmpty
     @ValidAppartment
     private String source;
 
+    @NotEmpty
     @ValidAppartment
     private String destination;
 
@@ -47,15 +49,9 @@ public class TripForm {
 
     private LocalDateTime arrival;
 
+    @NotNull
     private boolean noReservation;
 
     @PositiveOrZero
     private BigDecimal otherExpenses;
-
-    public Long getUserInAppartmentCount() {
-        return getUsers()
-                .stream()
-                .filter(TripUserForm::isInAppartment)
-                .count();
-    }
 }

@@ -7,6 +7,7 @@ import com.psk.backend.appartment.AppartmentRepository;
 import com.psk.backend.appartment.reservation.aggregations.QueryResultCount;
 import com.psk.backend.appartment.reservation.value.PlacementFilter;
 import com.psk.backend.appartment.reservation.value.PlacementResult;
+import com.psk.backend.appartment.reservation.value.ReservationForm;
 import com.psk.backend.appartment.reservation.value.ReservationListView;
 import com.psk.backend.common.EntityId;
 import io.atlassian.fugue.Try;
@@ -93,7 +94,6 @@ public class ReservationRepository {
                 intersectionConditions
         );
 
-
         Long totalPlaces = calculateTotalPlaces(new Criteria().andOperator(conditions, intersectionConditions));
 
         var countQueryOperations = ImmutableList.<AggregationOperation>builder()
@@ -156,12 +156,12 @@ public class ReservationRepository {
         }
     }
 
-    public Try<EntityId> insert(Reservation entity) {
-        mongoOperations.insert(entity);
+    public Try<EntityId> insert(ReservationForm form) {
+        var entity = mongoOperations.insert(mapper.fromForm(form));
         return successful(entityId(entity.getId()));
     }
 
-    public Try<EntityId> updateByTripId(String tripId, Reservation newReservation) {
+    public Try<EntityId> updateByTripId(String tripId, ReservationForm newReservation) {
         return findByTripId(tripId).map(a -> {
             mongoOperations.save(mapper.update(newReservation, a));
             return entityId(a.getId());
@@ -193,7 +193,7 @@ public class ReservationRepository {
                 .orElseGet(() -> failure(OBJECT_NOT_FOUND.entity(Reservation.class.getName(), id)));
     }
 
-    public Try<EntityId> update(String id, Reservation reservation) {
+    public Try<EntityId> update(String id, ReservationForm reservation) {
         return findById(id).map(a -> {
             mongoOperations.save(mapper.update(reservation, a));
             return entityId(a.getId());

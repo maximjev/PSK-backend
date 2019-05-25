@@ -93,6 +93,7 @@ public class TripManagementService {
                                 .flatMap(res -> reservationRepository.deleteByTripId(t2.getId()));
                     } else if (!t1.hasReservation() && t2.hasReservation()) {
                         reservationRepository.reassignTripByTripId(t2.getId(), t1.getId());
+                        t1.reservationAssigned();
                     }
                     return successful(entityId(t1.getId()));
                 })

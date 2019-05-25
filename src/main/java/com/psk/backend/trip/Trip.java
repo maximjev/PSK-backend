@@ -69,6 +69,12 @@ public class Trip {
 
     public Trip merge(Trip other) {
         this.users.addAll(other.getUsers());
+
+        if (this.getReservationBegin() == null && this.getReservationEnd() == null) {
+            this.setReservationBegin(other.getReservationBegin());
+            this.setReservationEnd(other.getReservationEnd());
+        }
+
         if (this.getFlight() != null) {
             this.getFlight().merge(other.getFlight());
         } else {
@@ -102,5 +108,10 @@ public class Trip {
 
     public boolean hasReservation() {
         return !this.noReservation;
+    }
+
+    public void reservationAssigned() {
+        this.noReservation = false;
+        this.arrival = null;
     }
 }

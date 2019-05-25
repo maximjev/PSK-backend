@@ -1,6 +1,7 @@
 package com.psk.backend.appartment
 
 import com.psk.backend.appartment.value.AppartmentForm
+import com.psk.backend.common.address.AddressForm
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.mongodb.core.MongoOperations
 import org.springframework.data.mongodb.core.query.Query
@@ -10,7 +11,6 @@ import spock.lang.Specification
 import javax.annotation.Resource
 
 import static com.psk.backend.PageableBuilder.pageable
-import static com.psk.backend.appartment.AddressBuilder.address
 import static com.psk.backend.appartment.AppartmentBuilder.appartment
 
 @SpringBootTest
@@ -31,7 +31,11 @@ class AppartmentRepositoryTest extends Specification {
     def "should create new appartment"() {
         setup:
         def form = new AppartmentForm(
-                address: address(),
+                address: new AddressForm(
+                        city: 'Vilnius',
+                        street: 'Gedimino',
+                        appartmentNumber: '5'
+                ),
                 size: 6
         )
         def appartment = appartment()
@@ -74,7 +78,11 @@ class AppartmentRepositoryTest extends Specification {
         appartment.id = id
         operations.insert(appartment)
         def form = new AppartmentForm(
-                address: address(),
+                address: new AddressForm(
+                        city: 'Vilnius',
+                        street: 'Gedimino',
+                        appartmentNumber: '5'
+                ),
                 size: 5
         )
 

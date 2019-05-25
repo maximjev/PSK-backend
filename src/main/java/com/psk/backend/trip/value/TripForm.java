@@ -1,6 +1,7 @@
 package com.psk.backend.trip.value;
 
 import com.psk.backend.common.validation.ValidAppartment;
+import com.psk.backend.trip.validation.ValidTripDates;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,6 +14,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@ValidTripDates
 public class TripForm {
 
     @NotEmpty

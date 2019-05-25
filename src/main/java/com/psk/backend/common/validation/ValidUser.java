@@ -10,7 +10,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface ValidUser {
-    String message() default "{com.psk.backend.user.validation" +
+    String message() default "{com.psk.backend.common.validation" +
             ".ValidUserValidator.message}";
 
     Class<?>[] groups() default {};

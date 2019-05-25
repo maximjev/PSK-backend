@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface ValidAppartment {
-    String message() default "{com.psk.backend.user.validation" +
+    String message() default "{com.psk.backend.common.validation" +
             ".ValidAppartment.message}";
 
     Class<?>[] groups() default {};

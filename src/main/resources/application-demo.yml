@@ -2,5 +2,5 @@ spring:
   data:
     mongodb:
       database: psk-db
-      host: localhost
+      host: db
       port: 27017

@@ -2,8 +2,6 @@ spring:
   data:
     mongodb:
       database: psk-db
-      host: db
-      port: 27017
   mail:
     default-encoding: UTF-8
     host: smtp.gmail.com

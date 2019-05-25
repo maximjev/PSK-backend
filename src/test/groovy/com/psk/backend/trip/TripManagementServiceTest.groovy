@@ -3,6 +3,7 @@ package com.psk.backend.trip
 import com.psk.backend.appartment.reservation.Reservation
 import com.psk.backend.appartment.reservation.ReservationRepository
 import com.psk.backend.trip.value.TripForm
+import com.psk.backend.trip.value.TripMergeForm
 import com.psk.backend.trip.value.TripUserForm
 import com.psk.backend.user.User
 import org.springframework.boot.test.context.SpringBootTest
@@ -62,7 +63,7 @@ class TripManagementServiceTest extends Specification {
                 departion: of(2019, 7, 1, 12, 0),
                 reservationBegin: of(2019, 7, 3, 12, 0),
                 reservationEnd: of(2019, 7, 8, 12, 0),
-                users: [new TripUserForm(userId: '1',inAppartment: true), new TripUserForm(userId: '2', inAppartment: true)]
+                users: [new TripUserForm(userId: '1', inAppartment: true), new TripUserForm(userId: '2', inAppartment: true)]
         )
 
 
@@ -114,7 +115,7 @@ class TripManagementServiceTest extends Specification {
                 departion: of(2019, 7, 1, 12, 0),
                 reservationBegin: of(2019, 7, 3, 12, 0),
                 reservationEnd: of(2019, 7, 8, 12, 0),
-                users: [new TripUserForm(userId: '1',inAppartment: true), new TripUserForm(userId: '2', inAppartment: true)]
+                users: [new TripUserForm(userId: '1', inAppartment: true), new TripUserForm(userId: '2', inAppartment: true)]
         )
         def updateForm = new TripForm(
                 name: "name-2",
@@ -173,7 +174,7 @@ class TripManagementServiceTest extends Specification {
                 departion: of(2019, 7, 1, 12, 0),
                 arrival: of(2019, 7, 2, 12, 0),
                 noReservation: true,
-                users: [new TripUserForm(userId: '1',inAppartment: true), new TripUserForm(userId: '2', inAppartment: true)]
+                users: [new TripUserForm(userId: '1', inAppartment: true), new TripUserForm(userId: '2', inAppartment: true)]
         )
 
         when:
@@ -222,7 +223,7 @@ class TripManagementServiceTest extends Specification {
                 reservationBegin: of(2019, 7, 3, 12, 0),
                 reservationEnd: of(2019, 7, 8, 12, 0),
                 noReservation: false,
-                users: [new TripUserForm(userId: '1',inAppartment: true), new TripUserForm(userId: '2', inAppartment: true)]
+                users: [new TripUserForm(userId: '1', inAppartment: true), new TripUserForm(userId: '2', inAppartment: true)]
         )
 
         when:
@@ -254,7 +255,7 @@ class TripManagementServiceTest extends Specification {
                 reservationBegin: of(2019, 7, 3, 12, 0),
                 reservationEnd: of(2019, 7, 8, 12, 0),
                 noReservation: false,
-                users: [new TripUserForm(userId: '1',inAppartment: false), new TripUserForm(userId: '2', inAppartment: true)]
+                users: [new TripUserForm(userId: '1', inAppartment: false), new TripUserForm(userId: '2', inAppartment: true)]
         )
 
         when:
@@ -295,7 +296,7 @@ class TripManagementServiceTest extends Specification {
                 reservationBegin: of(2019, 7, 3, 12, 0),
                 reservationEnd: of(2019, 7, 8, 12, 0),
                 noReservation: false,
-                users: [new TripUserForm(userId: '1',inAppartment: false), new TripUserForm(userId: '2', inAppartment: true)]
+                users: [new TripUserForm(userId: '1', inAppartment: false), new TripUserForm(userId: '2', inAppartment: true)]
         )
 
         when:
@@ -308,5 +309,126 @@ class TripManagementServiceTest extends Specification {
 
         loadedTrip.isFailure()
         loadedReservation.isFailure()
+    }
+
+    def "Should not merge trips with too large date distance"() {
+
+        setup:
+        operations.insertAll([user('1'), user('2'), user('3'), user('4')])
+
+        operations.insertAll([appartment('ap-1'), appartment('ap-2')])
+
+        def reservations = [
+                reservation('1', '2019-07-01 12:00', '2019-07-09 12:00', 'ap-2'),
+                reservation('2', '2019-07-06 12:00', '2019-07-10 12:00', 'ap-2'),
+        ]
+        operations.insertAll(reservations)
+
+        def form1 = new TripForm(
+                name: 'name 1',
+                source: 'ap-1',
+                destination: 'ap-2',
+                description: 'description',
+                departion: of(2019, 7, 1, 12, 0),
+                reservationBegin: of(2019, 7, 3, 12, 0),
+                reservationEnd: of(2019, 7, 8, 12, 0),
+                noReservation: false,
+                users: [new TripUserForm(userId: '1', inAppartment: false), new TripUserForm(userId: '2', inAppartment: true)]
+        )
+        def form2 = new TripForm(
+                name: 'name 2',
+                source: 'ap-1',
+                destination: 'ap-2',
+                description: 'description',
+                departion: of(2019, 7, 3, 12, 0),
+                reservationBegin: of(2019, 7, 3, 12, 0),
+                reservationEnd: of(2019, 7, 8, 12, 0),
+                noReservation: false,
+                users: [new TripUserForm(userId: '3', inAppartment: false), new TripUserForm(userId: '4', inAppartment: true)]
+        )
+
+
+        when:
+        def firstTrip = service.create(form1)
+        def secondTrip = service.create(form2)
+
+        def mergeForm = new TripMergeForm(
+                tripOne: firstTrip.getOrElse().id,
+                tripTwo: secondTrip.getOrElse().id,
+        )
+        def result = service.merge(mergeForm)
+
+        then:
+        result.isFailure()
+    }
+
+    def "Should merge two trips"() {
+
+        setup:
+        operations.insertAll([user('1'), user('2'), user('3'), user('4')])
+
+        operations.insertAll([appartment('ap-1'), appartment('ap-2')])
+
+        def reservations = [
+                reservation('1', '2019-07-01 12:00', '2019-07-09 12:00', 'ap-2'),
+                reservation('2', '2019-07-06 12:00', '2019-07-10 12:00', 'ap-2'),
+        ]
+        operations.insertAll(reservations)
+
+        def form1 = new TripForm(
+                name: 'name 1',
+                source: 'ap-1',
+                destination: 'ap-2',
+                description: 'description',
+                departion: of(2019, 7, 1, 12, 0),
+                reservationBegin: of(2019, 7, 3, 12, 0),
+                reservationEnd: of(2019, 7, 8, 12, 0),
+                noReservation: false,
+                users: [new TripUserForm(userId: '1', inAppartment: false), new TripUserForm(userId: '2', inAppartment: true)]
+        )
+        def form2 = new TripForm(
+                name: 'name 2',
+                source: 'ap-1',
+                destination: 'ap-2',
+                description: 'description',
+                departion: of(2019, 7, 2, 11, 0),
+                reservationBegin: of(2019, 7, 3, 12, 0),
+                reservationEnd: of(2019, 7, 8, 12, 0),
+                noReservation: false,
+                users: [new TripUserForm(userId: '3', inAppartment: false), new TripUserForm(userId: '4', inAppartment: true)]
+        )
+
+
+        when:
+        def firstTrip = service.create(form1)
+        def secondTrip = service.create(form2)
+
+        def mergeForm = new TripMergeForm(
+                tripOne: firstTrip.getOrElse().id,
+                tripTwo: secondTrip.getOrElse().id,
+        )
+        def result = service.merge(mergeForm)
+
+        then:
+        result.isSuccess()
+        def mergedTrip = tripRepository.findById(result.getOrElse().id).getOrElse()
+        def loadedReservation = reservationRepository.findByTripId(result.getOrElse().id).getOrElse()
+        def deletedTrip = tripRepository.findById(secondTrip.getOrElse().id)
+        def deletedReservation = reservationRepository.findByTripId(secondTrip.getOrElse().id)
+
+        deletedTrip.isFailure()
+        deletedReservation.isFailure()
+
+        mergedTrip.source == form1.source
+        mergedTrip.destination == form1.destination
+        mergedTrip.reservationBegin == form1.reservationBegin
+        mergedTrip.reservationEnd == form1.reservationEnd
+        mergedTrip.departion == form1.departion
+        mergedTrip.users.size() == 4
+
+        loadedReservation.places == 2
+        loadedReservation.appartmentId == form1.destination
+        loadedReservation.from == form1.reservationBegin
+        loadedReservation.till == form1.reservationEnd
     }
 }

@@ -89,7 +89,7 @@ public class TripManagementService {
                     }
 
                     if (t1.hasReservation() && t2.hasReservation()) {
-                        reservationRepository.updatePlacesByTripId(t1.getId(), t2.getUserInAppartmentCount())
+                        reservationRepository.updatePlacesByTripId(t1.getId(), t1.getUserInAppartmentCount())
                                 .flatMap(res -> reservationRepository.deleteByTripId(t2.getId()));
                     } else if (!t1.hasReservation() && t2.hasReservation()) {
                         reservationRepository.reassignTripByTripId(t2.getId(), t1.getId());

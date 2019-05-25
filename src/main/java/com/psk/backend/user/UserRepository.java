@@ -17,8 +17,6 @@ import java.util.Optional;
 
 import static com.psk.backend.common.EntityId.entityId;
 import static com.psk.backend.common.Error.USER_NOT_FOUND;
-import static com.psk.backend.user.UserRole.ROLE_ORGANIZER;
-import static com.psk.backend.user.UserRole.ROLE_USER;
 import static io.atlassian.fugue.Try.failure;
 import static io.atlassian.fugue.Try.successful;
 import static java.util.Optional.ofNullable;
@@ -39,7 +37,7 @@ public class UserRepository {
 
 
     public Page<UserListView> list(Pageable page) {
-        var conditions = new Criteria().orOperator(where("role").is(ROLE_USER), where("role").is(ROLE_ORGANIZER));
+        var conditions = new Criteria();
 
         var total = mongoOperations.count(query(conditions), User.class);
 
@@ -92,9 +90,7 @@ public class UserRepository {
 
     public Try<EntityId> update(String userId, UpdateUserForm form) {
         return findById(userId).map(user -> {
-            user.setName(form.getName());
-            user.setSurname(form.getSurname());
-            mongoOperations.save(user);
+            mongoOperations.save(userMapper.update(form, user));
             return entityId(user.getId());
         });
     }

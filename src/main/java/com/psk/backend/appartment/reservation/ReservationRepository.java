@@ -176,6 +176,13 @@ public class ReservationRepository {
         });
     }
 
+    public Try<EntityId> reassignTripByTripId(String id, String newId) {
+        return findByTripId(id).map(r ->{
+            r.setTripId(newId);
+            mongoOperations.save(r);
+            return entityId(r.getId());
+        });
+    }
 
     public Try<Reservation> findByTripId(String id) {
         return mongoOperations
@@ -186,6 +193,13 @@ public class ReservationRepository {
                 .orElseGet(() -> failure(OBJECT_NOT_FOUND.entity(Reservation.class.getName(), id)));
     }
 
+    public Try<EntityId> update(String id, Reservation reservation) {
+        return findById(id).map(a -> {
+            mongoOperations.save(mapper.update(reservation, a));
+            return entityId(a.getId());
+        });
+    }
+
     public Try<EntityId> deleteByTripId(String tripId) {
         DeleteResult result = mongoOperations.remove(
                 query(where("tripId").is(tripId)),
@@ -194,5 +208,14 @@ public class ReservationRepository {
         return result.getDeletedCount() > 0
                 ? successful(entityId(tripId))
                 : failure(OBJECT_NOT_FOUND.entity(tripId));
+    }
+
+    public Try<Reservation> findById(String id) {
+        return mongoOperations
+                .query(Reservation.class)
+                .matching(query(where("id").is(id)))
+                .one()
+                .map(Try::successful)
+                .orElseGet(() -> failure(OBJECT_NOT_FOUND.entity(Reservation.class.getName(), id)));
     }
 }

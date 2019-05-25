@@ -142,9 +142,4 @@ public class TripRepository {
 
         return new PageImpl<>(entities, page, total);
     }
-
-    public Try<EntityId> save(Trip trip){
-        mongoOperations.save(trip);
-        return successful(entityId(trip.getId()));
-    }
 }

@@ -20,7 +20,7 @@ import static com.psk.backend.appartment.reservation.ReservationBuilder.reservat
 @SpringBootTest
 @ActiveProfiles("test")
 @Ignore
-class ReservationRepositoryTest extends Specification {
+class AvailableReservationFilteringTest extends Specification {
 
     @Resource
     MongoOperations operations

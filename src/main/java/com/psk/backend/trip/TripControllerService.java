@@ -3,6 +3,7 @@ package com.psk.backend.trip;
 import com.psk.backend.common.EntityId;
 import com.psk.backend.trip.value.TripForm;
 import com.psk.backend.trip.value.TripListView;
+import com.psk.backend.trip.value.TripMergeForm;
 import com.psk.backend.trip.value.TripView;
 import io.atlassian.fugue.Try;
 import org.springframework.data.domain.Page;
@@ -15,9 +16,9 @@ import static io.atlassian.fugue.Try.failure;
 @Service
 public class TripControllerService {
     private final TripRepository repository;
-    private final CreateTripService service;
+    private final TripManagementService service;
 
-    public TripControllerService(TripRepository repository, CreateTripService service) {
+    public TripControllerService(TripRepository repository, TripManagementService service) {
         this.repository = repository;
         this.service = service;
     }
@@ -31,7 +32,7 @@ public class TripControllerService {
     }
 
     public Try<EntityId> update(String id, TripForm form) {
-        return repository.update(id, form);
+        return service.update(id, form);
     }
 
     public Try<TripView> get(String id) {
@@ -39,7 +40,15 @@ public class TripControllerService {
     }
 
     public Try<EntityId> delete(String id) {
-        return repository.delete(id);
+        return service.delete(id);
+    }
+
+    public Try<Page<TripListView>> match(String id, Pageable page) {
+        return this.repository.match(id, page);
+    }
+
+    public Try<EntityId> merge(TripMergeForm form) {
+        return service.merge(form);
     }
 
     public Try<EntityId> confirm(String id, String userId) {

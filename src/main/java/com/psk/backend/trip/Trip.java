@@ -17,6 +17,8 @@ public class Trip {
     @Id
     private String id;
 
+    private String name;
+
     private String source;
 
     private String destination;
@@ -50,4 +52,30 @@ public class Trip {
 
     @LastModifiedBy
     private AuditUser updatedBy;
+
+    public boolean isMergeableWith(Trip other) {
+        return this.departion.plusDays(1).isAfter(other.getDepartion())
+                && this.departion.minusDays(1).isBefore(other.getDepartion())
+                && this.source.equals(other.getDestination())
+                && this.destination.equals(other.getDestination())
+                && this.status.equals(TripStatus.DRAFT);
+    }
+
+    public Trip merge(Trip other) {
+        this.users.addAll(other.getUsers());
+        this.getFlight().merge(other.getFlight());
+        this.getHotel().merge(other.getHotel());
+        StringBuilder builder = new StringBuilder();
+        builder.append("First trip description:\n")
+                .append(this.getDescription())
+                .append("\nSecond trip description:")
+                .append(other.getDescription());
+        this.setDescription(builder.toString());
+        return this;
+    }
+
+    public Long getUserInAppartmentCount() {
+        return getUsers().stream().filter(TripUser::isInAppartment).count();
+
+    }
 }

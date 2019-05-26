@@ -11,8 +11,11 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.psk.backend.common.EntityId.entityId;
@@ -34,11 +37,12 @@ public class TripRepository {
         this.mongoOperations = mongoOperations;
         this.mapper = mapper;
     }
-    public List<Trip> getAllTrips(){
-        return mongoOperations.findAll(Trip.class);
+    public List<Trip> getTripsByStatus(TripStatus status){
+        return mongoOperations.find(new Query(Criteria.where("status").is(status)), Trip.class);
     }
 
     public Page<TripListView> list(Pageable page) {
+
         var conditions = new Criteria();
 
         var total = mongoOperations.count(query(conditions), Trip.class);
@@ -127,4 +131,5 @@ public class TripRepository {
         mongoOperations.save(trip);
         return successful(entityId(trip.getId()));
     }
+
 }

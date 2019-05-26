@@ -5,6 +5,7 @@ import com.psk.backend.user.UserRepository;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -12,6 +13,7 @@ import java.util.Optional;
 
 @EnableMongoAuditing
 @Configuration
+@EnableScheduling
 public class MongoConfig {
     public static class SpringSecurityAuditorAware implements AuditorAware<AuditUser> {
 

@@ -76,19 +76,25 @@ public class Trip {
         }
 
         if (this.getFlight() != null) {
-            this.getFlight().merge(other.getFlight());
+            if (other.getFlight() != null) {
+                this.getFlight().merge(other.getFlight());
+            }
         } else {
             this.setFlight(other.getFlight());
         }
 
         if (this.getHotel() != null) {
-            this.getHotel().merge(other.getHotel());
+            if (other.getHotel() != null) {
+                this.getHotel().merge(other.getHotel());
+            }
         } else {
             this.setHotel(other.getHotel());
         }
 
         if (this.getCarRent() != null) {
-            this.getCarRent().merge(other.getCarRent());
+            if (this.getCarRent() != null) {
+                this.getCarRent().merge(other.getCarRent());
+            }
         } else {
             this.setCarRent(other.getCarRent());
         }
@@ -96,7 +102,7 @@ public class Trip {
         StringBuilder builder = new StringBuilder();
         builder.append("First trip description:\n")
                 .append(this.getDescription())
-                .append("\nSecond trip description:")
+                .append("\nSecond trip description:\n")
                 .append(other.getDescription());
         this.setDescription(builder.toString());
         return this;

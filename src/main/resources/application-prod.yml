@@ -8,3 +8,5 @@ app:
     oauth2:
       swagger:
         redirect-uri: http://ec2-18-188-16-88.us-east-2.compute.amazonaws.com:8080/api/webjars/springfox-swagger-ui/oauth2-redirect.html
+
+  url: http://ec2-18-188-16-88.us-east-2.compute.amazonaws.com

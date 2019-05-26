@@ -64,14 +64,14 @@ public class TripManagementService {
     }
 
     private Try<PlacementResult> validateReservation(PlacementResult result, TripForm form) {
-        if ((result.getAvailablePlaces() > getUserInAppartmentCount(form)) || !form.isReservation()) {
+        if ((result.getAvailablePlaces() > getUserInApartmentCount(form)) || !form.isReservation()) {
             return successful(result);
         } else {
             return failure(UNEXPECTED_ERROR.entity("Not enough space in apartment"));
         }
     }
 
-    private Long getUserInAppartmentCount(TripForm form) {
+    private Long getUserInApartmentCount(TripForm form) {
         return form.getUsers()
                 .stream()
                 .filter(TripUserForm::isInApartment)

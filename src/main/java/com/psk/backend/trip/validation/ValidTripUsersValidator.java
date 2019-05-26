@@ -10,16 +10,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class ValidDifferentUsersValidator implements ConstraintValidator<ValidTripApartments, List<TripUser>> {
+public class ValidTripUsersValidator implements ConstraintValidator<ValidTripUsers, List<TripUser>> {
 
     @Override
-    public void initialize(ValidTripApartments constraintAnnotation) {
+    public void initialize(ValidTripUsers constraintAnnotation) {
     }
 
     @Override
     public boolean isValid(List<TripUser> value, ConstraintValidatorContext context) {
+        boolean allHaveHotel = value.stream()
+                .filter(tripUser -> !tripUser.isInApartment())
+                .allMatch(a -> a.getResidenceAddress() != null);
+
         var ids = value.stream().map(TripUser::getId).collect(Collectors.toList());
 
-        return ids.stream().noneMatch(i -> Collections.frequency(ids, i) > 1);
+        return ids.stream().noneMatch(i -> Collections.frequency(ids, i) > 1) && allHaveHotel;
     }
 }

@@ -1,10 +1,7 @@
 package com.psk.backend.trip;
 
 import com.psk.backend.common.EntityId;
-import com.psk.backend.trip.value.TripForm;
-import com.psk.backend.trip.value.TripListView;
-import com.psk.backend.trip.value.TripMergeForm;
-import com.psk.backend.trip.value.TripView;
+import com.psk.backend.trip.value.*;
 import io.atlassian.fugue.Try;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,7 +26,7 @@ public class TripControllerService {
         return repository.list(page);
     }
 
-    public Try<EntityId> create(TripForm form) {
+    public Try<EntityId> create(TripCreateForm form) {
         return service.create(form);
     }
 

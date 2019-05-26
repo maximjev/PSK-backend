@@ -7,11 +7,14 @@ import com.psk.backend.config.BaseMapperConfig;
 import com.psk.backend.trip.value.*;
 import com.psk.backend.user.User;
 import com.psk.backend.user.UserRepository;
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 import javax.annotation.Resource;
+
+import static com.psk.backend.common.address.AddressFormatter.formatAddress;
 
 @Mapper(config = BaseMapperConfig.class)
 public abstract class TripMapper {
@@ -24,6 +27,20 @@ public abstract class TripMapper {
 
     @Mapping(target = "status", expression = "java(TripStatus.DRAFT)")
     abstract Trip create(TripCreateForm form);
+
+    @AfterMapping
+    public void afterMapping(TripCreateForm form, @MappingTarget Trip trip) {
+        trip.getUsers().stream()
+                .filter(TripUser::isInApartment)
+                .forEach(u -> u.setResidenceAddress(formatAddress(trip.getDestination().getAddress())));
+    }
+
+    @AfterMapping
+    public void afterMapping(TripForm form, @MappingTarget Trip trip) {
+        trip.getUsers().stream()
+                .filter(TripUser::isInApartment)
+                .forEach(u -> u.setResidenceAddress(formatAddress(trip.getDestination().getAddress())));
+    }
 
     @Mapping(source = "source.address", target = "sourceAddress")
     @Mapping(source = "destination.address", target = "destinationAddress")

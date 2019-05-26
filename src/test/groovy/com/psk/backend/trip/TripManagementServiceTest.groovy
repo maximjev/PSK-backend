@@ -3,6 +3,7 @@ package com.psk.backend.trip
 import com.psk.backend.apartment.Apartment
 import com.psk.backend.apartment.reservation.Reservation
 import com.psk.backend.apartment.reservation.ReservationRepository
+import com.psk.backend.common.address.AddressFormatter
 import com.psk.backend.trip.value.*
 import com.psk.backend.user.User
 import org.springframework.boot.test.context.SpringBootTest
@@ -887,5 +888,120 @@ class TripManagementServiceTest extends Specification {
         loadedReservation.apartmentId == form1.destination
         loadedReservation.from == form1.reservationBegin
         loadedReservation.till == form1.reservationEnd
+    }
+
+
+    def "Should assign apartment address to user that is in apartment"() {
+
+        setup:
+        def user1 = user('1')
+        def user2 = user('2')
+        operations.insertAll([user1, user2])
+
+        def source = apartment('ap-1')
+        def destination = apartment('ap-2')
+        operations.insertAll([source, destination])
+
+
+        def form = new TripCreateForm(
+                name: "name",
+                source: 'ap-1',
+                destination: 'ap-2',
+                description: 'description',
+                reservation: true,
+                departure: of(2019, 7, 1, 12, 0),
+                reservationBegin: of(2019, 7, 3, 12, 0),
+                reservationEnd: of(2019, 7, 8, 12, 0),
+                users: [new TripUserForm(userId: '1', inApartment: true, carRent: 'car rent'),
+                        new TripUserForm(userId: '2', inApartment: true, flightTicket: 'flight ticket')]
+        )
+
+
+        when:
+        def result = service.create(form)
+
+        then:
+        result.isSuccess()
+        def loadedTrip = operations.findById(result.getOrElse().id, Trip)
+        def loadedReservation = reservationRepository.findByTripId(result.getOrElse().id)
+
+        loadedTrip.name == form.name
+        loadedTrip.departure == form.departure
+        loadedTrip.destination.id == form.destination
+        loadedTrip.source.id == form.source
+        loadedTrip.reservationBegin == form.reservationBegin
+        loadedTrip.reservationEnd == form.reservationEnd
+        loadedTrip.users.size() == 2
+        loadedTrip.users[0].id == user1.id
+        loadedTrip.users[0].name == user1.name
+        loadedTrip.users[0].surname == user1.surname
+        loadedTrip.users[0].email == user1.email
+        loadedTrip.users[0].carRent == 'car rent'
+        loadedTrip.users[1].flightTicket == 'flight ticket'
+        loadedTrip.users[0].residenceAddress == AddressFormatter.formatAddress(loadedTrip.destination.address)
+        loadedTrip.users[1].residenceAddress == AddressFormatter.formatAddress(loadedTrip.destination.address)
+
+        loadedReservation.isSuccess()
+        loadedReservation.getOrElse().apartmentId == 'ap-2'
+        loadedReservation.getOrElse().places == 2
+        loadedReservation.getOrElse().from == form.reservationBegin
+        loadedReservation.getOrElse().till == form.reservationEnd
+    }
+
+    def "Should map residence address for users"() {
+
+        setup:
+        def user1 = user('1')
+        def user2 = user('2')
+        operations.insertAll([user1, user2])
+
+        def source = apartment('ap-1')
+        def destination = apartment('ap-2')
+        operations.insertAll([source, destination])
+
+
+        def form = new TripCreateForm(
+                name: "name",
+                source: 'ap-1',
+                destination: 'ap-2',
+                description: 'description',
+                reservation: true,
+                departure: of(2019, 7, 1, 12, 0),
+                reservationBegin: of(2019, 7, 3, 12, 0),
+                reservationEnd: of(2019, 7, 8, 12, 0),
+                users: [new TripUserForm(userId: '1', inApartment: false, carRent: 'car rent', residenceAddress: 'Naugarduko 24, Vilnius'),
+                        new TripUserForm(userId: '2', inApartment: false, flightTicket: 'flight ticket', residenceAddress: 'Naugarduko 25, Vilnius')]
+        )
+
+
+        when:
+        def result = service.create(form)
+
+        then:
+        result.isSuccess()
+        def loadedTrip = operations.findById(result.getOrElse().id, Trip)
+        def loadedReservation = reservationRepository.findByTripId(result.getOrElse().id)
+
+        loadedTrip.name == form.name
+        loadedTrip.departure == form.departure
+        loadedTrip.destination.id == form.destination
+        loadedTrip.source.id == form.source
+        loadedTrip.reservationBegin == form.reservationBegin
+        loadedTrip.reservationEnd == form.reservationEnd
+        loadedTrip.users.size() == 2
+        loadedTrip.users[0].id == user1.id
+        loadedTrip.users[0].name == user1.name
+        loadedTrip.users[0].surname == user1.surname
+        loadedTrip.users[0].email == user1.email
+        loadedTrip.users[0].carRent == 'car rent'
+        loadedTrip.users[1].flightTicket == 'flight ticket'
+        loadedTrip.users[0].residenceAddress == 'Naugarduko 24, Vilnius'
+        loadedTrip.users[1].residenceAddress == 'Naugarduko 25, Vilnius'
+
+        loadedReservation.isSuccess()
+        loadedReservation.getOrElse().apartmentId == 'ap-2'
+        loadedReservation.getOrElse().places == 0
+        loadedReservation.getOrElse().from == form.reservationBegin
+        loadedReservation.getOrElse().till == form.reservationEnd
     }
 }

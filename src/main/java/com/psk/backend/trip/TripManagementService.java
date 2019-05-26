@@ -5,6 +5,7 @@ import com.psk.backend.apartment.reservation.ReservationRepository;
 import com.psk.backend.apartment.reservation.value.PlacementFilter;
 import com.psk.backend.apartment.reservation.value.PlacementResult;
 import com.psk.backend.common.EntityId;
+import com.psk.backend.trip.value.TripCreateForm;
 import com.psk.backend.trip.value.TripForm;
 import com.psk.backend.trip.value.TripMergeForm;
 import com.psk.backend.trip.value.TripUserForm;
@@ -33,7 +34,7 @@ public class TripManagementService {
         this.reservationMapper = reservationMapper;
     }
 
-    public Try<EntityId> create(TripForm form) {
+    public Try<EntityId> create(TripCreateForm form) {
         return reservationRepository
                 .availablePlaces(form.getDestination(),
                         new PlacementFilter(form.getReservationBegin(), form.getReservationEnd()))
@@ -48,9 +49,8 @@ public class TripManagementService {
     }
 
     public Try<EntityId> update(String id, TripForm form) {
-        return reservationRepository
-                .availablePlaces(form.getDestination(),
-                        new PlacementFilter(form.getReservationBegin(), form.getReservationEnd()))
+        return tripRepository.findById(id).flatMap(t -> reservationRepository.availablePlaces(t.getDestination().getId(),
+                new PlacementFilter(form.getReservationBegin(), form.getReservationEnd())))
                 .flatMap(a -> validateReservation(a, form))
                 .flatMap(a -> tripRepository.update(id, form))
                 .flatMap(entityId -> reservationRepository

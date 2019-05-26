@@ -2,6 +2,7 @@ package com.psk.backend.trip;
 
 import com.mongodb.client.result.DeleteResult;
 import com.psk.backend.common.EntityId;
+import com.psk.backend.trip.value.TripCreateForm;
 import com.psk.backend.trip.value.TripForm;
 import com.psk.backend.trip.value.TripListView;
 import com.psk.backend.trip.value.TripView;
@@ -71,7 +72,7 @@ public class TripRepository {
         return new PageImpl<>(entities, page, total);
     }
 
-    public Try<EntityId> insert(TripForm form) {
+    public Try<EntityId> insert(TripCreateForm form) {
         Trip entity = mapper.create(form);
         mongoOperations.insert(entity);
         return successful(entityId(entity.getId()));

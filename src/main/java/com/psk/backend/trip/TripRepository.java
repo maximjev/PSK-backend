@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -141,5 +142,9 @@ public class TripRepository {
                 .collect(toList());
 
         return new PageImpl<>(entities, page, total);
+    }
+
+    public List<Trip> getTripsByStatus(TripStatus status){
+        return mongoOperations.find(new Query(Criteria.where("status").is(status)), Trip.class);
     }
 }

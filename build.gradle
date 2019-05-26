@@ -18,7 +18,7 @@ plugins {
 }
 
 test {
-    systemProperty 'spring.profiles.active', 'TEST'
+    systemProperty 'spring.profiles.active', 'DEV'
 }
 
 apply plugin: 'io.spring.dependency-management'

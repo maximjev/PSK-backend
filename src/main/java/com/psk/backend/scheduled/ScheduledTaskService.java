@@ -20,7 +20,7 @@ public class ScheduledTaskService {
         this.tripRepository=tripRepository;
     }
 
-    @Scheduled(fixedRate=10)
+    @Scheduled(fixedRate = 3600)
     public void updateTripStatus(){
         checkStartedTrips();
         checkConfirmedTrips();
@@ -40,7 +40,7 @@ public class ScheduledTaskService {
                     .filter(user -> user.getStatus().equals(TripUserStatus.DECLINED))
                     .count();
             if (noOfDeclinedUsers == trip.getUsers().size()
-                    || trip.getDepartion().isBefore(LocalDateTime.now()) ){
+                    || trip.getDeparture().isBefore(LocalDateTime.now()) ){
                 trip.setStatus(TripStatus.CANCELED);
             }
             tripRepository.save(trip);
@@ -50,7 +50,7 @@ public class ScheduledTaskService {
     private void checkConfirmedTrips(){
         List <Trip>  trips = tripRepository.getTripsByStatus(TripStatus.CONFIRMED);
         for (Trip trip :trips) {
-            if (trip.getDepartion().isBefore(LocalDateTime.now())) {
+            if (trip.getDeparture().isBefore(LocalDateTime.now())) {
                 trip.setStatus(TripStatus.STARTED);
                 tripRepository.save(trip);
             }

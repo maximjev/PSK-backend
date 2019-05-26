@@ -61,6 +61,7 @@ class TripManagementServiceTest extends Specification {
                 source: 'ap-1',
                 destination: 'ap-2',
                 description: 'description',
+                reservation: true,
                 departure: of(2019, 7, 1, 12, 0),
                 reservationBegin: of(2019, 7, 3, 12, 0),
                 reservationEnd: of(2019, 7, 8, 12, 0),
@@ -113,6 +114,7 @@ class TripManagementServiceTest extends Specification {
                 source: 'ap-1',
                 destination: 'ap-2',
                 description: 'description',
+                reservation: true,
                 departure: of(2019, 7, 1, 12, 0),
                 reservationBegin: of(2019, 7, 3, 12, 0),
                 reservationEnd: of(2019, 7, 8, 12, 0),
@@ -121,6 +123,7 @@ class TripManagementServiceTest extends Specification {
         def updateForm = new TripForm(
                 name: "name-2",
                 description: 'description-2',
+                reservation: true,
                 departure: of(2019, 8, 1, 12, 0),
                 reservationBegin: of(2019, 8, 5, 12, 0),
                 reservationEnd: of(2019, 8, 9, 12, 0),
@@ -172,7 +175,7 @@ class TripManagementServiceTest extends Specification {
                 description: 'description',
                 departure: of(2019, 7, 1, 12, 0),
                 arrival: of(2019, 7, 2, 12, 0),
-                noReservation: true,
+                reservation: false,
                 users: [new TripUserForm(userId: '1', inApartment: true), new TripUserForm(userId: '2', inApartment: true)]
         )
 
@@ -221,7 +224,7 @@ class TripManagementServiceTest extends Specification {
                 departure: of(2019, 7, 1, 12, 0),
                 reservationBegin: of(2019, 7, 3, 12, 0),
                 reservationEnd: of(2019, 7, 8, 12, 0),
-                noReservation: false,
+                reservation: true,
                 users: [new TripUserForm(userId: '1', inApartment: true), new TripUserForm(userId: '2', inApartment: true)]
         )
 
@@ -253,7 +256,7 @@ class TripManagementServiceTest extends Specification {
                 departure: of(2019, 7, 1, 12, 0),
                 reservationBegin: of(2019, 7, 3, 12, 0),
                 reservationEnd: of(2019, 7, 8, 12, 0),
-                noReservation: false,
+                reservation: true,
                 users: [new TripUserForm(userId: '1', inApartment: false), new TripUserForm(userId: '2', inApartment: true)]
         )
 
@@ -294,7 +297,7 @@ class TripManagementServiceTest extends Specification {
                 departure: of(2019, 7, 1, 12, 0),
                 reservationBegin: of(2019, 7, 3, 12, 0),
                 reservationEnd: of(2019, 7, 8, 12, 0),
-                noReservation: false,
+                reservation: true,
                 users: [new TripUserForm(userId: '1', inApartment: false), new TripUserForm(userId: '2', inApartment: true)]
         )
 
@@ -331,7 +334,7 @@ class TripManagementServiceTest extends Specification {
                 departure: of(2019, 7, 1, 12, 0),
                 reservationBegin: of(2019, 7, 3, 12, 0),
                 reservationEnd: of(2019, 7, 8, 12, 0),
-                noReservation: false,
+                reservation: false,
                 users: [new TripUserForm(userId: '1', inApartment: false), new TripUserForm(userId: '2', inApartment: true)]
         )
         def form2 = new TripCreateForm(
@@ -342,7 +345,7 @@ class TripManagementServiceTest extends Specification {
                 departure: of(2019, 7, 3, 12, 0),
                 reservationBegin: of(2019, 7, 3, 12, 0),
                 reservationEnd: of(2019, 7, 8, 12, 0),
-                noReservation: false,
+                reservation: false,
                 users: [new TripUserForm(userId: '3', inApartment: false), new TripUserForm(userId: '4', inApartment: true)]
         )
 
@@ -382,7 +385,7 @@ class TripManagementServiceTest extends Specification {
                 departure: of(2019, 7, 1, 12, 0),
                 reservationBegin: of(2019, 7, 3, 12, 0),
                 reservationEnd: of(2019, 7, 8, 12, 0),
-                noReservation: false,
+                reservation: true,
                 users: [new TripUserForm(userId: '1', inApartment: false), new TripUserForm(userId: '2', inApartment: true)]
         )
         def form2 = new TripCreateForm(
@@ -393,7 +396,7 @@ class TripManagementServiceTest extends Specification {
                 departure: of(2019, 7, 2, 11, 0),
                 reservationBegin: of(2019, 7, 3, 12, 0),
                 reservationEnd: of(2019, 7, 8, 12, 0),
-                noReservation: false,
+                reservation: true,
                 users: [new TripUserForm(userId: '3', inApartment: false), new TripUserForm(userId: '4', inApartment: true)]
         )
 
@@ -452,7 +455,7 @@ class TripManagementServiceTest extends Specification {
                 departure: of(2019, 7, 1, 12, 0),
                 reservationBegin: of(2019, 7, 3, 12, 0),
                 reservationEnd: of(2019, 7, 8, 12, 0),
-                noReservation: false,
+                reservation: true,
                 users: [new TripUserForm(userId: '1', inApartment: false), new TripUserForm(userId: '2', inApartment: true)]
         )
         def form2 = new TripCreateForm(
@@ -462,7 +465,7 @@ class TripManagementServiceTest extends Specification {
                 description: 'description',
                 departure: of(2019, 7, 2, 11, 0),
                 arrival: of(2019, 7, 5, 11, 0),
-                noReservation: true,
+                reservation: false,
                 users: [new TripUserForm(userId: '3', inApartment: false), new TripUserForm(userId: '4', inApartment: false)]
         )
 
@@ -520,7 +523,7 @@ class TripManagementServiceTest extends Specification {
                 description: 'description',
                 departure: of(2019, 7, 2, 11, 0),
                 arrival: of(2019, 7, 5, 11, 0),
-                noReservation: true,
+                reservation: false,
                 users: [new TripUserForm(userId: '3', inApartment: false), new TripUserForm(userId: '4', inApartment: false)]
         )
         def form2 = new TripCreateForm(
@@ -531,7 +534,7 @@ class TripManagementServiceTest extends Specification {
                 departure: of(2019, 7, 1, 12, 0),
                 reservationBegin: of(2019, 7, 3, 12, 0),
                 reservationEnd: of(2019, 7, 8, 12, 0),
-                noReservation: false,
+                reservation: true,
                 users: [new TripUserForm(userId: '1', inApartment: false), new TripUserForm(userId: '2', inApartment: true)]
         )
 
@@ -589,7 +592,7 @@ class TripManagementServiceTest extends Specification {
                 description: 'description',
                 departure: of(2019, 7, 2, 11, 0),
                 arrival: of(2019, 7, 5, 11, 0),
-                noReservation: true,
+                reservation: false,
                 users: [new TripUserForm(userId: '3', inApartment: false), new TripUserForm(userId: '4', inApartment: false)]
         )
         def form2 = new TripCreateForm(
@@ -599,7 +602,7 @@ class TripManagementServiceTest extends Specification {
                 description: 'description',
                 departure: of(2019, 7, 1, 12, 0),
                 arrival: of(2019, 7, 3, 12, 0),
-                noReservation: true,
+                reservation: false,
                 users: [new TripUserForm(userId: '1', inApartment: false), new TripUserForm(userId: '2', inApartment: false)]
         )
 

@@ -31,7 +31,7 @@ public class Trip {
 
     private LocalDateTime arrival;
 
-    private boolean noReservation;
+    private boolean reservation;
 
     private LocalDateTime reservationBegin;
 
@@ -102,16 +102,16 @@ public class Trip {
         return this;
     }
 
-    public Long getUserInAppartmentCount() {
+    public Long getUserInApartmentCount() {
         return getUsers().stream().filter(TripUser::isInApartment).count();
     }
 
     public boolean hasReservation() {
-        return !this.noReservation;
+        return this.reservation;
     }
 
     public void reservationAssigned() {
-        this.noReservation = false;
+        this.reservation = true;
         this.arrival = null;
     }
 }

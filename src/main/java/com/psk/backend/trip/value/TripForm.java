@@ -41,7 +41,7 @@ public class TripForm {
     private LocalDateTime arrival;
 
     @NotNull
-    private boolean noReservation;
+    private boolean reservation;
 
     @PositiveOrZero
     private BigDecimal otherExpenses;

@@ -4,7 +4,6 @@ package com.psk.backend.scheduled;
 import com.psk.backend.trip.Trip;
 import com.psk.backend.trip.TripRepository;
 import com.psk.backend.trip.TripStatus;
-import com.psk.backend.trip.TripUser;
 import com.psk.backend.trip.TripUserStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -31,25 +30,34 @@ public class ScheduledTaskService {
         List <Trip>  trips = tripRepository.getTripsByStatus(TripStatus.DRAFT);
         for (Trip trip :trips) {
 
+            long noOfPendingUsers = trip.getUsers().stream()
+                    .filter(user -> user.getStatus().equals(TripUserStatus.CONFIRMATION_PENDING))
+                    .count();
+            if (noOfPendingUsers > 0 && trip.getDeparture().isBefore(LocalDateTime.now())){
+                trip.setStatus(TripStatus.CANCELED);
+                tripRepository.save(trip);
+                continue;
+            }
+
             long noOfConfirmedUsers = trip.getUsers().stream()
                     .filter(user -> user.getStatus().equals(TripUserStatus.CONFIRMED))
                     .count();
-            if (noOfConfirmedUsers  == trip.getUsers().size()){
+            if (noOfConfirmedUsers > 0){
                 trip.setStatus(TripStatus.CONFIRMED);
                 tripRepository.save(trip);
-            }
-            else {
-                long noOfDeclinedUsers = trip.getUsers().stream()
-                        .filter(user -> user.getStatus().equals(TripUserStatus.DECLINED))
-                        .count();
-
-                if (noOfDeclinedUsers == trip.getUsers().size()
-                        || trip.getDeparture().isBefore(LocalDateTime.now()) ){
-                    trip.setStatus(TripStatus.CANCELED);
-                    tripRepository.save(trip);
-                }
+                continue;
             }
 
+            long noOfDeclinedUsers = trip.getUsers().stream()
+                    .filter(user -> user.getStatus().equals(TripUserStatus.DECLINED))
+                    .count();
+
+            if (noOfDeclinedUsers == trip.getUsers().size()
+                    || trip.getDeparture().isBefore(LocalDateTime.now()) ){
+                trip.setStatus(TripStatus.CANCELED);
+                tripRepository.save(trip);
+                continue;
+            }
         }
     }
 

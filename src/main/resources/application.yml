@@ -2,6 +2,7 @@ spring:
   data:
     mongodb:
       database: psk-db
+
   mail:
     default-encoding: UTF-8
     host: smtp.gmail.com
@@ -18,8 +19,10 @@ spring:
     test-connection: false
 
 logging:
+  file: /war/log/pskDebug.log
   level:
     com.psk.backend: DEBUG
+
 
 server:
   servlet:

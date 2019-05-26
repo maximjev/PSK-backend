@@ -1,5 +1,6 @@
 package com.psk.backend.user;
 
+import com.psk.backend.auth.value.CurrentUserView;
 import com.psk.backend.config.BaseMapperConfig;
 import com.psk.backend.user.value.*;
 import org.mapstruct.Mapper;
@@ -17,6 +18,8 @@ public abstract class UserMapper {
     public abstract UserListView listView(User user);
 
     public abstract UserSelectView selectView(User user);
+
+    public abstract CurrentUserView fromUser(User user);
 
     abstract UserView view(User user);
 }

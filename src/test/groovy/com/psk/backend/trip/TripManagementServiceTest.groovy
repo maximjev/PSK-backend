@@ -62,7 +62,8 @@ class TripManagementServiceTest extends Specification {
                 departure: of(2019, 7, 1, 12, 0),
                 reservationBegin: of(2019, 7, 3, 12, 0),
                 reservationEnd: of(2019, 7, 8, 12, 0),
-                users: [new TripUserForm(userId: '1', inApartment: true), new TripUserForm(userId: '2', inApartment: true)]
+                users: [new TripUserForm(userId: '1', inApartment: true, carRent: 'car rent'),
+                        new TripUserForm(userId: '2', inApartment: true, flightTicket: 'flight ticket')]
         )
 
 
@@ -85,6 +86,8 @@ class TripManagementServiceTest extends Specification {
         loadedTrip.users[0].name == user1.name
         loadedTrip.users[0].surname == user1.surname
         loadedTrip.users[0].email == user1.email
+        loadedTrip.users[0].carRent == 'car rent'
+        loadedTrip.users[1].flightTicket == 'flight ticket'
 
         loadedReservation.isSuccess()
         loadedReservation.getOrElse().apartmentId == 'ap-2'

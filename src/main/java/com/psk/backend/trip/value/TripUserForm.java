@@ -15,4 +15,10 @@ public class TripUserForm {
 
     @NotNull
     private boolean inApartment;
+
+    private String residenceAddress;
+
+    private String carRent;
+
+    private String flightTicket;
 }

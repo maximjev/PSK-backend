@@ -12,6 +12,9 @@ class TripUserBuilder {
         email('email')
         status(TripUserStatus.CONFIRMED)
         inApartment(true)
+        residenceAddress('address')
+        carRent('car rent')
+        flightTicket('flight ticket')
     }
 
     static TripUser tripUser() {

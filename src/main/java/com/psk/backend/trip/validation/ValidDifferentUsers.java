@@ -5,12 +5,12 @@ import javax.validation.Payload;
 import java.lang.annotation.*;
 
 @Documented
-@Constraint(validatedBy = ValidTripDatesValidator.class)
+@Constraint(validatedBy = ValidDifferentUsersValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface ValidTripDates {
+@Target(ElementType.FIELD)
+public @interface ValidDifferentUsers {
     String message() default "{com.psk.backend.trip.validation" +
-            ".ValidTripDatesValidator.message}";
+            ".ValidDifferentUsers.message}";
 
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};

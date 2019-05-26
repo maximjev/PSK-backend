@@ -1,5 +1,6 @@
 package com.psk.backend.trip.value;
 
+import com.psk.backend.trip.validation.ValidDifferentUsers;
 import com.psk.backend.trip.validation.ValidTripDates;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,6 +22,7 @@ public class TripForm {
     private String name;
 
     @Valid
+    @ValidDifferentUsers
     private List<TripUserForm> users;
 
     private String description;

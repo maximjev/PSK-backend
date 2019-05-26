@@ -3,6 +3,7 @@ package com.psk.backend.apartment.reservation;
 import com.psk.backend.apartment.reservation.value.ReservationForm;
 import com.psk.backend.apartment.reservation.value.ReservationListView;
 import com.psk.backend.config.BaseMapperConfig;
+import com.psk.backend.trip.value.TripCreateForm;
 import com.psk.backend.trip.value.TripForm;
 import com.psk.backend.user.AuditUser;
 import org.mapstruct.Mapper;
@@ -18,11 +19,20 @@ public abstract class ReservationMapper {
         return user.toString();
     }
 
+    @Mapping(target = "apartmentId", ignore = true)
     public abstract Reservation update(ReservationForm newReservation, @MappingTarget Reservation reservation);
 
     @Mapping(source = "reservationBegin", target = "from")
     @Mapping(source = "reservationEnd", target = "till")
     @Mapping(source = "destination", target = "apartmentId")
+    @Mapping(expression = "java((long)form.getUsers()" +
+            ".stream()" +
+            ".filter(f -> f.isInApartment())" +
+            ".count())", target = "places")
+    public abstract ReservationForm fromTrip(TripCreateForm form);
+
+    @Mapping(source = "reservationBegin", target = "from")
+    @Mapping(source = "reservationEnd", target = "till")
     @Mapping(expression = "java((long)form.getUsers()" +
             ".stream()" +
             ".filter(f -> f.isInApartment())" +

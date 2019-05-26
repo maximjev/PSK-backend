@@ -4,10 +4,7 @@ import com.psk.backend.apartment.Address;
 import com.psk.backend.apartment.ApartmentRepository;
 import com.psk.backend.common.address.AddressView;
 import com.psk.backend.config.BaseMapperConfig;
-import com.psk.backend.trip.value.TripForm;
-import com.psk.backend.trip.value.TripListView;
-import com.psk.backend.trip.value.TripUserForm;
-import com.psk.backend.trip.value.TripView;
+import com.psk.backend.trip.value.*;
 import com.psk.backend.user.User;
 import com.psk.backend.user.UserRepository;
 import org.mapstruct.Mapper;
@@ -26,10 +23,10 @@ public abstract class TripMapper {
     private ApartmentRepository apartmentRepository;
 
     @Mapping(target = "status", expression = "java(TripStatus.DRAFT)")
-    abstract Trip create(TripForm form);
+    abstract Trip create(TripCreateForm form);
 
-    @Mapping(source = "source", target = "sourceAddress")
-    @Mapping(source = "destination", target = "destinationAddress")
+    @Mapping(source = "source.address", target = "sourceAddress")
+    @Mapping(source = "destination.address", target = "destinationAddress")
     abstract TripListView listView(Trip trip);
 
     abstract TripView view(Trip trip);
@@ -43,14 +40,14 @@ public abstract class TripMapper {
                 .getOrElse(TripUser::new);
     }
 
+    public TripApartment apartment(String id) {
+        return apartmentRepository.findById(id)
+                .map(a -> new TripApartment(id, a.getAddress()))
+                .getOrElse(() -> new TripApartment(id));
+    }
+
     @Mapping(target = "status", expression = "java(TripUserStatus.CONFIRMATION_PENDING)")
     abstract TripUser user(User user);
-
-    public AddressView addressView(String apartmentId) {
-        return apartmentRepository.findById(apartmentId)
-                .map(a -> this.address(a.getAddress()))
-                .getOrElse(AddressView::new);
-    }
 
     public abstract AddressView address(Address address);
 }

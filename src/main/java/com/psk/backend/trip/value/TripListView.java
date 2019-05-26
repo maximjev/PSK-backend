@@ -15,7 +15,7 @@ public class TripListView {
     private TripStatus status;
     private AddressView sourceAddress;
     private AddressView destinationAddress;
-    private LocalDateTime departion;
+    private LocalDateTime departure;
     private LocalDateTime reservationBegin;
     private LocalDateTime reservationEnd;
 

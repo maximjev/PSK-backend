@@ -19,9 +19,9 @@ public class Trip {
 
     private String name;
 
-    private String source;
+    private TripApartment source;
 
-    private String destination;
+    private TripApartment destination;
 
     private List<TripUser> users;
 
@@ -31,7 +31,7 @@ public class Trip {
 
     private LocalDateTime arrival;
 
-    private boolean noReservation;
+    private boolean reservation;
 
     private LocalDateTime reservationBegin;
 
@@ -62,8 +62,8 @@ public class Trip {
     public boolean isMergeableWith(Trip other) {
         return this.departure.plusDays(1).isAfter(other.getDeparture())
                 && this.departure.minusDays(1).isBefore(other.getDeparture())
-                && this.source.equals(other.getSource())
-                && this.destination.equals(other.getDestination())
+                && this.source.getId().equals(other.getSource().getId())
+                && this.destination.getId().equals(other.getDestination().getId())
                 && this.status.equals(TripStatus.DRAFT);
     }
 
@@ -102,16 +102,16 @@ public class Trip {
         return this;
     }
 
-    public Long getUserInAppartmentCount() {
+    public Long getUserInApartmentCount() {
         return getUsers().stream().filter(TripUser::isInApartment).count();
     }
 
     public boolean hasReservation() {
-        return !this.noReservation;
+        return this.reservation;
     }
 
     public void reservationAssigned() {
-        this.noReservation = false;
+        this.reservation = true;
         this.arrival = null;
     }
 }

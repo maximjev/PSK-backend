@@ -5,6 +5,7 @@ import com.psk.backend.apartment.reservation.ReservationRepository;
 import com.psk.backend.apartment.reservation.value.PlacementFilter;
 import com.psk.backend.apartment.reservation.value.PlacementResult;
 import com.psk.backend.common.EntityId;
+import com.psk.backend.trip.value.TripCreateForm;
 import com.psk.backend.trip.value.TripForm;
 import com.psk.backend.trip.value.TripMergeForm;
 import com.psk.backend.trip.value.TripUserForm;
@@ -33,24 +34,23 @@ public class TripManagementService {
         this.reservationMapper = reservationMapper;
     }
 
-    public Try<EntityId> create(TripForm form) {
+    public Try<EntityId> create(TripCreateForm form) {
         return reservationRepository
                 .availablePlaces(form.getDestination(),
                         new PlacementFilter(form.getReservationBegin(), form.getReservationEnd()))
                 .flatMap(a -> validateReservation(a, form))
                 .flatMap(a -> tripRepository.insert(form))
                 .flatMap(entityId ->
-                        form.isNoReservation()
-                                ? successful(entityId)
-                                : reservationRepository.insert(reservationMapper.fromTrip(form)
+                        form.isReservation()
+                                ? reservationRepository.insert(reservationMapper.fromTrip(form)
                                 .withTrip(entityId.getId())).map(r -> entityId)
+                                : successful(entityId)
                 );
     }
 
     public Try<EntityId> update(String id, TripForm form) {
-        return reservationRepository
-                .availablePlaces(form.getDestination(),
-                        new PlacementFilter(form.getReservationBegin(), form.getReservationEnd()))
+        return tripRepository.findById(id).flatMap(t -> reservationRepository.availablePlaces(t.getDestination().getId(),
+                new PlacementFilter(form.getReservationBegin(), form.getReservationEnd())))
                 .flatMap(a -> validateReservation(a, form))
                 .flatMap(a -> tripRepository.update(id, form))
                 .flatMap(entityId -> reservationRepository
@@ -64,7 +64,7 @@ public class TripManagementService {
     }
 
     private Try<PlacementResult> validateReservation(PlacementResult result, TripForm form) {
-        if ((result.getAvailablePlaces() > getUserInAppartmentCount(form)) || form.isNoReservation()) {
+        if ((result.getAvailablePlaces() > getUserInAppartmentCount(form)) || !form.isReservation()) {
             return successful(result);
         } else {
             return failure(UNEXPECTED_ERROR.entity("Not enough space in apartment"));
@@ -82,19 +82,20 @@ public class TripManagementService {
         return begin(tripRepository.findById(form.getTripOne()))
                 .then(t1 -> tripRepository.findById(form.getTripTwo()))
                 .then((t1, t2) -> {
-                    if (t1.isMergeableWith(t2)) {
-                        tripRepository.save(t1.merge(t2));
-                    } else {
+                    if (!t1.isMergeableWith(t2)) {
                         return failure(MERGE_ERROR.entity(t1.getId(), t2.getId()));
                     }
+                    t1.merge(t2);
 
                     if (t1.hasReservation() && t2.hasReservation()) {
-                        reservationRepository.updatePlacesByTripId(t1.getId(), t1.getUserInAppartmentCount())
+                        reservationRepository.updatePlacesByTripId(t1.getId(), t1.getUserInApartmentCount())
                                 .flatMap(res -> reservationRepository.deleteByTripId(t2.getId()));
                     } else if (!t1.hasReservation() && t2.hasReservation()) {
                         reservationRepository.reassignTripByTripId(t2.getId(), t1.getId());
                         t1.reservationAssigned();
                     }
+
+                    tripRepository.save(t1);
                     return successful(entityId(t1.getId()));
                 })
                 .then((t1, t2, entityId) -> tripRepository.delete(t2.getId()))

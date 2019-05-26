@@ -177,7 +177,7 @@ public class ReservationRepository {
     }
 
     public Try<EntityId> reassignTripByTripId(String id, String newId) {
-        return findByTripId(id).map(r ->{
+        return findByTripId(id).map(r -> {
             r.setTripId(newId);
             mongoOperations.save(r);
             return entityId(r.getId());

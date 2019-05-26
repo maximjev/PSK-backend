@@ -2,10 +2,7 @@ package com.psk.backend.trip;
 
 import com.psk.backend.common.CommonErrors;
 import com.psk.backend.common.EntityId;
-import com.psk.backend.trip.value.TripForm;
-import com.psk.backend.trip.value.TripListView;
-import com.psk.backend.trip.value.TripMergeForm;
-import com.psk.backend.trip.value.TripView;
+import com.psk.backend.trip.value.*;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,7 +33,7 @@ public class TripController {
     @ApiOperation(value = "Create trip", response = EntityId.class)
     @CommonErrors
     @PostMapping
-    public ResponseEntity<?> create(@Valid @RequestBody TripForm form) {
+    public ResponseEntity<?> create(@Valid @RequestBody TripCreateForm form) {
         return service.create(form).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
     }
 

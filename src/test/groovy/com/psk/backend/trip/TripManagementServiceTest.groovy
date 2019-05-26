@@ -1,8 +1,8 @@
 package com.psk.backend.trip
 
-import com.psk.backend.appartment.Appartment
-import com.psk.backend.appartment.reservation.Reservation
-import com.psk.backend.appartment.reservation.ReservationRepository
+import com.psk.backend.apartment.Apartment
+import com.psk.backend.apartment.reservation.Reservation
+import com.psk.backend.apartment.reservation.ReservationRepository
 import com.psk.backend.trip.value.TripForm
 import com.psk.backend.trip.value.TripMergeForm
 import com.psk.backend.trip.value.TripUserForm
@@ -15,8 +15,8 @@ import spock.lang.Specification
 
 import javax.annotation.Resource
 
-import static com.psk.backend.appartment.AppartmentBuilder.appartment
-import static com.psk.backend.appartment.reservation.ReservationBuilder.reservation
+import static com.psk.backend.apartment.ApartmentBuilder.apartment
+import static com.psk.backend.apartment.reservation.ReservationBuilder.reservation
 import static com.psk.backend.user.UserBuilder.user
 import static java.time.LocalDateTime.of
 
@@ -39,7 +39,7 @@ class TripManagementServiceTest extends Specification {
     def cleanup() {
         operations.remove(new Query(), Trip)
         operations.remove(new Query(), Reservation)
-        operations.remove(new Query(), Appartment)
+        operations.remove(new Query(), Apartment)
         operations.remove(new Query(), User)
     }
 
@@ -50,8 +50,8 @@ class TripManagementServiceTest extends Specification {
         def user2 = user('2')
         operations.insertAll([user1, user2])
 
-        def source = appartment('ap-1')
-        def destination = appartment('ap-2')
+        def source = apartment('ap-1')
+        def destination = apartment('ap-2')
         operations.insertAll([source, destination])
 
 
@@ -60,10 +60,10 @@ class TripManagementServiceTest extends Specification {
                 source: 'ap-1',
                 destination: 'ap-2',
                 description: 'description',
-                departion: of(2019, 7, 1, 12, 0),
+                departure: of(2019, 7, 1, 12, 0),
                 reservationBegin: of(2019, 7, 3, 12, 0),
                 reservationEnd: of(2019, 7, 8, 12, 0),
-                users: [new TripUserForm(userId: '1', inAppartment: true), new TripUserForm(userId: '2', inAppartment: true)]
+                users: [new TripUserForm(userId: '1', inApartment: true), new TripUserForm(userId: '2', inApartment: true)]
         )
 
 
@@ -76,7 +76,7 @@ class TripManagementServiceTest extends Specification {
         def loadedReservation = reservationRepository.findByTripId(result.getOrElse().id)
 
         loadedTrip.name == form.name
-        loadedTrip.departion == form.departion
+        loadedTrip.departure == form.departure
         loadedTrip.destination == form.destination
         loadedTrip.source == form.source
         loadedTrip.reservationBegin == form.reservationBegin
@@ -88,7 +88,7 @@ class TripManagementServiceTest extends Specification {
         loadedTrip.users[0].email == user1.email
 
         loadedReservation.isSuccess()
-        loadedReservation.getOrElse().appartmentId == 'ap-2'
+        loadedReservation.getOrElse().apartmentId == 'ap-2'
         loadedReservation.getOrElse().places == 2
         loadedReservation.getOrElse().from == form.reservationBegin
         loadedReservation.getOrElse().till == form.reservationEnd
@@ -101,9 +101,9 @@ class TripManagementServiceTest extends Specification {
         def user2 = user('2')
         operations.insertAll([user1, user2])
 
-        def source = appartment('ap-1')
-        def destination = appartment('ap-2')
-        def app = appartment('ap-3')
+        def source = apartment('ap-1')
+        def destination = apartment('ap-2')
+        def app = apartment('ap-3')
         operations.insertAll([source, destination, app])
 
 
@@ -112,20 +112,20 @@ class TripManagementServiceTest extends Specification {
                 source: 'ap-1',
                 destination: 'ap-2',
                 description: 'description',
-                departion: of(2019, 7, 1, 12, 0),
+                departure: of(2019, 7, 1, 12, 0),
                 reservationBegin: of(2019, 7, 3, 12, 0),
                 reservationEnd: of(2019, 7, 8, 12, 0),
-                users: [new TripUserForm(userId: '1', inAppartment: true), new TripUserForm(userId: '2', inAppartment: true)]
+                users: [new TripUserForm(userId: '1', inApartment: true), new TripUserForm(userId: '2', inApartment: true)]
         )
         def updateForm = new TripForm(
                 name: "name-2",
                 source: 'ap-2',
                 destination: 'ap-3',
                 description: 'description-2',
-                departion: of(2019, 8, 1, 12, 0),
+                departure: of(2019, 8, 1, 12, 0),
                 reservationBegin: of(2019, 8, 5, 12, 0),
                 reservationEnd: of(2019, 8, 9, 12, 0),
-                users: [new TripUserForm(userId: '2', inAppartment: true)]
+                users: [new TripUserForm(userId: '2', inApartment: true)]
         )
 
         when:
@@ -138,7 +138,7 @@ class TripManagementServiceTest extends Specification {
         def loadedReservation = reservationRepository.findByTripId(result.getOrElse().id)
 
         loadedTrip.name == updateForm.name
-        loadedTrip.departion == updateForm.departion
+        loadedTrip.departure == updateForm.departure
         loadedTrip.reservationBegin == updateForm.reservationBegin
         loadedTrip.reservationEnd == updateForm.reservationEnd
         loadedTrip.users.size() == 1
@@ -148,7 +148,7 @@ class TripManagementServiceTest extends Specification {
         loadedTrip.users[0].email == user2.email
 
         loadedReservation.isSuccess()
-        loadedReservation.getOrElse().appartmentId == 'ap-3'
+        loadedReservation.getOrElse().apartmentId == 'ap-3'
         loadedReservation.getOrElse().places == 1
         loadedReservation.getOrElse().from == updateForm.reservationBegin
         loadedReservation.getOrElse().till == updateForm.reservationEnd
@@ -161,8 +161,8 @@ class TripManagementServiceTest extends Specification {
         def user2 = user('2')
         operations.insertAll([user1, user2])
 
-        def source = appartment('ap-1')
-        def destination = appartment('ap-2')
+        def source = apartment('ap-1')
+        def destination = apartment('ap-2')
         operations.insertAll([source, destination])
 
 
@@ -171,10 +171,10 @@ class TripManagementServiceTest extends Specification {
                 source: 'ap-1',
                 destination: 'ap-2',
                 description: 'description',
-                departion: of(2019, 7, 1, 12, 0),
+                departure: of(2019, 7, 1, 12, 0),
                 arrival: of(2019, 7, 2, 12, 0),
                 noReservation: true,
-                users: [new TripUserForm(userId: '1', inAppartment: true), new TripUserForm(userId: '2', inAppartment: true)]
+                users: [new TripUserForm(userId: '1', inApartment: true), new TripUserForm(userId: '2', inApartment: true)]
         )
 
         when:
@@ -186,7 +186,7 @@ class TripManagementServiceTest extends Specification {
         def loadedReservation = reservationRepository.findByTripId(result.getOrElse().id)
 
         loadedTrip.name == form.name
-        loadedTrip.departion == form.departion
+        loadedTrip.departure == form.departure
         loadedTrip.destination == form.destination
         loadedTrip.source == form.source
         loadedTrip.reservationBegin == form.reservationBegin
@@ -196,7 +196,7 @@ class TripManagementServiceTest extends Specification {
         loadedTrip.users[0].name == user1.name
         loadedTrip.users[0].surname == user1.surname
         loadedTrip.users[0].email == user1.email
-        loadedTrip.users[0].inAppartment
+        loadedTrip.users[0].inApartment
 
         loadedReservation.isFailure()
     }
@@ -205,7 +205,7 @@ class TripManagementServiceTest extends Specification {
 
         setup:
         operations.insertAll([user('1'), user('2')])
-        operations.insertAll([appartment('ap-1'), appartment('ap-2')])
+        operations.insertAll([apartment('ap-1'), apartment('ap-2')])
 
         def reservations = [
                 reservation('1', '2019-07-01 12:00', '2019-07-09 12:00', 'ap-2'),
@@ -219,11 +219,11 @@ class TripManagementServiceTest extends Specification {
                 source: 'ap-1',
                 destination: 'ap-2',
                 description: 'description',
-                departion: of(2019, 7, 1, 12, 0),
+                departure: of(2019, 7, 1, 12, 0),
                 reservationBegin: of(2019, 7, 3, 12, 0),
                 reservationEnd: of(2019, 7, 8, 12, 0),
                 noReservation: false,
-                users: [new TripUserForm(userId: '1', inAppartment: true), new TripUserForm(userId: '2', inAppartment: true)]
+                users: [new TripUserForm(userId: '1', inApartment: true), new TripUserForm(userId: '2', inApartment: true)]
         )
 
         when:
@@ -238,7 +238,7 @@ class TripManagementServiceTest extends Specification {
         setup:
         operations.insertAll([user('1'), user('2'), user('3')])
 
-        operations.insertAll([appartment('ap-1'), appartment('ap-2')])
+        operations.insertAll([apartment('ap-1'), apartment('ap-2')])
 
         def reservations = [
                 reservation('1', '2019-07-01 12:00', '2019-07-09 12:00', 'ap-2'),
@@ -251,11 +251,11 @@ class TripManagementServiceTest extends Specification {
                 source: 'ap-1',
                 destination: 'ap-2',
                 description: 'description',
-                departion: of(2019, 7, 1, 12, 0),
+                departure: of(2019, 7, 1, 12, 0),
                 reservationBegin: of(2019, 7, 3, 12, 0),
                 reservationEnd: of(2019, 7, 8, 12, 0),
                 noReservation: false,
-                users: [new TripUserForm(userId: '1', inAppartment: false), new TripUserForm(userId: '2', inAppartment: true)]
+                users: [new TripUserForm(userId: '1', inApartment: false), new TripUserForm(userId: '2', inApartment: true)]
         )
 
         when:
@@ -268,9 +268,9 @@ class TripManagementServiceTest extends Specification {
 
         loadedTrip.users.size() == 2
         loadedTrip.users[0].id == '1'
-        !loadedTrip.users[0].inAppartment
+        !loadedTrip.users[0].inApartment
         loadedTrip.users[1].id == '2'
-        loadedTrip.users[1].inAppartment
+        loadedTrip.users[1].inApartment
         loadedReservation.getOrElse().places == 1
     }
 
@@ -279,7 +279,7 @@ class TripManagementServiceTest extends Specification {
         setup:
         operations.insertAll([user('1'), user('2'), user('3')])
 
-        operations.insertAll([appartment('ap-1'), appartment('ap-2')])
+        operations.insertAll([apartment('ap-1'), apartment('ap-2')])
 
         def reservations = [
                 reservation('1', '2019-07-01 12:00', '2019-07-09 12:00', 'ap-2'),
@@ -292,11 +292,11 @@ class TripManagementServiceTest extends Specification {
                 source: 'ap-1',
                 destination: 'ap-2',
                 description: 'description',
-                departion: of(2019, 7, 1, 12, 0),
+                departure: of(2019, 7, 1, 12, 0),
                 reservationBegin: of(2019, 7, 3, 12, 0),
                 reservationEnd: of(2019, 7, 8, 12, 0),
                 noReservation: false,
-                users: [new TripUserForm(userId: '1', inAppartment: false), new TripUserForm(userId: '2', inAppartment: true)]
+                users: [new TripUserForm(userId: '1', inApartment: false), new TripUserForm(userId: '2', inApartment: true)]
         )
 
         when:
@@ -316,7 +316,7 @@ class TripManagementServiceTest extends Specification {
         setup:
         operations.insertAll([user('1'), user('2'), user('3'), user('4')])
 
-        operations.insertAll([appartment('ap-1'), appartment('ap-2')])
+        operations.insertAll([apartment('ap-1'), apartment('ap-2')])
 
         def reservations = [
                 reservation('1', '2019-07-01 12:00', '2019-07-09 12:00', 'ap-2'),
@@ -329,22 +329,22 @@ class TripManagementServiceTest extends Specification {
                 source: 'ap-1',
                 destination: 'ap-2',
                 description: 'description',
-                departion: of(2019, 7, 1, 12, 0),
+                departure: of(2019, 7, 1, 12, 0),
                 reservationBegin: of(2019, 7, 3, 12, 0),
                 reservationEnd: of(2019, 7, 8, 12, 0),
                 noReservation: false,
-                users: [new TripUserForm(userId: '1', inAppartment: false), new TripUserForm(userId: '2', inAppartment: true)]
+                users: [new TripUserForm(userId: '1', inApartment: false), new TripUserForm(userId: '2', inApartment: true)]
         )
         def form2 = new TripForm(
                 name: 'name 2',
                 source: 'ap-1',
                 destination: 'ap-2',
                 description: 'description',
-                departion: of(2019, 7, 3, 12, 0),
+                departure: of(2019, 7, 3, 12, 0),
                 reservationBegin: of(2019, 7, 3, 12, 0),
                 reservationEnd: of(2019, 7, 8, 12, 0),
                 noReservation: false,
-                users: [new TripUserForm(userId: '3', inAppartment: false), new TripUserForm(userId: '4', inAppartment: true)]
+                users: [new TripUserForm(userId: '3', inApartment: false), new TripUserForm(userId: '4', inApartment: true)]
         )
 
 
@@ -367,7 +367,7 @@ class TripManagementServiceTest extends Specification {
         setup:
         operations.insertAll([user('1'), user('2'), user('3'), user('4')])
 
-        operations.insertAll([appartment('ap-1'), appartment('ap-2')])
+        operations.insertAll([apartment('ap-1'), apartment('ap-2')])
 
         def reservations = [
                 reservation('1', '2019-07-01 12:00', '2019-07-09 12:00', 'ap-2'),
@@ -380,22 +380,22 @@ class TripManagementServiceTest extends Specification {
                 source: 'ap-1',
                 destination: 'ap-2',
                 description: 'description',
-                departion: of(2019, 7, 1, 12, 0),
+                departure: of(2019, 7, 1, 12, 0),
                 reservationBegin: of(2019, 7, 3, 12, 0),
                 reservationEnd: of(2019, 7, 8, 12, 0),
                 noReservation: false,
-                users: [new TripUserForm(userId: '1', inAppartment: false), new TripUserForm(userId: '2', inAppartment: true)]
+                users: [new TripUserForm(userId: '1', inApartment: false), new TripUserForm(userId: '2', inApartment: true)]
         )
         def form2 = new TripForm(
                 name: 'name 2',
                 source: 'ap-1',
                 destination: 'ap-2',
                 description: 'description',
-                departion: of(2019, 7, 2, 11, 0),
+                departure: of(2019, 7, 2, 11, 0),
                 reservationBegin: of(2019, 7, 3, 12, 0),
                 reservationEnd: of(2019, 7, 8, 12, 0),
                 noReservation: false,
-                users: [new TripUserForm(userId: '3', inAppartment: false), new TripUserForm(userId: '4', inAppartment: true)]
+                users: [new TripUserForm(userId: '3', inApartment: false), new TripUserForm(userId: '4', inApartment: true)]
         )
 
 
@@ -423,11 +423,11 @@ class TripManagementServiceTest extends Specification {
         mergedTrip.destination == form1.destination
         mergedTrip.reservationBegin == form1.reservationBegin
         mergedTrip.reservationEnd == form1.reservationEnd
-        mergedTrip.departion == form1.departion
+        mergedTrip.departure == form1.departure
         mergedTrip.users.size() == 4
 
         loadedReservation.places == 2
-        loadedReservation.appartmentId == form1.destination
+        loadedReservation.apartmentId == form1.destination
         loadedReservation.from == form1.reservationBegin
         loadedReservation.till == form1.reservationEnd
     }
@@ -437,7 +437,7 @@ class TripManagementServiceTest extends Specification {
         setup:
         operations.insertAll([user('1'), user('2'), user('3'), user('4')])
 
-        operations.insertAll([appartment('ap-1'), appartment('ap-2')])
+        operations.insertAll([apartment('ap-1'), apartment('ap-2')])
 
         def reservations = [
                 reservation('1', '2019-07-01 12:00', '2019-07-09 12:00', 'ap-2'),
@@ -450,21 +450,21 @@ class TripManagementServiceTest extends Specification {
                 source: 'ap-1',
                 destination: 'ap-2',
                 description: 'description',
-                departion: of(2019, 7, 1, 12, 0),
+                departure: of(2019, 7, 1, 12, 0),
                 reservationBegin: of(2019, 7, 3, 12, 0),
                 reservationEnd: of(2019, 7, 8, 12, 0),
                 noReservation: false,
-                users: [new TripUserForm(userId: '1', inAppartment: false), new TripUserForm(userId: '2', inAppartment: true)]
+                users: [new TripUserForm(userId: '1', inApartment: false), new TripUserForm(userId: '2', inApartment: true)]
         )
         def form2 = new TripForm(
                 name: 'name 2',
                 source: 'ap-1',
                 destination: 'ap-2',
                 description: 'description',
-                departion: of(2019, 7, 2, 11, 0),
+                departure: of(2019, 7, 2, 11, 0),
                 arrival: of(2019, 7, 5, 11, 0),
                 noReservation: true,
-                users: [new TripUserForm(userId: '3', inAppartment: false), new TripUserForm(userId: '4', inAppartment: false)]
+                users: [new TripUserForm(userId: '3', inApartment: false), new TripUserForm(userId: '4', inApartment: false)]
         )
 
 
@@ -492,11 +492,11 @@ class TripManagementServiceTest extends Specification {
         mergedTrip.destination == form1.destination
         mergedTrip.reservationBegin == form1.reservationBegin
         mergedTrip.reservationEnd == form1.reservationEnd
-        mergedTrip.departion == form1.departion
+        mergedTrip.departure == form1.departure
         mergedTrip.users.size() == 4
 
         loadedReservation.places == 1
-        loadedReservation.appartmentId == form1.destination
+        loadedReservation.apartmentId == form1.destination
         loadedReservation.from == form1.reservationBegin
         loadedReservation.till == form1.reservationEnd
     }
@@ -506,7 +506,7 @@ class TripManagementServiceTest extends Specification {
         setup:
         operations.insertAll([user('1'), user('2'), user('3'), user('4')])
 
-        operations.insertAll([appartment('ap-1'), appartment('ap-2')])
+        operations.insertAll([apartment('ap-1'), apartment('ap-2')])
 
         def reservations = [
                 reservation('1', '2019-07-01 12:00', '2019-07-09 12:00', 'ap-2'),
@@ -519,21 +519,21 @@ class TripManagementServiceTest extends Specification {
                 source: 'ap-1',
                 destination: 'ap-2',
                 description: 'description',
-                departion: of(2019, 7, 2, 11, 0),
+                departure: of(2019, 7, 2, 11, 0),
                 arrival: of(2019, 7, 5, 11, 0),
                 noReservation: true,
-                users: [new TripUserForm(userId: '3', inAppartment: false), new TripUserForm(userId: '4', inAppartment: false)]
+                users: [new TripUserForm(userId: '3', inApartment: false), new TripUserForm(userId: '4', inApartment: false)]
         )
         def form2 = new TripForm(
                 name: 'name 1',
                 source: 'ap-1',
                 destination: 'ap-2',
                 description: 'description',
-                departion: of(2019, 7, 1, 12, 0),
+                departure: of(2019, 7, 1, 12, 0),
                 reservationBegin: of(2019, 7, 3, 12, 0),
                 reservationEnd: of(2019, 7, 8, 12, 0),
                 noReservation: false,
-                users: [new TripUserForm(userId: '1', inAppartment: false), new TripUserForm(userId: '2', inAppartment: true)]
+                users: [new TripUserForm(userId: '1', inApartment: false), new TripUserForm(userId: '2', inApartment: true)]
         )
 
 
@@ -561,11 +561,11 @@ class TripManagementServiceTest extends Specification {
         mergedTrip.destination == form1.destination
         mergedTrip.reservationBegin == form2.reservationBegin
         mergedTrip.reservationEnd == form2.reservationEnd
-        mergedTrip.departion == form1.departion
+        mergedTrip.departure == form1.departure
         mergedTrip.users.size() == 4
 
         loadedReservation.places == 1
-        loadedReservation.appartmentId == form1.destination
+        loadedReservation.apartmentId == form1.destination
         loadedReservation.from == form2.reservationBegin
         loadedReservation.till == form2.reservationEnd
     }
@@ -575,7 +575,7 @@ class TripManagementServiceTest extends Specification {
         setup:
         operations.insertAll([user('1'), user('2'), user('3'), user('4')])
 
-        operations.insertAll([appartment('ap-1'), appartment('ap-2')])
+        operations.insertAll([apartment('ap-1'), apartment('ap-2')])
 
         def reservations = [
                 reservation('1', '2019-07-01 12:00', '2019-07-09 12:00', 'ap-2'),
@@ -588,20 +588,20 @@ class TripManagementServiceTest extends Specification {
                 source: 'ap-1',
                 destination: 'ap-2',
                 description: 'description',
-                departion: of(2019, 7, 2, 11, 0),
+                departure: of(2019, 7, 2, 11, 0),
                 arrival: of(2019, 7, 5, 11, 0),
                 noReservation: true,
-                users: [new TripUserForm(userId: '3', inAppartment: false), new TripUserForm(userId: '4', inAppartment: false)]
+                users: [new TripUserForm(userId: '3', inApartment: false), new TripUserForm(userId: '4', inApartment: false)]
         )
         def form2 = new TripForm(
                 name: 'name 1',
                 source: 'ap-1',
                 destination: 'ap-2',
                 description: 'description',
-                departion: of(2019, 7, 1, 12, 0),
+                departure: of(2019, 7, 1, 12, 0),
                 arrival: of(2019, 7, 3, 12, 0),
                 noReservation: true,
-                users: [new TripUserForm(userId: '1', inAppartment: false), new TripUserForm(userId: '2', inAppartment: false)]
+                users: [new TripUserForm(userId: '1', inApartment: false), new TripUserForm(userId: '2', inApartment: false)]
         )
 
 
@@ -624,7 +624,7 @@ class TripManagementServiceTest extends Specification {
 
         mergedTrip.source == form1.source
         mergedTrip.destination == form1.destination
-        mergedTrip.departion == form1.departion
+        mergedTrip.departure == form1.departure
         mergedTrip.arrival == form1.arrival
         mergedTrip.users.size() == 4
     }

@@ -8,5 +8,5 @@ import lombok.Setter;
 public class AddressView {
     private String city;
     private String street;
-    private String appartmentNumber;
+    private String apartmentNumber;
 }

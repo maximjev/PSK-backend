@@ -45,8 +45,8 @@ public class TripRepository {
     public Try<Page<TripListView>> match(String id, Pageable page) {
         return findById(id).flatMap(t -> {
             Criteria criteria = new Criteria().orOperator(
-                    where("departion").lte(t.getDepartion().plusDays(1)),
-                    where("departion").gte(t.getDepartion().minusDays(1))
+                    where("departure").lte(t.getDeparture().plusDays(1)),
+                    where("departure").gte(t.getDeparture().minusDays(1))
             ).andOperator(
                     where("status").is(TripStatus.DRAFT),
                     where("source").is(t.getSource()),

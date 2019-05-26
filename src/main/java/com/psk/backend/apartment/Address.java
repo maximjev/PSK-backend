@@ -1,19 +1,14 @@
-package com.psk.backend.common.address;
+package com.psk.backend.apartment;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
-import javax.validation.constraints.NotEmpty;
-
+@ToString
 @Getter
 @Setter
-public class AddressForm {
-
-    @NotEmpty
+public class Address {
     private String city;
-
-    @NotEmpty
     private String street;
-
     private String apartmentNumber;
 }

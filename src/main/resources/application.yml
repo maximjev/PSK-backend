@@ -18,6 +18,7 @@ spring:
     test-connection: false
 
 logging:
+  file: /war/log/pskDebug.log
   level:
     com.psk.backend: DEBUG
 

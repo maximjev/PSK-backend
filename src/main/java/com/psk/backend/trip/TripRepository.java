@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -126,6 +127,17 @@ public class TripRepository {
 
         });
     }
+    public Try<EntityId> setUserApartmentReservation(String id, String userId, boolean status) {
+        return findById(id).flatMap(trip -> {
+            List <TripUser> users= trip.getUsers();
+            users.stream()
+                    .filter(u -> userId.equals(u.getId()))
+                    .forEach(u -> u.setInApartment(status));
+            mongoOperations.save(trip);
+            return successful(entityId(id));
+        });
+    }
+
 
     public Page<TripListView> listByUser(Pageable page, String userId) {
         var conditions = new Criteria();
@@ -145,5 +157,9 @@ public class TripRepository {
                 .collect(toList());
 
         return new PageImpl<>(entities, page, total);
+    }
+
+    public List<Trip> getTripsByStatus(TripStatus status){
+        return mongoOperations.find(new Query(Criteria.where("status").is(status)), Trip.class);
     }
 }

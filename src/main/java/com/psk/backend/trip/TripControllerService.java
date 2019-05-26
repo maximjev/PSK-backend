@@ -62,6 +62,7 @@ public class TripControllerService {
     public Try<EntityId> decline(String id, String userId) {
         return repository.findById(id).flatMap(trip -> {
            if (trip.getDeparture().isAfter(LocalDateTime.now())) {
+               repository.setUserApartmentReservation(id, userId, false);
                return repository.updateStatus(id, userId, TripUserStatus.DECLINED);
            }
            return failure(UNEXPECTED_ERROR.entity(id));

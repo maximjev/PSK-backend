@@ -16,13 +16,13 @@ import java.util.List;
 @Getter
 @Setter
 @ValidTripDates
+@ValidTripUsers
 public class TripForm {
 
     @NotEmpty
     private String name;
 
     @Valid
-    @ValidTripUsers
     private List<TripUserForm> users;
 
     private String description;

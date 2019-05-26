@@ -36,7 +36,7 @@ public abstract class TripMapper {
     public TripUser user(TripUserForm form) {
         return userRepository
                 .findById(form.getUserId()).map(u ->
-                        this.user(u).isInApartment(form.isInApartment()))
+                        this.tripUser(form, this.user(u)))
                 .getOrElse(TripUser::new);
     }
 
@@ -48,6 +48,8 @@ public abstract class TripMapper {
 
     @Mapping(target = "status", expression = "java(TripUserStatus.CONFIRMATION_PENDING)")
     abstract TripUser user(User user);
+
+    abstract TripUser tripUser(TripUserForm form, @MappingTarget TripUser user);
 
     public abstract AddressView address(Address address);
 }

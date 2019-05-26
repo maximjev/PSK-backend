@@ -20,6 +20,8 @@ import static com.psk.backend.common.EntityId.entityId;
 import static com.psk.backend.common.Error.OBJECT_NOT_FOUND;
 import static io.atlassian.fugue.Try.failure;
 import static io.atlassian.fugue.Try.successful;
+import static java.util.Collections.reverseOrder;
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
@@ -66,6 +68,7 @@ public class TripRepository {
                         .limit(page.getPageSize()),
                 Trip.class)
                 .stream()
+                .sorted(comparing(Trip::getCreatedAt, reverseOrder()))
                 .map(mapper::listView)
                 .collect(toList());
 

@@ -5,6 +5,7 @@ import groovy.transform.builder.Builder
 import groovy.transform.builder.ExternalStrategy
 
 import static com.psk.backend.trip.ExpensesBuilder.expenses
+import static com.psk.backend.trip.TripApartmentBuilder.tripApartment
 import static com.psk.backend.trip.TripUserBuilder.tripUser
 import static java.time.LocalDateTime.of
 
@@ -13,8 +14,8 @@ class TripBuilder {
     TripBuilder() {
         id('123')
         name('name')
-        source('ap-1')
-        destination('ap-2')
+        source(tripApartment('ap-1'))
+        destination(tripApartment('ap-2'))
         departure(of(2019, 7, 1, 12, 0))
         reservationBegin(of(2019, 7, 3, 12, 0))
         reservationEnd(of(2019, 7, 8, 12, 0))

@@ -4,10 +4,11 @@ services:
   fe:
     image: repo.treescale.com/pskdev/frontend:latest
     container_name: be_frontend
+    network_mode: "host"
     ports:
-      - 4200:80
+      - 4200:4200
     volumes:
-      - ./nginx-for-dev.conf:/etc/nginx/nginx.conf:ro
+        - ./nginx-for-dev.conf:/etc/nginx/conf.d/default.conf
   db:
     image: mongo:4.0
     container_name: be_db

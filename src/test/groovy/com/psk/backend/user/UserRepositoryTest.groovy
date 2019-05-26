@@ -6,14 +6,12 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.mongodb.core.MongoOperations
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.test.context.ActiveProfiles
-import spock.lang.Ignore
 import spock.lang.Specification
 
 import javax.annotation.Resource
 
 @SpringBootTest
 @ActiveProfiles("test")
-@Ignore
 class UserRepositoryTest extends Specification {
 
     @Resource

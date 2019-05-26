@@ -1,10 +1,7 @@
 package com.psk.backend.user;
 
 import com.psk.backend.common.EntityId;
-import com.psk.backend.user.value.NewUserForm;
-import com.psk.backend.user.value.UpdateUserForm;
-import com.psk.backend.user.value.UserListView;
-import com.psk.backend.user.value.UserView;
+import com.psk.backend.user.value.*;
 import io.atlassian.fugue.Try;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -13,12 +10,12 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.psk.backend.common.EntityId.entityId;
 import static com.psk.backend.common.Error.USER_NOT_FOUND;
-import static com.psk.backend.user.UserRole.ROLE_ORGANIZER;
-import static com.psk.backend.user.UserRole.ROLE_USER;
 import static io.atlassian.fugue.Try.failure;
 import static io.atlassian.fugue.Try.successful;
 import static java.util.Optional.ofNullable;
@@ -38,8 +35,15 @@ public class UserRepository {
     }
 
 
+    public List<UserSelectView> all() {
+        return mongoOperations.findAll(User.class)
+                .stream()
+                .map(userMapper::selectView)
+                .collect(Collectors.toList());
+    }
+
     public Page<UserListView> list(Pageable page) {
-        var conditions = new Criteria().orOperator(where("role").is(ROLE_USER), where("role").is(ROLE_ORGANIZER));
+        var conditions = new Criteria();
 
         var total = mongoOperations.count(query(conditions), User.class);
 
@@ -92,9 +96,7 @@ public class UserRepository {
 
     public Try<EntityId> update(String userId, UpdateUserForm form) {
         return findById(userId).map(user -> {
-            user.setName(form.getName());
-            user.setSurname(form.getSurname());
-            mongoOperations.save(user);
+            mongoOperations.save(userMapper.update(form, user));
             return entityId(user.getId());
         });
     }

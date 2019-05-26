@@ -1,8 +1,10 @@
 package com.psk.backend.trip.value;
 
-import com.psk.backend.trip.validation.ValidUser;
+import com.psk.backend.common.validation.ValidUser;
 import lombok.Getter;
 import lombok.Setter;
+
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -11,5 +13,6 @@ public class TripUserForm {
     @ValidUser
     private String userId;
 
-    private boolean inAppartment;
+    @NotNull
+    private boolean inApartment;
 }

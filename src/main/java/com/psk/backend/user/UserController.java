@@ -10,8 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
 
 import static org.springframework.http.ResponseEntity.unprocessableEntity;
 
@@ -33,9 +33,17 @@ public class UserController {
         return service.users(page);
     }
 
+
+    @CommonErrors
+    @ApiOperation(value = "Get user list", response = UserSelectView.class)
+    @GetMapping("/all")
+    public List<UserSelectView> all() {
+        return service.all();
+    }
+
     @ApiOperation(value = "Create user", response = EntityId.class)
     @CommonErrors
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody NewUserForm form) {
         return service.create(form).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
     }
@@ -56,7 +64,7 @@ public class UserController {
     @ApiOperation(value = "Reset password", response = EntityId.class)
     @CommonErrors
     @PostMapping("/resetPassword")
-    public  ResponseEntity<?> changeUserPassword(HttpServletRequest request, @RequestParam("email") String userEmail) {
+    public  ResponseEntity<?> changeUserPassword(@RequestParam("email") String userEmail) {
         return service.resetPassword(userEmail).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
 
     }
@@ -68,7 +76,7 @@ public class UserController {
     }
     @ApiOperation(value = "Validate token", response = EntityId.class)
     @CommonErrors
-    @GetMapping("/{token}")
+    @GetMapping("/token/{token}")
     public ResponseEntity<?> validateToken(@PathVariable String token) {
         return service.isValid(token).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
     }

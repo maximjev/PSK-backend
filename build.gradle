@@ -17,6 +17,10 @@ plugins {
     id 'java'
 }
 
+test {
+    systemProperty 'spring.profiles.active', 'TEST'
+}
+
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'java'
 apply plugin: 'groovy'

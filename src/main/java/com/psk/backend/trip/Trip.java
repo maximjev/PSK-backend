@@ -17,6 +17,8 @@ public class Trip {
     @Id
     private String id;
 
+    private String name;
+
     private String source;
 
     private String destination;
@@ -25,7 +27,11 @@ public class Trip {
 
     private TripStatus status;
 
-    private LocalDateTime departion;
+    private LocalDateTime departure;
+
+    private LocalDateTime arrival;
+
+    private boolean noReservation;
 
     private LocalDateTime reservationBegin;
 
@@ -36,6 +42,8 @@ public class Trip {
     private Expenses flight;
 
     private Expenses hotel;
+
+    private Expenses carRent;
 
     private BigDecimal otherExpenses;
 
@@ -50,4 +58,60 @@ public class Trip {
 
     @LastModifiedBy
     private AuditUser updatedBy;
+
+    public boolean isMergeableWith(Trip other) {
+        return this.departure.plusDays(1).isAfter(other.getDeparture())
+                && this.departure.minusDays(1).isBefore(other.getDeparture())
+                && this.source.equals(other.getSource())
+                && this.destination.equals(other.getDestination())
+                && this.status.equals(TripStatus.DRAFT);
+    }
+
+    public Trip merge(Trip other) {
+        this.users.addAll(other.getUsers());
+
+        if (this.getReservationBegin() == null && this.getReservationEnd() == null) {
+            this.setReservationBegin(other.getReservationBegin());
+            this.setReservationEnd(other.getReservationEnd());
+        }
+
+        if (this.getFlight() != null) {
+            this.getFlight().merge(other.getFlight());
+        } else {
+            this.setFlight(other.getFlight());
+        }
+
+        if (this.getHotel() != null) {
+            this.getHotel().merge(other.getHotel());
+        } else {
+            this.setHotel(other.getHotel());
+        }
+
+        if (this.getCarRent() != null) {
+            this.getCarRent().merge(other.getCarRent());
+        } else {
+            this.setCarRent(other.getCarRent());
+        }
+
+        StringBuilder builder = new StringBuilder();
+        builder.append("First trip description:\n")
+                .append(this.getDescription())
+                .append("\nSecond trip description:")
+                .append(other.getDescription());
+        this.setDescription(builder.toString());
+        return this;
+    }
+
+    public Long getUserInAppartmentCount() {
+        return getUsers().stream().filter(TripUser::isInApartment).count();
+    }
+
+    public boolean hasReservation() {
+        return !this.noReservation;
+    }
+
+    public void reservationAssigned() {
+        this.noReservation = false;
+        this.arrival = null;
+    }
 }

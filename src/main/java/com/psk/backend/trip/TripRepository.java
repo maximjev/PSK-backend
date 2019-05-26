@@ -11,11 +11,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.psk.backend.common.EntityId.entityId;
@@ -37,14 +34,29 @@ public class TripRepository {
         this.mongoOperations = mongoOperations;
         this.mapper = mapper;
     }
-    public List<Trip> getTripsByStatus(TripStatus status){
-        return mongoOperations.find(new Query(Criteria.where("status").is(status)), Trip.class);
+    public List<Trip> getAllTrips(){
+        return mongoOperations.findAll(Trip.class);
     }
 
     public Page<TripListView> list(Pageable page) {
+        return listView(page, new Criteria());
+    }
 
-        var conditions = new Criteria();
+    public Try<Page<TripListView>> match(String id, Pageable page) {
+        return findById(id).flatMap(t -> {
+            Criteria criteria = new Criteria().orOperator(
+                    where("departure").lte(t.getDeparture().plusDays(1)),
+                    where("departure").gte(t.getDeparture().minusDays(1))
+            ).andOperator(
+                    where("status").is(TripStatus.DRAFT),
+                    where("source").is(t.getSource()),
+                    where("destination").is(t.getDestination()));
 
+            return successful(listView(page, criteria));
+        });
+    }
+
+    private Page<TripListView> listView(Pageable page, Criteria conditions) {
         var total = mongoOperations.count(query(conditions), Trip.class);
 
         var entities = mongoOperations.find(
@@ -63,6 +75,10 @@ public class TripRepository {
         Trip entity = mapper.create(form);
         mongoOperations.insert(entity);
         return successful(entityId(entity.getId()));
+    }
+
+    public Try<EntityId> save(Trip trip) {
+        return successful(entityId(mongoOperations.save(trip).getId()));
     }
 
     public Try<EntityId> update(String id, TripForm form) {
@@ -126,10 +142,4 @@ public class TripRepository {
 
         return new PageImpl<>(entities, page, total);
     }
-
-    public Try<EntityId> save(Trip trip){
-        mongoOperations.save(trip);
-        return successful(entityId(trip.getId()));
-    }
-
 }

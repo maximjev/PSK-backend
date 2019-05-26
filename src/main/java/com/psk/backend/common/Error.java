@@ -32,6 +32,13 @@ public enum Error {
         public String message() {
             return "Unexpected error";
         }
+    },
+
+    MERGE_ERROR {
+        @Override
+        public String message() {
+            return "The trips %s and %s cannot be merged";
+        }
     };
 
     private static final Logger LOG = getLogger(ErrorItem.class);

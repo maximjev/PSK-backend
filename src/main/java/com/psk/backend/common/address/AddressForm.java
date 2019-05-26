@@ -15,5 +15,5 @@ public class AddressForm {
     @NotEmpty
     private String street;
 
-    private String appartmentNumber;
+    private String apartmentNumber;
 }

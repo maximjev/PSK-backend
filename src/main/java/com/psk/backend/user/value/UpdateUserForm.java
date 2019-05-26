@@ -17,4 +17,8 @@ public class UpdateUserForm {
     private String name;
     @NotEmpty
     private String surname;
+
+    @NotEmpty
+    @ValidUserRole
+    private String role;
 }

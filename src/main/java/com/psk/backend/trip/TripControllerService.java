@@ -52,7 +52,7 @@ public class TripControllerService {
 
     public Try<EntityId> confirm(String id, String userId) {
         return repository.findById(id).flatMap(trip -> {
-            if (trip.getArrival().isAfter(LocalDateTime.now())) {
+            if (trip.getDeparture().isAfter(LocalDateTime.now())) {
                 return repository.updateStatus(id, userId, TripUserStatus.CONFIRMED);
             }
             return failure(UNEXPECTED_ERROR.entity(id));
@@ -61,7 +61,7 @@ public class TripControllerService {
 
     public Try<EntityId> decline(String id, String userId) {
         return repository.findById(id).flatMap(trip -> {
-           if (trip.getArrival().isAfter(LocalDateTime.now())) {
+           if (trip.getDeparture().isAfter(LocalDateTime.now())) {
                repository.setUserApartmentReservation(id, userId, false);
                return repository.updateStatus(id, userId, TripUserStatus.DECLINED);
            }

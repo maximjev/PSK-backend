@@ -42,7 +42,7 @@ public class ScheduledTaskService {
             long noOfConfirmedUsers = trip.getUsers().stream()
                     .filter(user -> user.getStatus().equals(TripUserStatus.CONFIRMED))
                     .count();
-            if (noOfConfirmedUsers > 0){
+            if (noOfConfirmedUsers > 0 && noOfPendingUsers==0){
                 trip.setStatus(TripStatus.CONFIRMED);
                 tripRepository.save(trip);
                 continue;

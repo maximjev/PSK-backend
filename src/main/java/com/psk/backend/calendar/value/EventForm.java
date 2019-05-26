@@ -1,9 +1,11 @@
-package com.psk.backend.calendars.value;
+package com.psk.backend.calendar.value;
 
+import com.psk.backend.calendar.EventUser;
 import lombok.Getter;
 import lombok.Setter;
-import javax.validation.constraints.NotNull;
+
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -12,7 +14,7 @@ import java.util.List;
 public class EventForm {
 
 	@NotEmpty
-    private String text;
+    private String description;
 
     private List<EventUser> users;
 

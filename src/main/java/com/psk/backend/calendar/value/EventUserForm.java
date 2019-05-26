@@ -1,6 +1,6 @@
-package com.psk.backend.calendars.value;
+package com.psk.backend.calendar.value;
 
-import com.psk.backend.trip.validation.ValidUser;
+import com.psk.backend.common.validation.ValidUser;
 import lombok.Getter;
 import lombok.Setter;
 

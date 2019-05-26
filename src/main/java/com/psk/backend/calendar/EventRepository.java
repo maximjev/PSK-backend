@@ -1,6 +1,9 @@
 package com.psk.backend.calendar;
 
 import com.mongodb.client.result.DeleteResult;
+import com.psk.backend.calendar.value.EventForm;
+import com.psk.backend.calendar.value.EventListView;
+import com.psk.backend.calendar.value.EventView;
 import com.psk.backend.common.EntityId;
 import io.atlassian.fugue.Try;
 import org.springframework.data.domain.Page;
@@ -9,9 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Repository;
-import com.psk.backend.calendar.value.EventForm;
-import com.psk.backend.calendar.value.EventListView;
-import com.psk.backend.calendar.value.EventView;
 
 import static com.psk.backend.common.EntityId.entityId;
 import static com.psk.backend.common.Error.OBJECT_NOT_FOUND;
@@ -57,7 +57,7 @@ public class EventRepository {
 
     public Try<EntityId> update(String id, EventForm form) {
         return findById(id).map(a -> {
-            mongoOperations.saveeventMapper.update(form, a));
+            mongoOperations.save(eventMapper.update(form, a));
             return entityId(a.getId());
         });
     }

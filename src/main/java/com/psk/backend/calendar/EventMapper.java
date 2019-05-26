@@ -1,12 +1,12 @@
 package com.psk.backend.calendar;
 
+import com.psk.backend.calendar.value.EventForm;
+import com.psk.backend.calendar.value.EventListView;
+import com.psk.backend.calendar.value.EventUserForm;
+import com.psk.backend.calendar.value.EventView;
 import com.psk.backend.config.BaseMapperConfig;
 import com.psk.backend.user.User;
 import com.psk.backend.user.UserRepository;
-import com.psk.backend.trip.value.EventForm;
-import com.psk.backend.trip.value.EventListView;
-import com.psk.backend.trip.value.EventUserForm;
-import com.psk.backend.trip.value.EventView;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;

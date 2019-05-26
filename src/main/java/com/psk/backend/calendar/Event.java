@@ -1,13 +1,13 @@
 package com.psk.backend.calendar;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 import com.psk.backend.user.AuditUser;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Document
 @Getter
@@ -17,7 +17,7 @@ public class Event {
     @Id
     private String id;
 
-    private String text;
+    private String description;
 	
 	private List<EventUser> users;
 

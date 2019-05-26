@@ -1,9 +1,9 @@
 package com.psk.backend.trip;
 
-import com.psk.backend.appartment.reservation.ReservationMapper;
-import com.psk.backend.appartment.reservation.ReservationRepository;
-import com.psk.backend.appartment.reservation.value.PlacementFilter;
-import com.psk.backend.appartment.reservation.value.PlacementResult;
+import com.psk.backend.apartment.reservation.ReservationMapper;
+import com.psk.backend.apartment.reservation.ReservationRepository;
+import com.psk.backend.apartment.reservation.value.PlacementFilter;
+import com.psk.backend.apartment.reservation.value.PlacementResult;
 import com.psk.backend.common.EntityId;
 import com.psk.backend.trip.value.TripForm;
 import com.psk.backend.trip.value.TripMergeForm;
@@ -67,14 +67,14 @@ public class TripManagementService {
         if ((result.getAvailablePlaces() > getUserInAppartmentCount(form)) || form.isNoReservation()) {
             return successful(result);
         } else {
-            return failure(UNEXPECTED_ERROR.entity("Not enough space in appartment"));
+            return failure(UNEXPECTED_ERROR.entity("Not enough space in apartment"));
         }
     }
 
     private Long getUserInAppartmentCount(TripForm form) {
         return form.getUsers()
                 .stream()
-                .filter(TripUserForm::isInAppartment)
+                .filter(TripUserForm::isInApartment)
                 .count();
     }
 

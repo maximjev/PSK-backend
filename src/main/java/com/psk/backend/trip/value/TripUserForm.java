@@ -14,5 +14,5 @@ public class TripUserForm {
     private String userId;
 
     @NotNull
-    private boolean inAppartment;
+    private boolean inApartment;
 }

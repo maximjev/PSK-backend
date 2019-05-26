@@ -15,7 +15,7 @@ class TripBuilder {
         name('name')
         source('ap-1')
         destination('ap-2')
-        departion(of(2019, 7, 1, 12, 0))
+        departure(of(2019, 7, 1, 12, 0))
         reservationBegin(of(2019, 7, 3, 12, 0))
         reservationEnd(of(2019, 7, 8, 12, 0))
         users([tripUser('1'), tripUser('2')])

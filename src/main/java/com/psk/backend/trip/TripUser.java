@@ -12,11 +12,11 @@ public class TripUser {
     private String name;
     private String surname;
     private String email;
-    private boolean inAppartment;
+    private boolean inApartment;
     private TripUserStatus status;
 
-    public TripUser isInAppartment(boolean inAppartment) {
-        this.inAppartment = inAppartment;
+    public TripUser isInApartment(boolean inApartment) {
+        this.inApartment = inApartment;
         return this;
     }
 }

@@ -1,6 +1,6 @@
 package com.psk.backend.trip.value;
 
-import com.psk.backend.common.validation.ValidAppartment;
+import com.psk.backend.common.validation.ValidApartment;
 import com.psk.backend.trip.validation.ValidTripDates;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,11 +22,11 @@ public class TripForm {
     private String name;
 
     @NotEmpty
-    @ValidAppartment
+    @ValidApartment
     private String source;
 
     @NotEmpty
-    @ValidAppartment
+    @ValidApartment
     private String destination;
 
     @Valid
@@ -41,7 +41,7 @@ public class TripForm {
     private ExpensesForm carRent;
 
     @NotNull
-    private LocalDateTime departion;
+    private LocalDateTime departure;
 
     private LocalDateTime reservationBegin;
 

@@ -7,6 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 public class UserControllerService {
@@ -21,6 +23,10 @@ public class UserControllerService {
 
     public Page<UserListView> users(Pageable page) {
         return userRepository.list(page);
+    }
+
+    public List<UserSelectView> all() {
+        return userRepository.all();
     }
 
     public Try<EntityId> create(NewUserForm form) {

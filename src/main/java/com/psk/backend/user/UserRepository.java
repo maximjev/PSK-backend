@@ -1,10 +1,7 @@
 package com.psk.backend.user;
 
 import com.psk.backend.common.EntityId;
-import com.psk.backend.user.value.NewUserForm;
-import com.psk.backend.user.value.UpdateUserForm;
-import com.psk.backend.user.value.UserListView;
-import com.psk.backend.user.value.UserView;
+import com.psk.backend.user.value.*;
 import io.atlassian.fugue.Try;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -13,7 +10,9 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.psk.backend.common.EntityId.entityId;
 import static com.psk.backend.common.Error.USER_NOT_FOUND;
@@ -35,6 +34,13 @@ public class UserRepository {
         this.userMapper = userMapper;
     }
 
+
+    public List<UserSelectView> all() {
+        return mongoOperations.findAll(User.class)
+                .stream()
+                .map(userMapper::selectView)
+                .collect(Collectors.toList());
+    }
 
     public Page<UserListView> list(Pageable page) {
         var conditions = new Criteria();

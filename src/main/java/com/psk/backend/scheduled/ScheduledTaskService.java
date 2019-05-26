@@ -23,7 +23,7 @@ public class ScheduledTaskService {
 
        List <Trip>  trips = tripRepository.getAllTrips();
        for (Trip trip :trips){
-           if (trip.getDepartion().isAfter(LocalDateTime.now())){
+           if (trip.getDeparture().isAfter(LocalDateTime.now())){
                trip.setStatus(TripStatus.STARTED);
                tripRepository.save(trip);
            }

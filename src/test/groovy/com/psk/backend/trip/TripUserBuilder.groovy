@@ -11,7 +11,7 @@ class TripUserBuilder {
         surname('surname')
         email('email')
         status(TripUserStatus.CONFIRMED)
-        inAppartment(true)
+        inApartment(true)
     }
 
     static TripUser tripUser() {

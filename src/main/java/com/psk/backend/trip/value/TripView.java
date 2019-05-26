@@ -16,7 +16,7 @@ public class TripView {
     private boolean noReservation;
     private TripStatus status;
     private String destination;
-    private LocalDateTime departion;
+    private LocalDateTime departure;
     private LocalDateTime reservationBegin;
     private LocalDateTime reservationEnd;
 

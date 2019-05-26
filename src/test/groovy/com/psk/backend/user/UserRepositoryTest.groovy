@@ -12,7 +12,6 @@ import javax.annotation.Resource
 
 @SpringBootTest
 @ActiveProfiles("test")
-//@Ignore
 class UserRepositoryTest extends Specification {
 
     @Resource

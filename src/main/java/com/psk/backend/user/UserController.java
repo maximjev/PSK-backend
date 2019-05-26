@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 import static org.springframework.http.ResponseEntity.unprocessableEntity;
 
@@ -30,6 +31,14 @@ public class UserController {
     @GetMapping
     public Page<UserListView> getAll(Pageable page) {
         return service.users(page);
+    }
+
+
+    @CommonErrors
+    @ApiOperation(value = "Get user list", response = UserSelectView.class)
+    @GetMapping("/all")
+    public List<UserSelectView> all() {
+        return service.all();
     }
 
     @ApiOperation(value = "Create user", response = EntityId.class)

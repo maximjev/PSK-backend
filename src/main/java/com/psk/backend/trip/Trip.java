@@ -27,7 +27,7 @@ public class Trip {
 
     private TripStatus status;
 
-    private LocalDateTime departion;
+    private LocalDateTime departure;
 
     private LocalDateTime arrival;
 
@@ -60,8 +60,8 @@ public class Trip {
     private AuditUser updatedBy;
 
     public boolean isMergeableWith(Trip other) {
-        return this.departion.plusDays(1).isAfter(other.getDepartion())
-                && this.departion.minusDays(1).isBefore(other.getDepartion())
+        return this.departure.plusDays(1).isAfter(other.getDeparture())
+                && this.departure.minusDays(1).isBefore(other.getDeparture())
                 && this.source.equals(other.getSource())
                 && this.destination.equals(other.getDestination())
                 && this.status.equals(TripStatus.DRAFT);
@@ -103,7 +103,7 @@ public class Trip {
     }
 
     public Long getUserInAppartmentCount() {
-        return getUsers().stream().filter(TripUser::isInAppartment).count();
+        return getUsers().stream().filter(TripUser::isInApartment).count();
     }
 
     public boolean hasReservation() {

@@ -40,7 +40,7 @@ public abstract class TripMapper {
         return userRepository
                 .findById(form.getUserId()).map(u ->
                         this.user(u).isInApartment(form.isInApartment()))
-                .getOrElse(null);
+                .getOrElse(TripUser::new);
     }
 
     @Mapping(target = "status", expression = "java(TripUserStatus.CONFIRMATION_PENDING)")
@@ -49,7 +49,7 @@ public abstract class TripMapper {
     public AddressView addressView(String apartmentId) {
         return apartmentRepository.findById(apartmentId)
                 .map(a -> this.address(a.getAddress()))
-                .getOrElse(null);
+                .getOrElse(AddressView::new);
     }
 
     public abstract AddressView address(Address address);

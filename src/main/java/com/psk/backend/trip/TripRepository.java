@@ -123,6 +123,17 @@ public class TripRepository {
 
         });
     }
+    public Try<EntityId> setUserApartmentReservation(String id, String userId, boolean status) {
+        return findById(id).flatMap(trip -> {
+            List <TripUser> users= trip.getUsers();
+            users.stream()
+                    .filter(u -> userId.equals(u.getId()))
+                    .forEach(u -> u.setInApartment(status));
+            mongoOperations.save(trip);
+            return successful(entityId(id));
+        });
+    }
+
 
     public Page<TripListView> listByUser(Pageable page, String userId) {
         var conditions = new Criteria();

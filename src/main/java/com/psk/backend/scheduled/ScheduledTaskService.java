@@ -20,7 +20,7 @@ public class ScheduledTaskService {
         this.tripRepository=tripRepository;
     }
 
-    @Scheduled(fixedRate = 3600)
+    @Scheduled(fixedRate = 10)
     public void updateTripStatus(){
         checkStartedTrips();
         checkConfirmedTrips();
@@ -30,20 +30,26 @@ public class ScheduledTaskService {
     private void checkDraftedTrips(){
         List <Trip>  trips = tripRepository.getTripsByStatus(TripStatus.DRAFT);
         for (Trip trip :trips) {
-            for (TripUser user : trip.getUsers()){
-                if (user.getStatus().equals(TripUserStatus.CONFIRMED)){
-                    trip.setStatus(TripStatus.CONFIRMED);
-                    break;
+
+            long noOfConfirmedUsers = trip.getUsers().stream()
+                    .filter(user -> user.getStatus().equals(TripUserStatus.CONFIRMED))
+                    .count();
+            if (noOfConfirmedUsers  == trip.getUsers().size()){
+                trip.setStatus(TripStatus.CONFIRMED);
+                tripRepository.save(trip);
+            }
+            else {
+                long noOfDeclinedUsers = trip.getUsers().stream()
+                        .filter(user -> user.getStatus().equals(TripUserStatus.DECLINED))
+                        .count();
+
+                if (noOfDeclinedUsers == trip.getUsers().size()
+                        || trip.getDeparture().isBefore(LocalDateTime.now()) ){
+                    trip.setStatus(TripStatus.CANCELED);
+                    tripRepository.save(trip);
                 }
             }
-            long noOfDeclinedUsers = trip.getUsers().stream()
-                    .filter(user -> user.getStatus().equals(TripUserStatus.DECLINED))
-                    .count();
-            if (noOfDeclinedUsers == trip.getUsers().size()
-                    || trip.getDeparture().isBefore(LocalDateTime.now()) ){
-                trip.setStatus(TripStatus.CANCELED);
-            }
-            tripRepository.save(trip);
+
         }
     }
 

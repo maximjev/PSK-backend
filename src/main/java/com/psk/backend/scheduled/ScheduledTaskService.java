@@ -51,7 +51,6 @@ public class ScheduledTaskService {
             long noOfDeclinedUsers = trip.getUsers().stream()
                     .filter(user -> user.getStatus().equals(TripUserStatus.DECLINED))
                     .count();
-
             if (noOfDeclinedUsers == trip.getUsers().size()
                     || trip.getDeparture().isBefore(LocalDateTime.now()) ){
                 trip.setStatus(TripStatus.CANCELED);

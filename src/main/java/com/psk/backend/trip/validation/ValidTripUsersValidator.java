@@ -1,6 +1,7 @@
 package com.psk.backend.trip.validation;
 
 import com.psk.backend.trip.TripUser;
+import com.psk.backend.trip.value.TripForm;
 import org.springframework.stereotype.Component;
 
 import javax.validation.ConstraintValidator;
@@ -10,19 +11,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class ValidTripUsersValidator implements ConstraintValidator<ValidTripUsers, List<TripUser>> {
+public class ValidTripUsersValidator implements ConstraintValidator<ValidTripUsers, TripForm> {
 
     @Override
     public void initialize(ValidTripUsers constraintAnnotation) {
     }
 
     @Override
-    public boolean isValid(List<TripUser> value, ConstraintValidatorContext context) {
-        boolean allHaveHotel = value.stream()
+    public boolean isValid(TripForm value, ConstraintValidatorContext context) {
+        boolean allHaveHotel = value.getUsers().stream()
                 .filter(tripUser -> !tripUser.isInApartment())
                 .allMatch(a -> a.getResidenceAddress() != null);
 
-        var ids = value.stream().map(TripUser::getId).collect(Collectors.toList());
+        var ids = value.getUsers().stream().map(u -> u.getUserId()).collect(Collectors.toList());
 
         return ids.stream().noneMatch(i -> Collections.frequency(ids, i) > 1) && allHaveHotel;
     }

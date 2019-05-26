@@ -19,7 +19,7 @@ public class ScheduledTaskService {
         this.tripRepository=tripRepository;
     }
 
-    @Scheduled(fixedRate = 10)
+    @Scheduled(fixedRate = 3600)
     public void updateTripStatus(){
         checkStartedTrips();
         checkConfirmedTrips();

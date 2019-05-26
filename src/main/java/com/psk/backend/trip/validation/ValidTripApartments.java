@@ -6,7 +6,7 @@ import javax.validation.Payload;
 import java.lang.annotation.*;
 
 @Documented
-@Constraint(validatedBy = ValidTripDatesValidator.class)
+@Constraint(validatedBy = ValidTripApartmentsValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface ValidTripApartments {

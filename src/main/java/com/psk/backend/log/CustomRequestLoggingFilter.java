@@ -28,13 +28,4 @@ public class CustomRequestLoggingFilter extends CommonsRequestLoggingFilter {
     @Override
     protected void afterRequest(HttpServletRequest request, String message) {}
 
-
-
-
-
-
-
-
-
-
 }

@@ -1,6 +1,7 @@
 package com.psk.backend.trip.value;
 
 import com.psk.backend.common.address.AddressForm;
+import com.psk.backend.trip.Expenses;
 import com.psk.backend.trip.TripStatus;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,6 +21,10 @@ public class TripView {
     private LocalDateTime departure;
     private LocalDateTime reservationBegin;
     private LocalDateTime reservationEnd;
+    private LocalDateTime arrival;
+    private String description;
+    private Expenses carRent;
+
 
     private ExpensesForm hotel;
     private ExpensesForm flight;

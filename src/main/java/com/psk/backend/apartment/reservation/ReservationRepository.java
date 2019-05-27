@@ -156,8 +156,8 @@ public class ReservationRepository {
         }
     }
 
-    public Try<EntityId> insert(ReservationForm form) {
-        var entity = mongoOperations.insert(mapper.fromForm(form));
+    public Try<EntityId> insert(ReservationForm form, String tripId) {
+        var entity = mongoOperations.insert(mapper.fromForm(form).withTrip(tripId));
         return successful(entityId(entity.getId()));
     }
 

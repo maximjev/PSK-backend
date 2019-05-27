@@ -20,6 +20,7 @@ public abstract class ReservationMapper {
     }
 
     @Mapping(target = "apartmentId", ignore = true)
+    @Mapping(target = "tripId", ignore = true)
     public abstract Reservation update(ReservationForm newReservation, @MappingTarget Reservation reservation);
 
     @Mapping(source = "reservationBegin", target = "from")

@@ -42,8 +42,7 @@ public class TripManagementService {
                 .flatMap(a -> tripRepository.insert(form))
                 .flatMap(entityId ->
                         form.isReservation()
-                                ? reservationRepository.insert(reservationMapper.fromTrip(form)
-                                .withTrip(entityId.getId())).map(r -> entityId)
+                                ? reservationRepository.insert(reservationMapper.fromTrip(form), entityId.getId()).map(r -> entityId)
                                 : successful(entityId)
                 );
     }

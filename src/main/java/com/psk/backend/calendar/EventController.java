@@ -17,7 +17,7 @@ import javax.validation.Valid;
 import static org.springframework.http.ResponseEntity.unprocessableEntity;
 
 @RestController
-@RequestMapping("/calendar")
+@RequestMapping("/event")
 public class EventController {
 
     @Autowired

@@ -49,7 +49,7 @@ public class UserController {
     }
 
     @ApiOperation(value = "Get user", response = UserView.class)
-    @GetMapping("/details/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> get(@PathVariable("id") String id) {
         return service.get(id).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
     }

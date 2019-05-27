@@ -74,4 +74,13 @@ public abstract class TripMapper {
     abstract TripUser tripUser(TripUserForm form, @MappingTarget TripUser user);
 
     public abstract AddressView address(Address address);
+
+    @Mapping(target = "tripId", source = "id")
+    @Mapping(source = "source.address", target = "sourceAddress")
+    @Mapping(source = "destination.address", target = "destinationAddress")
+    @Mapping(ignore = true, target = "carRent")
+    @Mapping(ignore = true, target = "flight")
+    public abstract TripUserView tripUserView(Trip trip);
+
+
 }

@@ -2,9 +2,11 @@ package com.psk.backend.trip;
 
 import com.psk.backend.common.EntityId;
 import com.psk.backend.trip.value.*;
+import com.psk.backend.user.UserRepository;
 import io.atlassian.fugue.Try;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -16,10 +18,12 @@ import static io.atlassian.fugue.Try.failure;
 public class TripControllerService {
     private final TripRepository repository;
     private final TripManagementService service;
+    private final UserRepository userRepository;
 
-    public TripControllerService(TripRepository repository, TripManagementService service) {
+    public TripControllerService(TripRepository repository, TripManagementService service, UserRepository userRepository) {
         this.repository = repository;
         this.service = service;
+        this.userRepository = userRepository;
     }
 
     public Page<TripListView> list(Pageable page) {
@@ -36,6 +40,11 @@ public class TripControllerService {
 
     public Try<TripView> get(String id) {
         return repository.get(id);
+    }
+
+    public Try<TripUserView> getUserView(String id, Authentication authentication) {
+        return userRepository.findByEmail(authentication.getName())
+                .flatMap(u -> repository.tripUserView(id, u.getId()));
     }
 
     public Try<EntityId> delete(String id) {

@@ -9,13 +9,13 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class TripListView {
-    private String id;
+public class TripUserView {
+    private String tripId;
     private String name;
     private TripStatus status;
-    private AddressView sourceAddress;
-    private AddressView destinationAddress;
     private LocalDateTime departure;
-
-    private LocalDateTime createdAt;
+    private AddressView sourceAddress;
+    private AddressView residenceAddress;
+    private String carRent;
+    private String flightTicket;
 }

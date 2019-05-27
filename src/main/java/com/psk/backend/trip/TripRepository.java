@@ -2,10 +2,7 @@ package com.psk.backend.trip;
 
 import com.mongodb.client.result.DeleteResult;
 import com.psk.backend.common.EntityId;
-import com.psk.backend.trip.value.TripCreateForm;
-import com.psk.backend.trip.value.TripForm;
-import com.psk.backend.trip.value.TripListView;
-import com.psk.backend.trip.value.TripView;
+import com.psk.backend.trip.value.*;
 import io.atlassian.fugue.Try;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -60,6 +57,17 @@ public class TripRepository {
         });
     }
 
+    public Try<TripUserView> tripUserView(String id, String userId) {
+        return findById(id).flatMap(t -> {
+            var userView = mapper.tripUserView(t);
+            var user = t.getUsers().stream().filter(u -> u.getId().equals(userId)).findFirst();
+            return user.map(u -> {
+                userView.setCarRent(u.getCarRent());
+                userView.setFlightTicket(u.getFlightTicket());
+                return successful(userView);
+            }).orElse(successful(userView));
+        });
+    }
     private Page<TripListView> listView(Pageable page, Criteria conditions) {
         var total = mongoOperations.count(query(conditions), Trip.class);
 

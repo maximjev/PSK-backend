@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -41,6 +42,12 @@ public class TripController {
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@PathVariable("id") String id) {
         return service.get(id).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
+    }
+
+    @ApiOperation(value = "Get user trip view", response = TripUserView.class)
+    @GetMapping("/{id}/user-view")
+    public ResponseEntity<?> getUserView(@PathVariable("id") String id, Authentication authentication) {
+        return service.getUserView(id, authentication).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
     }
 
     @ApiOperation(value = "Update trip", response = EntityId.class)

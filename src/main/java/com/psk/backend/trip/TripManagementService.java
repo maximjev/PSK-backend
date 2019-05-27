@@ -46,8 +46,7 @@ public class TripManagementService {
                 .flatMap(a -> tripRepository.insert(form))
                 .flatMap(entityId ->
                         form.isReservation()
-                                ? reservationRepository.insert(reservationMapper.fromTrip(form)
-                                .withTrip(entityId.getId())).map(r -> entityId)
+                                ? reservationRepository.insert(reservationMapper.fromTrip(form), entityId.getId()).map(r -> entityId)
                                 : successful(entityId)
                 );
     }
@@ -57,9 +56,10 @@ public class TripManagementService {
                 new PlacementFilter(form.getReservationBegin(), form.getReservationEnd())))
                 .flatMap(a -> validateReservation(a, form))
                 .flatMap(a -> tripRepository.update(id, form))
-                .flatMap(entityId -> reservationRepository
-                        .updateByTripId(id, reservationMapper.fromTrip(form).withTrip(entityId.getId()))
-                        .map(r -> entityId));
+                .flatMap(entityId -> tripRepository.findById(id).flatMap(t ->
+                        t.isReservation()
+                                ? reservationRepository.updateByTripId(id, reservationMapper.fromTrip(form)).map(r -> entityId)
+                                : successful(entityId)));
     }
 
     public Try<EntityId> delete(String tripId) {

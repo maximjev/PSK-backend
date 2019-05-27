@@ -1004,4 +1004,60 @@ class TripManagementServiceTest extends Specification {
         loadedReservation.getOrElse().from == form.reservationBegin
         loadedReservation.getOrElse().till == form.reservationEnd
     }
+
+    def "Should map trip information to view"() {
+
+        setup:
+        def user1 = user('1')
+        def user2 = user('2')
+        operations.insertAll([user1, user2])
+
+        def source = apartment('ap-1')
+        def destination = apartment('ap-2')
+        operations.insertAll([source, destination])
+
+
+        def form = new TripCreateForm(
+                name: "name",
+                source: 'ap-1',
+                destination: 'ap-2',
+                description: 'description',
+                reservation: true,
+                departure: of(2019, 7, 1, 12, 0),
+                reservationBegin: of(2019, 7, 3, 12, 0),
+                reservationEnd: of(2019, 7, 8, 12, 0),
+                users: [new TripUserForm(userId: '1', inApartment: true, carRent: 'car rent'),
+                        new TripUserForm(userId: '2', inApartment: false, flightTicket: 'flight ticket', residenceAddress: 'Naugarduko 25, Vilnius')]
+        )
+
+
+        when:
+        def result = service.create(form)
+
+        then:
+        result.isSuccess()
+        def trip = operations.findById(result.getOrElse().id, Trip)
+        def loadedTrip = tripRepository.get(result.getOrElse().id).getOrElse()
+
+        loadedTrip.name == form.name
+        loadedTrip.departure == form.departure
+        loadedTrip.destination.city == trip.destination.address.city
+        loadedTrip.destination.street == trip.destination.address.street
+        loadedTrip.destination.apartmentNumber == trip.destination.address.apartmentNumber
+        loadedTrip.source.city == trip.source.address.city
+        loadedTrip.source.street== trip.source.address.street
+        loadedTrip.source.apartmentNumber== trip.source.address.apartmentNumber
+        loadedTrip.reservationBegin == form.reservationBegin
+        loadedTrip.reservationEnd == form.reservationEnd
+        loadedTrip.users.size() == 2
+        loadedTrip.users[0].userId == user1.id
+        loadedTrip.users[0].inApartment
+        loadedTrip.users[0].residenceAddress == AddressFormatter.formatAddress(trip.destination.address)
+        loadedTrip.users[0].carRent == 'car rent'
+        !loadedTrip.users[1].inApartment
+        loadedTrip.users[1].userId == user2.id
+        loadedTrip.users[1].flightTicket == 'flight ticket'
+        loadedTrip.users[1].residenceAddress == 'Naugarduko 25, Vilnius'
+
+    }
 }

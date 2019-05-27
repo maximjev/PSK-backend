@@ -4,6 +4,7 @@ import com.psk.backend.apartment.reservation.ReservationMapper;
 import com.psk.backend.apartment.reservation.ReservationRepository;
 import com.psk.backend.apartment.reservation.value.PlacementFilter;
 import com.psk.backend.apartment.reservation.value.PlacementResult;
+import com.psk.backend.calendar.EventRepository;
 import com.psk.backend.common.EntityId;
 import com.psk.backend.trip.value.TripCreateForm;
 import com.psk.backend.trip.value.TripForm;
@@ -24,13 +25,16 @@ public class TripManagementService {
 
     private final TripRepository tripRepository;
     private final ReservationRepository reservationRepository;
+    private final EventRepository eventRepository;
     private final ReservationMapper reservationMapper;
 
     public TripManagementService(TripRepository tripRepository,
                                  ReservationRepository reservationRepository,
+                                 EventRepository eventRepository,
                                  ReservationMapper reservationMapper) {
         this.tripRepository = tripRepository;
         this.reservationRepository = reservationRepository;
+        this.eventRepository = eventRepository;
         this.reservationMapper = reservationMapper;
     }
 

@@ -16,7 +16,7 @@ public class EventForm {
 	@NotEmpty
     private String description;
 
-    private List<EventUser> users;
+    private List<EventUserForm> users;
 
     @NotNull
     private LocalDateTime start;

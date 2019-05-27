@@ -13,6 +13,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -43,8 +44,14 @@ public abstract class EventMapper {
                 .collect(toList());
     }
 
+    public LocalDateTime end(TripForm form){
+        return form.isReservation()
+                ? form.getReservationBegin()
+                : form.getArrival();
+    }
+
     @Mapping(source = "departure", target = "start")
-    @Mapping(source = "reservationBegin", target = "end")
+    @Mapping(expression = "java(end(form))", target = "end")
     @Mapping(expression = "java(fromTripForm(form.getUsers()))", target = "users")
     public abstract EventForm fromTrip(TripForm form);
 

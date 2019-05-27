@@ -46,7 +46,12 @@ public abstract class TripMapper {
     @Mapping(source = "destination.address", target = "destinationAddress")
     abstract TripListView listView(Trip trip);
 
+    @Mapping(source = "source.address", target = "source")
+    @Mapping(source = "destination.address", target = "destination")
     abstract TripView view(Trip trip);
+
+    @Mapping(source = "id", target = "userId")
+    abstract TripUserForm tripUserForm(TripUser trip);
 
     abstract Trip update(TripForm form, @MappingTarget Trip trip);
 

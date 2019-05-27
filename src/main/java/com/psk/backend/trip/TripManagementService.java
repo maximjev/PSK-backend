@@ -4,6 +4,7 @@ import com.psk.backend.apartment.reservation.ReservationMapper;
 import com.psk.backend.apartment.reservation.ReservationRepository;
 import com.psk.backend.apartment.reservation.value.PlacementFilter;
 import com.psk.backend.apartment.reservation.value.PlacementResult;
+import com.psk.backend.calendar.EventMapper;
 import com.psk.backend.calendar.EventRepository;
 import com.psk.backend.common.EntityId;
 import com.psk.backend.trip.value.TripCreateForm;
@@ -27,15 +28,18 @@ public class TripManagementService {
     private final ReservationRepository reservationRepository;
     private final EventRepository eventRepository;
     private final ReservationMapper reservationMapper;
+    private final EventMapper eventMapper;
 
     public TripManagementService(TripRepository tripRepository,
                                  ReservationRepository reservationRepository,
                                  EventRepository eventRepository,
-                                 ReservationMapper reservationMapper) {
+                                 ReservationMapper reservationMapper,
+                                 EventMapper eventMapper) {
         this.tripRepository = tripRepository;
         this.reservationRepository = reservationRepository;
         this.eventRepository = eventRepository;
         this.reservationMapper = reservationMapper;
+        this.eventMapper = eventMapper;
     }
 
     public Try<EntityId> create(TripCreateForm form) {
@@ -44,6 +48,7 @@ public class TripManagementService {
                         new PlacementFilter(form.getReservationBegin(), form.getReservationEnd()))
                 .flatMap(a -> validateReservation(a, form))
                 .flatMap(a -> tripRepository.insert(form))
+                .flatMap(a -> eventRepository.insert(eventMapper.fromTrip(form)))
                 .flatMap(entityId ->
                         form.isReservation()
                                 ? reservationRepository.insert(reservationMapper.fromTrip(form), entityId.getId()).map(r -> entityId)

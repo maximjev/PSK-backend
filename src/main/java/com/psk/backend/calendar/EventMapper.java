@@ -37,7 +37,7 @@ public abstract class EventMapper {
                         this.user(u).isAtEvent(form.isAtEvent()))
                 .getOrElse(null);
     }
-    public static List<EventUserForm> fromTripForm(List<TripUserForm> form){
+    public List<EventUserForm> fromTripForm(List<TripUserForm> form){
         return form.stream()
                 .map(u -> new EventUserForm(u.getUserId(), true))
                 .collect(toList());
@@ -45,7 +45,7 @@ public abstract class EventMapper {
 
     @Mapping(source = "departure", target = "start")
     @Mapping(source = "reservationBegin", target = "end")
-    @Mapping(expression = "java(EventMapper.fromTripForm(form.getUsers()))", target = "users")
+    @Mapping(expression = "java(fromTripForm(form.getUsers()))", target = "users")
     public abstract EventForm fromTrip(TripForm form);
 
 

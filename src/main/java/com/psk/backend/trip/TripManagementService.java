@@ -59,8 +59,11 @@ public class TripManagementService {
     }
 
     public Try<EntityId> delete(String tripId) {
-        return reservationRepository.deleteByTripId(tripId)
-                .flatMap(id -> tripRepository.delete(tripId));
+        return tripRepository.findById(tripId)
+                .flatMap(t -> t.hasReservation()
+                        ? reservationRepository.deleteByTripId(tripId).flatMap(r -> tripRepository.delete(tripId))
+                        : tripRepository.delete(tripId)
+                );
     }
 
     private Try<PlacementResult> validateReservation(PlacementResult result, TripForm form) {

@@ -6,12 +6,12 @@ import com.psk.backend.calendar.value.EventListView;
 import com.psk.backend.calendar.value.EventView;
 import com.psk.backend.common.EntityId;
 import io.atlassian.fugue.Try;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Repository;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 import static com.psk.backend.common.EntityId.entityId;
 import static com.psk.backend.common.Error.OBJECT_NOT_FOUND;
@@ -32,21 +32,18 @@ public class EventRepository {
         this.eventMapper = eventMapper;
     }
 
-    public Page<EventListView> list(Pageable page) {
-        var conditions = new Criteria();
+    public List<EventListView> list(String userId) {
+        var conditions = new Criteria().andOperator(
+                where("users").elemMatch(where("id").is(userId)),
+                where("from").gt(LocalDateTime.now().minusMonths(1))
+        );
 
-        var total = mongoOperations.count(query(conditions), Event.class);
-
-        var events = mongoOperations.find(
-                query(conditions)
-                        .skip(page.getOffset())
-                        .limit(page.getPageSize()),
+        return mongoOperations.find(
+                query(conditions),
                 Event.class)
                 .stream()
                 .map(eventMapper::listView)
                 .collect(toList());
-
-        return new PageImpl<>(events, page, total);
     }
 
     public Try<EntityId> insert(EventForm form) {

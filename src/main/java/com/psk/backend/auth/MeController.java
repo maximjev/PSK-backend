@@ -22,7 +22,7 @@ public class MeController {
         this.userMapper = userMapper;
     }
 
-    @GetMapping("/me")
+    @GetMapping
     public ResponseEntity<CurrentUserView> get(Authentication auth) {
         return userRepository.findByUsername(auth.getName())
                 .map(userMapper::fromUser)

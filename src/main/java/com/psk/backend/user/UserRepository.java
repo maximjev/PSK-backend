@@ -18,8 +18,6 @@ import static com.psk.backend.common.EntityId.entityId;
 import static com.psk.backend.common.Error.USER_NOT_FOUND;
 import static io.atlassian.fugue.Try.failure;
 import static io.atlassian.fugue.Try.successful;
-import static java.util.Collections.reverseOrder;
-import static java.util.Comparator.comparing;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
@@ -55,7 +53,7 @@ public class UserRepository {
                         .limit(page.getPageSize()),
                 User.class)
                 .stream()
-                .sorted(comparing(User::getCreatedAt, reverseOrder()))
+//                .sorted(comparing(User::getCreatedAt, reverseOrder()))
                 .map(userMapper::listView)
                 .collect(toList());
 

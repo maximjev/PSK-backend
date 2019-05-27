@@ -7,12 +7,12 @@ import com.psk.backend.common.CommonErrors;
 import com.psk.backend.common.EntityId;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 import static org.springframework.http.ResponseEntity.unprocessableEntity;
 
@@ -30,8 +30,8 @@ public class EventController {
     @CommonErrors
     @ApiOperation(value = "Get event list", response = EventListView.class)
     @GetMapping
-    public Page<EventListView> getAll(Pageable page) {
-        return service.list(page);
+    public List<EventListView> getAll(Authentication authentication) {
+        return service.list(authentication);
     }
 
     @ApiOperation(value = "Create event", response = EntityId.class)

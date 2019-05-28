@@ -37,8 +37,8 @@ public class EventController {
     @ApiOperation(value = "Create event", response = EntityId.class)
     @CommonErrors
     @PostMapping
-    public ResponseEntity<?> create(@Valid @RequestBody EventForm form) {
-        return service.create(form).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
+    public ResponseEntity<?> create(@Valid @RequestBody EventForm form, Authentication authentication) {
+        return service.create(form, authentication).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
     }
 
     @ApiOperation(value = "Get event", response = EventView.class)

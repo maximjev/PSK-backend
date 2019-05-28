@@ -76,10 +76,12 @@ public abstract class TripMapper {
     public abstract AddressView address(Address address);
 
     @Mapping(target = "tripId", source = "id")
-    @Mapping(source = "source.address", target = "sourceAddress")
-    @Mapping(source = "destination.address", target = "destinationAddress")
+    @Mapping(expression = "java(com.psk.backend.common.address.AddressFormatter.formatAddress(trip.getSource().getAddress()))",
+            target = "sourceAddress")
+    @Mapping(expression = "java(com.psk.backend.common.address.AddressFormatter.formatAddress(trip.getDestination().getAddress()))",
+            target = "residenceAddress")
     @Mapping(ignore = true, target = "carRent")
-    @Mapping(ignore = true, target = "flight")
+    @Mapping(ignore = true, target = "flightTicket")
     public abstract TripUserView tripUserView(Trip trip);
 
 

@@ -64,6 +64,7 @@ public class TripRepository {
             return user.map(u -> {
                 userView.setCarRent(u.getCarRent());
                 userView.setFlightTicket(u.getFlightTicket());
+                userView.setResidenceAddress(u.getResidenceAddress());
                 return successful(userView);
             }).orElse(successful(userView));
         });

@@ -1058,6 +1058,5 @@ class TripManagementServiceTest extends Specification {
         loadedTrip.users[1].userId == user2.id
         loadedTrip.users[1].flightTicket == 'flight ticket'
         loadedTrip.users[1].residenceAddress == 'Naugarduko 25, Vilnius'
-
     }
 }

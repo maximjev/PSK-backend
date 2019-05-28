@@ -5,6 +5,7 @@ import com.psk.backend.calendar.value.EventForm;
 import com.psk.backend.calendar.value.EventListView;
 import com.psk.backend.calendar.value.EventView;
 import com.psk.backend.common.EntityId;
+import com.psk.backend.user.User;
 import io.atlassian.fugue.Try;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -35,7 +36,7 @@ public class EventRepository {
     public List<EventListView> list(String userId) {
         var conditions = new Criteria().andOperator(
                 where("users").elemMatch(where("id").is(userId)),
-                where("from").gt(LocalDateTime.now().minusMonths(1))
+                where("start").gt(LocalDateTime.now().minusMonths(1))
         );
 
         return mongoOperations.find(
@@ -46,8 +47,11 @@ public class EventRepository {
                 .collect(toList());
     }
 
-    public Try<EntityId> insert(EventForm form) {
+    public Try<EntityId> insert(EventForm form, User user) {
         Event event = eventMapper.create(form);
+        var eventUser = eventMapper.user(user);
+        eventUser.setStatus(EventUserStatus.CONFIRMED);
+        event.getUsers().add(eventUser);
         mongoOperations.insert(event);
         return successful(entityId(event.getId()));
     }

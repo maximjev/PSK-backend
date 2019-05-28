@@ -30,8 +30,9 @@ public class EventControllerService {
                 .getOrElse(Collections::emptyList);
     }
 
-    public Try<EntityId> create(EventForm form) {
-        return eventRepository.insert(form);
+    public Try<EntityId> create(EventForm form, Authentication authentication) {
+        return userRepository.findByEmail(authentication.getName())
+                .flatMap(u -> eventRepository.insert(form, u));
     }
 
     public Try<EntityId> update(String id, EventForm form) {

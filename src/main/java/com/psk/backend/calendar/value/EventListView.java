@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Setter
 public class EventListView {
     private String id;
-	private String description;
+	private String name;
     private LocalDateTime start;
     private LocalDateTime end;
     private boolean owner;

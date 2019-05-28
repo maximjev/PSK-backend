@@ -2,6 +2,7 @@ package com.psk.backend.calendar;
 
 import com.psk.backend.calendar.value.EventForm;
 import com.psk.backend.calendar.value.EventListView;
+import com.psk.backend.calendar.value.EventView;
 import com.psk.backend.common.CommonErrors;
 import com.psk.backend.common.EntityId;
 import io.swagger.annotations.ApiOperation;
@@ -40,17 +41,36 @@ public class EventController {
         return service.create(form, authentication).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
     }
 
-//    @ApiOperation(value = "Update event", response = EntityId.class)
-//    @CommonErrors
-//    @PutMapping("/{id}")
-//    public ResponseEntity<?> update(@PathVariable("id") String id, @Valid @RequestBody EventForm form, Authentication authentication) {
-//        return service.update(id, form, authentication).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
-//    }
+    @ApiOperation(value = "Update event", response = EntityId.class)
+    @CommonErrors
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@PathVariable("id") String id, @Valid @RequestBody EventForm form, Authentication authentication) {
+        return service.update(id, form, authentication).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
+    }
 
     @ApiOperation(value = "Delete event", response = EntityId.class)
     @CommonErrors
     @DeleteMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable("id") String id, Authentication authentication) {
         return service.delete(id, authentication).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
+    }
+
+    @ApiOperation(value = "Get event details for owner", response = EventView.class)
+    @GetMapping("/{id}")
+    public ResponseEntity<?> get(@PathVariable("id") String id, Authentication authentication) {
+        return service.get(id, authentication).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
+    }
+
+    @ApiOperation(value = "Confirm event", response = EntityId.class)
+    @CommonErrors
+    @PutMapping("/{id}/confirm")
+    public ResponseEntity<?> confirm(@PathVariable("id") String id, Authentication authentication) {
+        return service.confirm(id, authentication).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
+    }
+    @ApiOperation(value = "Decline event", response = EntityId.class)
+    @CommonErrors
+    @PutMapping("/{id}/decline")
+    public ResponseEntity<?> decline(@PathVariable("id") String id, Authentication authentication) {
+        return service.decline(id, authentication).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
     }
 }

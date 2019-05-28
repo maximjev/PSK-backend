@@ -2,6 +2,7 @@ package com.psk.backend.calendar;
 
 import com.psk.backend.calendar.value.EventForm;
 import com.psk.backend.calendar.value.EventListView;
+import com.psk.backend.calendar.value.EventView;
 import com.psk.backend.common.EntityId;
 import io.atlassian.fugue.Try;
 import org.springframework.security.core.Authentication;
@@ -13,9 +14,11 @@ import java.util.List;
 public class EventControllerService {
 
     private final EventManagementService service;
+    private final EventConfirmationService confirmationService;
 
-    public EventControllerService(EventManagementService service) {
+    public EventControllerService(EventManagementService service, EventConfirmationService confirmationService) {
         this.service = service;
+        this.confirmationService = confirmationService;
     }
 
     public List<EventListView> list(Authentication authentication) {
@@ -30,7 +33,19 @@ public class EventControllerService {
         return service.update(id, form, authentication);
     }
 
+    public Try<EventView> get(String id, Authentication authentication) {
+        return service.get(id, authentication);
+    }
+
     public Try<EntityId> delete(String id, Authentication authentication) {
         return service.delete(id, authentication);
+    }
+
+    public Try<EntityId> confirm(String id, Authentication authentication) {
+        return confirmationService.confirm(id, authentication);
+    }
+
+    public Try<EntityId> decline(String id, Authentication authentication) {
+        return confirmationService.decline(id, authentication);
     }
 }

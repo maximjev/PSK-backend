@@ -3,6 +3,7 @@ package com.psk.backend.calendar;
 import com.mongodb.client.result.DeleteResult;
 import com.psk.backend.calendar.value.EventForm;
 import com.psk.backend.calendar.value.EventListView;
+import com.psk.backend.calendar.value.EventView;
 import com.psk.backend.common.EntityId;
 import com.psk.backend.user.AuditUser;
 import com.psk.backend.user.User;
@@ -96,5 +97,21 @@ public class EventRepository {
                 .one()
                 .map(Try::successful)
                 .orElseGet(() -> failure(OBJECT_NOT_FOUND.entity(Event.class.getName(), id)));
+    }
+
+    public Try<EntityId> updateStatus(String id, String userId, EventUserStatus status) {
+        return findByCriteria(id, where("id").is(id)).map(e -> {
+            e.getUsers().stream()
+                    .filter(u -> u.getId().equals(userId))
+                    .findFirst()
+                    .ifPresent(u -> u.setStatus(status));
+            mongoOperations.save(e);
+            return entityId(e.getId());
+        });
+    }
+
+    public Try<EventView> get(String id, AuditUser user) {
+        return findByCriteria(id, eventOfOwner(id, user))
+                .map(eventMapper::view);
     }
 }

@@ -17,6 +17,8 @@ public class Event {
     @Id
     private String id;
 
+    private String name;
+
     private String description;
 	
 	private List<EventUser> users;
@@ -38,9 +40,4 @@ public class Event {
 
     @LastModifiedBy
     private AuditUser updatedBy;
-
-    public Event withTrip(String tripId) {
-        this.tripId = tripId;
-        return this;
-    }
 }

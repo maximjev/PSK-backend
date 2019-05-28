@@ -2,6 +2,7 @@ package com.psk.backend.calendar;
 
 import com.psk.backend.calendar.value.EventForm;
 import com.psk.backend.calendar.value.EventListView;
+import com.psk.backend.calendar.value.EventView;
 import com.psk.backend.common.EntityId;
 import com.psk.backend.trip.TripRepository;
 import com.psk.backend.user.AuditUser;
@@ -51,5 +52,10 @@ public class EventManagementService {
     public Try<EntityId> update(String id, EventForm eventForm, Authentication authentication) {
         return userRepository.findByEmail(authentication.getName())
                 .flatMap(u -> eventRepository.update(id, eventForm, AuditUser.of(u)));
+    }
+
+    public Try<EventView> get(String id, Authentication authentication) {
+        return userRepository.findByEmail(authentication.getName())
+                .flatMap(u -> eventRepository.get(id, AuditUser.of(u)));
     }
 }

@@ -1,8 +1,6 @@
 package com.psk.backend.calendar;
 
-import com.psk.backend.calendar.value.EventForm;
-import com.psk.backend.calendar.value.EventListView;
-import com.psk.backend.calendar.value.EventUserForm;
+import com.psk.backend.calendar.value.*;
 import com.psk.backend.config.BaseMapperConfig;
 import com.psk.backend.user.User;
 import com.psk.backend.user.UserRepository;
@@ -20,7 +18,7 @@ public abstract class EventMapper {
 
     abstract Event create(EventForm form);
 
-    @Mapping(target = "trip", defaultValue = "false")
+    @Mapping(target = "trip", expression = "java(false)")
     @Mapping(target = "owner", expression = "java(e.getCreatedBy().getUserId().equals(userId))")
     abstract EventListView listView(Event e, String userId);
 
@@ -28,11 +26,15 @@ public abstract class EventMapper {
 
     public EventUser user(EventUserForm form) {
         return userRepository
-                .findById(form.getUserId()).map(u ->
-                        this.user(u).isAtEvent(form.isAtEvent()))
+                .findById(form.getUserId()).map(this::user)
                 .getOrElse(null);
     }
 
     @Mapping(target = "status", expression = "java(EventUserStatus.CONFIRMATION_PENDING)")
+    @Mapping(target = "owner", expression = "java(false)")
     abstract EventUser user(User user);
+
+    abstract EventView view(Event event);
+
+    abstract EventUserView userView(EventUser user);
 }

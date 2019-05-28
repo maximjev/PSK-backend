@@ -51,7 +51,9 @@ public abstract class EventMapper {
     }
 
     @Mapping(source = "departure", target = "start")
-    @Mapping(expression = "java(end(form))", target = "end")
+    @Mapping(expression = "java(form.isReservation()" +
+                            " ? form.getReservationBegin()" +
+                            " : form.getArrival())", target = "end")
     @Mapping(expression = "java(fromTripForm(form.getUsers()))", target = "users")
     public abstract EventForm fromTrip(TripForm form);
 

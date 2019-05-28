@@ -51,9 +51,13 @@ public class EventRepository {
         mongoOperations.insert(event);
         return successful(entityId(event.getId()));
     }
+    public Try<EntityId> insert(EventForm form, String tripId) {
+        var entity = mongoOperations.insert(eventMapper.create(form).withTrip(tripId));
+        return successful(entityId(entity.getId()));
+    }
 
     public Try<EntityId> update(String id, EventForm form) {
-        return findById(id).map(a -> {
+        return findByTripId(id).map(a -> {
             mongoOperations.save(eventMapper.update(form, a));
             return entityId(a.getId());
         });
@@ -76,6 +80,14 @@ public class EventRepository {
                 .one()
                 .map(Try::successful)
                 .orElseGet(() -> failure(OBJECT_NOT_FOUND.entity(Event.class.getName(), id)));
+    }
+    public Try<Event> findByTripId(String tripId) {
+        return mongoOperations
+                .query(Event.class)
+                .matching(query(where("tripId").is(tripId)))
+                .one()
+                .map(Try::successful)
+                .orElseGet(() -> failure(OBJECT_NOT_FOUND.entity(Event.class.getName(), tripId)));
     }
 
     public Try<EventView> get(String id) {

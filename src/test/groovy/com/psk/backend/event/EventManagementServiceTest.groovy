@@ -109,7 +109,7 @@ class EventManagementServiceTest extends Specification {
         list[0].id == result.getOrElse().id
         list[0].start == form.start
         list[0].end == form.end
-        list[0].description == form.description
+        list[0].name == form.name
         list[0].owner
         !list[0].trip
     }
@@ -144,7 +144,7 @@ class EventManagementServiceTest extends Specification {
         list[0].id == result.getOrElse().id
         list[0].start == form.departure
         list[0].end == form.reservationBegin
-        list[0].description == form.description
+        list[0].name == form.name
         !list[0].owner
         list[0].trip
     }
@@ -178,7 +178,7 @@ class EventManagementServiceTest extends Specification {
         list[0].id == result.getOrElse().id
         list[0].start == form.departure
         list[0].end == form.arrival
-        list[0].description == form.description
+        list[0].name == form.name
         !list[0].owner
         list[0].trip
     }
@@ -221,14 +221,14 @@ class EventManagementServiceTest extends Specification {
         list[0].id == event.getOrElse().id
         list[0].start == form.start
         list[0].end == form.end
-        list[0].description == form.description
+        list[0].name == form.name
         list[0].owner
         !list[0].trip
 
         list[1].id == trip.getOrElse().id
         list[1].start == tripForm.departure
         list[1].end == tripForm.arrival
-        list[1].description == tripForm.description
+        list[1].name == tripForm.name
         !list[1].owner
         list[1].trip
     }

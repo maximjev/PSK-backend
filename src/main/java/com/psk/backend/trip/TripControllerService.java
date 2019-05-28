@@ -2,24 +2,31 @@ package com.psk.backend.trip;
 
 import com.psk.backend.common.EntityId;
 import com.psk.backend.trip.value.*;
+import com.psk.backend.user.UserRepository;
 import io.atlassian.fugue.Try;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-
-import static com.psk.backend.common.Error.UNEXPECTED_ERROR;
-import static io.atlassian.fugue.Try.failure;
 
 @Service
 public class TripControllerService {
     private final TripRepository repository;
     private final TripManagementService service;
+    private final UserRepository userRepository;
+    private final TripMergeService mergeService;
+    private final TripConfirmationService confirmationService;
 
-    public TripControllerService(TripRepository repository, TripManagementService service) {
+    public TripControllerService(TripRepository repository,
+                                 TripManagementService service,
+                                 UserRepository userRepository,
+                                 TripMergeService mergeService,
+                                 TripConfirmationService confirmationService) {
         this.repository = repository;
         this.service = service;
+        this.userRepository = userRepository;
+        this.mergeService = mergeService;
+        this.confirmationService = confirmationService;
     }
 
     public Page<TripListView> list(Pageable page) {
@@ -38,6 +45,11 @@ public class TripControllerService {
         return repository.get(id);
     }
 
+    public Try<TripUserView> getUserView(String id, Authentication authentication) {
+        return userRepository.findByEmail(authentication.getName())
+                .flatMap(u -> repository.tripUserView(id, u.getId()));
+    }
+
     public Try<EntityId> delete(String id) {
         return service.delete(id);
     }
@@ -47,27 +59,18 @@ public class TripControllerService {
     }
 
     public Try<EntityId> merge(TripMergeForm form) {
-        return service.merge(form);
+        return mergeService.merge(form);
     }
 
-    public Try<EntityId> confirm(String id, String userId) {
-        return repository.findById(id).flatMap(trip -> {
-            if (trip.getDeparture().isAfter(LocalDateTime.now())) {
-                return repository.updateStatus(id, userId, TripUserStatus.CONFIRMED);
-            }
-            return failure(UNEXPECTED_ERROR.entity(id));
-        });
+    public Try<EntityId> confirm(String id, Authentication authentication) {
+        return confirmationService.confirm(id, authentication);
     }
 
-    public Try<EntityId> decline(String id, String userId) {
-        return repository.findById(id).flatMap(trip -> {
-           if (trip.getDeparture().isAfter(LocalDateTime.now())) {
-               repository.setUserApartmentReservation(id, userId, false);
-               return repository.updateStatus(id, userId, TripUserStatus.DECLINED);
-           }
-           return failure(UNEXPECTED_ERROR.entity(id));
-        });
+    public Try<EntityId> decline(String id, Authentication authentication) {
+        return confirmationService.decline(id, authentication);
     }
 
-    public Page<TripListView> listByUser(Pageable page, String userId) {return repository.listByUser(page, userId); }
+    public Page<TripListView> listByUser(Pageable page, String userId) {
+        return repository.listByUser(page, userId);
+    }
 }

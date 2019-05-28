@@ -3,8 +3,9 @@ package com.psk.backend.calendar;
 import com.mongodb.client.result.DeleteResult;
 import com.psk.backend.calendar.value.EventForm;
 import com.psk.backend.calendar.value.EventListView;
-import com.psk.backend.calendar.value.EventView;
 import com.psk.backend.common.EntityId;
+import com.psk.backend.user.AuditUser;
+import com.psk.backend.user.User;
 import io.atlassian.fugue.Try;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -34,38 +35,53 @@ public class EventRepository {
 
     public List<EventListView> list(String userId) {
         var conditions = new Criteria().andOperator(
-                where("users").elemMatch(where("id").is(userId)),
-                where("from").gt(LocalDateTime.now().minusMonths(1))
+                where("start").gt(LocalDateTime.now().minusMonths(1)),
+                where("users").elemMatch(where("id").is(userId)
+                        .orOperator(
+                                where("status").is(EventUserStatus.CONFIRMATION_PENDING),
+                                where("status").is(EventUserStatus.CONFIRMED)
+                        ))
         );
 
         return mongoOperations.find(
                 query(conditions),
                 Event.class)
                 .stream()
-                .map(eventMapper::listView)
+                .map((Event e) -> eventMapper.listView(e, userId))
                 .collect(toList());
     }
 
-    public Try<EntityId> insert(EventForm form) {
+    public Try<EntityId> insert(EventForm form, User user) {
         Event event = eventMapper.create(form);
+        var eventUser = eventMapper.user(user);
+        eventUser.setStatus(EventUserStatus.CONFIRMED);
+        if (event.getUsers() == null) {
+            event.setUsers(List.of(eventUser));
+        } else {
+            event.getUsers().add(eventUser);
+        }
         mongoOperations.insert(event);
         return successful(entityId(event.getId()));
     }
-    public Try<EntityId> insert(EventForm form, String tripId) {
-        var entity = mongoOperations.insert(eventMapper.create(form).withTrip(tripId));
-        return successful(entityId(entity.getId()));
+
+    public Try<EntityId> update(String id, EventForm form, AuditUser user) {
+        return this.findByCriteria(id, eventOfOwner(id, user))
+                .map(e -> {
+                    mongoOperations.save(eventMapper.update(form, e));
+                    return entityId(id);
+                });
     }
 
-    public Try<EntityId> update(String id, EventForm form) {
-        return findByTripId(id).map(a -> {
-            mongoOperations.save(eventMapper.update(form, a));
-            return entityId(a.getId());
-        });
+    private Criteria eventOfOwner(String id, AuditUser user) {
+        return new Criteria().andOperator(
+                where("id").is(id),
+                where("createdBy").is(user)
+        );
     }
 
-    public Try<EntityId> delete(String id) {
+    public Try<EntityId> delete(String id, AuditUser user) {
         DeleteResult result = mongoOperations.remove(
-                query(where("id").is(id)),
+                query(eventOfOwner(id, user)),
                 Event.class
         );
         return result.getDeletedCount() > 0
@@ -73,24 +89,12 @@ public class EventRepository {
                 : failure(OBJECT_NOT_FOUND.entity(id));
     }
 
-    public Try<Event> findById(String id) {
+    public Try<Event> findByCriteria(String id, Criteria criteria) {
         return mongoOperations
                 .query(Event.class)
-                .matching(query(where("id").is(id)))
+                .matching(query(criteria))
                 .one()
                 .map(Try::successful)
                 .orElseGet(() -> failure(OBJECT_NOT_FOUND.entity(Event.class.getName(), id)));
-    }
-    public Try<Event> findByTripId(String tripId) {
-        return mongoOperations
-                .query(Event.class)
-                .matching(query(where("tripId").is(tripId)))
-                .one()
-                .map(Try::successful)
-                .orElseGet(() -> failure(OBJECT_NOT_FOUND.entity(Event.class.getName(), tripId)));
-    }
-
-    public Try<EventView> get(String id) {
-        return findById(id).map(eventMapper::view);
     }
 }

@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -43,6 +44,12 @@ public class TripController {
         return service.get(id).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
     }
 
+    @ApiOperation(value = "Get user trip view", response = TripUserView.class)
+    @GetMapping("/{id}/user-view")
+    public ResponseEntity<?> getUserView(@PathVariable("id") String id, Authentication authentication) {
+        return service.getUserView(id, authentication).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
+    }
+
     @ApiOperation(value = "Update trip", response = EntityId.class)
     @CommonErrors
     @PutMapping("/{id}")
@@ -59,15 +66,15 @@ public class TripController {
 
     @ApiOperation(value = "Confirm trip", response = EntityId.class)
     @CommonErrors
-    @PutMapping("/{id}/{userId}/confirm/")
-    public ResponseEntity<?> confirm(@PathVariable("id") String id, @PathVariable("userId") String userId) {
-        return service.confirm(id, userId).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
+    @PutMapping("/{id}/confirm")
+    public ResponseEntity<?> confirm(@PathVariable("id") String id, Authentication authentication) {
+        return service.confirm(id, authentication).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
     }
     @ApiOperation(value = "Decline trip", response = EntityId.class)
     @CommonErrors
-    @PutMapping("/{id}/{userId}/decline/")
-    public ResponseEntity<?> decline(@PathVariable("id") String id, @PathVariable("userId") String userId) {
-        return service.decline(id, userId).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
+    @PutMapping("/{id}/decline")
+    public ResponseEntity<?> decline(@PathVariable("id") String id, Authentication authentication) {
+        return service.decline(id, authentication).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
     }
 
     @CommonErrors

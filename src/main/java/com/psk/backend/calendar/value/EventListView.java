@@ -12,4 +12,6 @@ public class EventListView {
 	private String description;
     private LocalDateTime start;
     private LocalDateTime end;
+    private boolean owner;
+    private boolean trip;
 }

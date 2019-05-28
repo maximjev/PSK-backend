@@ -1,11 +1,9 @@
 package com.psk.backend.trip;
 
 import com.mongodb.client.result.DeleteResult;
+import com.psk.backend.calendar.value.EventListView;
 import com.psk.backend.common.EntityId;
-import com.psk.backend.trip.value.TripCreateForm;
-import com.psk.backend.trip.value.TripForm;
-import com.psk.backend.trip.value.TripListView;
-import com.psk.backend.trip.value.TripView;
+import com.psk.backend.trip.value.*;
 import io.atlassian.fugue.Try;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -15,6 +13,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.psk.backend.common.EntityId.entityId;
@@ -38,8 +37,23 @@ public class TripRepository {
         this.mongoOperations = mongoOperations;
         this.mapper = mapper;
     }
-    public List<Trip> getAllTrips(){
-        return mongoOperations.findAll(Trip.class);
+
+    public List<EventListView> eventListView(String userId) {
+        var conditions = new Criteria().andOperator(
+                where("users").elemMatch(where("id").is(userId)
+                        .orOperator(
+                                where("status").is(TripUserStatus.CONFIRMATION_PENDING),
+                                where("status").is(TripUserStatus.CONFIRMED)
+                        )),
+                where("departure").gt(LocalDateTime.now().minusMonths(1))
+        );
+
+        return mongoOperations.find(
+                query(conditions),
+                Trip.class)
+                .stream()
+                .map(mapper::toEvent)
+                .collect(toList());
     }
 
     public Page<TripListView> list(Pageable page) {
@@ -57,6 +71,19 @@ public class TripRepository {
                     where("destination").is(t.getDestination()));
 
             return successful(listView(page, criteria));
+        });
+    }
+
+    public Try<TripUserView> tripUserView(String id, String userId) {
+        return findById(id).flatMap(t -> {
+            var userView = mapper.tripUserView(t);
+            var user = t.getUsers().stream().filter(u -> u.getId().equals(userId)).findFirst();
+            return user.map(u -> {
+                userView.setCarRent(u.getCarRent());
+                userView.setFlightTicket(u.getFlightTicket());
+                userView.setResidenceAddress(u.getResidenceAddress());
+                return successful(userView);
+            }).orElse(successful(userView));
         });
     }
 
@@ -118,18 +145,18 @@ public class TripRepository {
 
     public Try<EntityId> updateStatus(String id, String userId, TripUserStatus status) {
         return findById(id).flatMap(trip -> {
-            List <TripUser> users= trip.getUsers();
+            List<TripUser> users = trip.getUsers();
             users.stream()
                     .filter(u -> userId.equals(u.getId()))
                     .forEach(u -> u.setStatus(status));
             mongoOperations.save(trip);
             return successful(entityId(id));
-
         });
     }
+
     public Try<EntityId> setUserApartmentReservation(String id, String userId, boolean status) {
         return findById(id).flatMap(trip -> {
-            List <TripUser> users= trip.getUsers();
+            List<TripUser> users = trip.getUsers();
             users.stream()
                     .filter(u -> userId.equals(u.getId()))
                     .forEach(u -> u.setInApartment(status));
@@ -143,7 +170,7 @@ public class TripRepository {
         var conditions = new Criteria();
 
         var total = mongoOperations.count(query(conditions)
-                .addCriteria(where("users").elemMatch(Criteria.where("id").is(userId))),
+                        .addCriteria(where("users").elemMatch(Criteria.where("id").is(userId))),
                 Trip.class);
 
         var entities = mongoOperations.find(
@@ -159,7 +186,7 @@ public class TripRepository {
         return new PageImpl<>(entities, page, total);
     }
 
-    public List<Trip> getTripsByStatus(TripStatus status){
+    public List<Trip> getTripsByStatus(TripStatus status) {
         return mongoOperations.find(new Query(Criteria.where("status").is(status)), Trip.class);
     }
 }

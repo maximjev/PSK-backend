@@ -45,7 +45,8 @@ public class TripRepository {
                                 where("status").is(TripUserStatus.CONFIRMATION_PENDING),
                                 where("status").is(TripUserStatus.CONFIRMED)
                         )),
-                where("departure").gt(LocalDateTime.now().minusMonths(1))
+                where("departure").gt(LocalDateTime.now().minusMonths(1)),
+                where("status").ne(TripStatus.CANCELLED)
         );
 
         return mongoOperations.find(
@@ -66,7 +67,10 @@ public class TripRepository {
                     where("departure").lte(t.getDeparture().plusDays(1)),
                     where("departure").gte(t.getDeparture().minusDays(1))
             ).andOperator(
-                    where("status").is(TripStatus.DRAFT),
+                    new Criteria().orOperator(
+                            where("status").is(TripStatus.DRAFT),
+                            where("status").is(TripStatus.CONFIRMED)
+                    ),
                     where("source").is(t.getSource()),
                     where("destination").is(t.getDestination()));
 

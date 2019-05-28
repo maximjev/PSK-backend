@@ -31,7 +31,6 @@ public abstract class EventMapper {
     }
 
     @Mapping(target = "status", expression = "java(EventUserStatus.CONFIRMATION_PENDING)")
-    @Mapping(target = "owner", expression = "java(false)")
     abstract EventUser user(User user);
 
     abstract EventView view(Event event);

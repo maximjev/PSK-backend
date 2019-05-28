@@ -40,12 +40,12 @@ public class EventController {
         return service.create(form, authentication).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
     }
 
-    @ApiOperation(value = "Update event", response = EntityId.class)
-    @CommonErrors
-    @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") String id, @Valid @RequestBody EventForm form, Authentication authentication) {
-        return service.update(id, form, authentication).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
-    }
+//    @ApiOperation(value = "Update event", response = EntityId.class)
+//    @CommonErrors
+//    @PutMapping("/{id}")
+//    public ResponseEntity<?> update(@PathVariable("id") String id, @Valid @RequestBody EventForm form, Authentication authentication) {
+//        return service.update(id, form, authentication).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
+//    }
 
     @ApiOperation(value = "Delete event", response = EntityId.class)
     @CommonErrors

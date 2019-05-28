@@ -86,12 +86,9 @@ public abstract class TripMapper {
     public abstract TripUserView tripUserView(Trip trip);
 
     @Mapping(source = "departure", target = "start")
-    @Mapping(source = "reservationBegin", target = "end")
-    @Mapping(target = "trip", expression = "java(true)")
-    public abstract EventListView toReservedEvent(Trip trip);
-
-    @Mapping(source = "departure", target = "start")
-    @Mapping(source = "arrival", target = "end")
+    @Mapping(expression = "java(trip.isReservation()" +
+            " ? trip.getReservationBegin()" +
+            " : trip.getArrival())", target = "end")
     @Mapping(target = "trip", expression = "java(true)")
     public abstract EventListView toEvent(Trip trip);
 }

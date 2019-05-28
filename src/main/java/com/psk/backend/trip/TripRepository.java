@@ -52,7 +52,7 @@ public class TripRepository {
                 query(conditions),
                 Trip.class)
                 .stream()
-                .map(t -> t.isReservation() ? mapper.toReservedEvent(t) : mapper.toEvent(t))
+                .map(mapper::toEvent)
                 .collect(toList());
     }
 

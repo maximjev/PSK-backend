@@ -48,8 +48,8 @@ public class EventManagementService {
                 .flatMap(u -> eventRepository.delete(id, AuditUser.of(u)));
     }
 
-//    public Try<EntityId> update(String id, EventForm eventForm, Authentication authentication) {
-//        return userRepository.findByEmail(authentication.getName())
-//                .flatMap(u -> eventRepository.update(id, eventForm, AuditUser.of(u)));
-//    }
+    public Try<EntityId> update(String id, EventForm eventForm, Authentication authentication) {
+        return userRepository.findByEmail(authentication.getName())
+                .flatMap(u -> eventRepository.update(id, eventForm, AuditUser.of(u)));
+    }
 }

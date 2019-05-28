@@ -34,7 +34,7 @@ public class ScheduledTaskService {
                     .filter(user -> user.getStatus().equals(TripUserStatus.CONFIRMATION_PENDING))
                     .count();
             if (noOfPendingUsers > 0 && trip.getDeparture().isBefore(LocalDateTime.now())){
-                trip.setStatus(TripStatus.CANCELED);
+                trip.setStatus(TripStatus.CANCELLED);
                 tripRepository.save(trip);
                 continue;
             }
@@ -53,7 +53,7 @@ public class ScheduledTaskService {
                     .count();
             if (noOfDeclinedUsers == trip.getUsers().size()
                     || trip.getDeparture().isBefore(LocalDateTime.now()) ){
-                trip.setStatus(TripStatus.CANCELED);
+                trip.setStatus(TripStatus.CANCELLED);
                 tripRepository.save(trip);
                 continue;
             }

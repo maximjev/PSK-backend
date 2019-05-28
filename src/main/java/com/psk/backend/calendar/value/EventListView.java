@@ -1,5 +1,6 @@
 package com.psk.backend.calendar.value;
 
+import com.psk.backend.calendar.EventUserStatus;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,6 +13,7 @@ public class EventListView {
 	private String name;
     private LocalDateTime start;
     private LocalDateTime end;
+    private EventUserStatus status;
     private boolean owner;
     private boolean trip;
 }

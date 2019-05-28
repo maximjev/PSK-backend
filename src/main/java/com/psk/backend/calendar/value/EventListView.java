@@ -13,7 +13,7 @@ public class EventListView {
 	private String name;
     private LocalDateTime start;
     private LocalDateTime end;
-    private EventUserStatus status;
+    private EventUserStatus userStatus;
     private boolean owner;
     private boolean trip;
 }

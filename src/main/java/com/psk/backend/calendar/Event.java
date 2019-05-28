@@ -24,6 +24,8 @@ public class Event {
     private LocalDateTime start;
 
     private LocalDateTime end;
+
+    private String tripId;
 	
 	@CreatedDate
     private LocalDateTime createdAt;
@@ -36,4 +38,9 @@ public class Event {
 
     @LastModifiedBy
     private AuditUser updatedBy;
+
+    public Event withTrip(String tripId) {
+        this.tripId = tripId;
+        return this;
+    }
 }

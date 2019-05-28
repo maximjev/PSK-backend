@@ -7,7 +7,6 @@ import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Document
@@ -20,7 +19,7 @@ public class Event {
 
     private String description;
 	
-	private List<EventUser> users = new ArrayList<>();
+	private List<EventUser> users;
 
     private LocalDateTime start;
 

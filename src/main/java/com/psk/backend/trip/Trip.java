@@ -109,7 +109,7 @@ public class Trip {
     }
 
     public Long getUserInApartmentCount() {
-        return getUsers().stream().filter(TripUser::isInApartment).count();
+        return getUsers().stream().filter(TripUser::isInApartment).filter(TripUser::notDeclined).count();
     }
 
     public boolean hasReservation() {

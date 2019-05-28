@@ -22,4 +22,11 @@ class UserBuilder {
                 id: id
         ).build()
     }
+
+    static User user(String id, String email) {
+        new UserBuilder(
+                id: id,
+                email: email
+        ).build()
+    }
 }

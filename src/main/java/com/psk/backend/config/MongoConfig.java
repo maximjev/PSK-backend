@@ -2,6 +2,7 @@ package com.psk.backend.config;
 
 import com.psk.backend.user.AuditUser;
 import com.psk.backend.user.UserRepository;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
@@ -41,4 +42,8 @@ public class MongoConfig {
         }
     }
 
+    @Bean
+    public SpringSecurityAuditorAware springSecurityAuditorAware(UserRepository userRepository) {
+        return new SpringSecurityAuditorAware(userRepository);
+    }
 }

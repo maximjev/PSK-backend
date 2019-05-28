@@ -25,4 +25,8 @@ public class TripUser {
         this.inApartment = inApartment;
         return this;
     }
+
+    public boolean notDeclined() {
+        return !status.equals(TripUserStatus.DECLINED);
+    }
 }

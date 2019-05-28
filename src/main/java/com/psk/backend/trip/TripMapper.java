@@ -2,6 +2,7 @@ package com.psk.backend.trip;
 
 import com.psk.backend.apartment.Address;
 import com.psk.backend.apartment.ApartmentRepository;
+import com.psk.backend.calendar.value.EventListView;
 import com.psk.backend.common.address.AddressView;
 import com.psk.backend.config.BaseMapperConfig;
 import com.psk.backend.trip.value.*;
@@ -84,5 +85,13 @@ public abstract class TripMapper {
     @Mapping(ignore = true, target = "flightTicket")
     public abstract TripUserView tripUserView(Trip trip);
 
+    @Mapping(source = "departure", target = "start")
+    @Mapping(source = "reservationBegin", target = "end")
+    @Mapping(target = "trip", expression = "java(true)")
+    public abstract EventListView toReservedEvent(Trip trip);
 
+    @Mapping(source = "departure", target = "start")
+    @Mapping(source = "arrival", target = "end")
+    @Mapping(target = "trip", expression = "java(true)")
+    public abstract EventListView toEvent(Trip trip);
 }

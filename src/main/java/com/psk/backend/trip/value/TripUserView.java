@@ -1,6 +1,7 @@
 package com.psk.backend.trip.value;
 
 import com.psk.backend.trip.TripStatus;
+import com.psk.backend.trip.TripUserStatus;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,4 +18,5 @@ public class TripUserView {
     private String residenceAddress;
     private String carRent;
     private String flightTicket;
+    private TripUserStatus userStatus;
 }

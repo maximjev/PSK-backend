@@ -82,6 +82,7 @@ public class TripRepository {
                 userView.setCarRent(u.getCarRent());
                 userView.setFlightTicket(u.getFlightTicket());
                 userView.setResidenceAddress(u.getResidenceAddress());
+                userView.setUserStatus(u.getStatus());
                 return successful(userView);
             }).orElse(successful(userView));
         });

@@ -20,6 +20,8 @@ public abstract class EventMapper {
 
     @Mapping(target = "trip", expression = "java(false)")
     @Mapping(target = "owner", expression = "java(e.getCreatedBy().getUserId().equals(userId))")
+    @Mapping(target = "status", expression = "java(e.getUsers().stream()" +
+            ".filter(u -> u.getId().equals(userId)).findFirst().get().getStatus())")
     abstract EventListView listView(Event e, String userId);
 
     abstract Event update(EventForm form, @MappingTarget Event event);

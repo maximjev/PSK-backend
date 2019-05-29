@@ -25,6 +25,10 @@ public class EventControllerService {
         return service.list(authentication);
     }
 
+    public List<EventListView> forUser(String id) {
+        return service.forUser(id);
+    }
+
     public Try<EntityId> create(EventForm form, Authentication authentication) {
         return service.create(form, authentication);
     }

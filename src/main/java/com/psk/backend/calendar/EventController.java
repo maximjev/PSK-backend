@@ -61,6 +61,12 @@ public class EventController {
         return service.get(id, authentication).fold(e -> unprocessableEntity().body(e), ResponseEntity::ok);
     }
 
+    @ApiOperation(value = "Get events for user", response = EventListView.class)
+    @GetMapping("/user/{userId}")
+    public List<EventListView> forUser(@PathVariable("userId") String userId) {
+        return service.forUser(userId);
+    }
+
     @ApiOperation(value = "Confirm event", response = EntityId.class)
     @CommonErrors
     @PutMapping("/{id}/confirm")

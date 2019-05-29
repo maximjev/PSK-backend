@@ -1,46 +1,79 @@
 package com.psk.backend.trip;
 
 import com.psk.backend.apartment.Address;
+import com.psk.backend.apartment.ApartmentRepository;
 import com.psk.backend.calendar.value.EventListView;
 import com.psk.backend.common.address.AddressView;
 import com.psk.backend.config.BaseMapperConfig;
 import com.psk.backend.trip.value.*;
 import com.psk.backend.user.User;
+import com.psk.backend.user.UserRepository;
 import org.mapstruct.*;
 
+import javax.annotation.Resource;
+
+import static com.psk.backend.common.address.AddressFormatter.formatAddress;
 
 @Mapper(config = BaseMapperConfig.class)
 @DecoratedWith(TripMapperDecorator.class)
-interface TripMapper {
+public abstract class TripMapper {
+
+    @Resource
+    private UserRepository userRepository;
+
+    @Resource
+    private ApartmentRepository apartmentRepository;
 
     @Mapping(target = "status", expression = "java(TripStatus.DRAFT)")
-    Trip create(TripCreateForm form);
+    abstract Trip create(TripCreateForm form);
 
+    @AfterMapping
+    public void afterMapping(TripCreateForm form, @MappingTarget Trip trip) {
+        trip.getUsers().stream()
+                .filter(TripUser::isInApartment)
+                .forEach(u -> u.setResidenceAddress(formatAddress(trip.getDestination().getAddress())));
+    }
 
+    @AfterMapping
+    public void afterMapping(TripForm form, @MappingTarget Trip trip) {
+        trip.getUsers().stream()
+                .filter(TripUser::isInApartment)
+                .forEach(u -> u.setResidenceAddress(formatAddress(trip.getDestination().getAddress())));
+    }
 
     @Mapping(source = "source.address", target = "sourceAddress")
     @Mapping(source = "destination.address", target = "destinationAddress")
-    TripListView listView(Trip trip);
+    abstract TripListView listView(Trip trip);
 
     @Mapping(source = "source.address", target = "source")
     @Mapping(source = "destination.address", target = "destination")
-    TripView view(Trip trip);
+    @Mapping(source = "destination.id", target = "destinationId")
+    abstract TripView view(Trip trip);
 
     @Mapping(source = "id", target = "userId")
-    TripUserForm tripUserForm(TripUser trip);
+    abstract TripUserForm tripUserForm(TripUser trip);
 
-    Trip update(TripForm form, @MappingTarget Trip trip);
+    abstract Trip update(TripForm form, @MappingTarget Trip trip);
 
-    TripUser user(TripUserForm form);
+    public TripUser user(TripUserForm form) {
+        return userRepository
+                .findById(form.getUserId()).map(u ->
+                        this.tripUser(form, this.user(u)))
+                .getOrElse(TripUser::new);
+    }
 
-    TripApartment apartment(String id);
+    public TripApartment apartment(String id) {
+        return apartmentRepository.findById(id)
+                .map(a -> new TripApartment(id, a.getAddress()))
+                .getOrElse(() -> new TripApartment(id));
+    }
 
     @Mapping(target = "status", expression = "java(TripUserStatus.CONFIRMATION_PENDING)")
-    TripUser user(User user);
+    abstract TripUser user(User user);
 
-    TripUser tripUser(TripUserForm form, @MappingTarget TripUser user);
+    abstract TripUser tripUser(TripUserForm form, @MappingTarget TripUser user);
 
-    AddressView address(Address address);
+    public abstract AddressView address(Address address);
 
     @Mapping(target = "tripId", source = "id")
     @Mapping(expression = "java(com.psk.backend.common.address.AddressFormatter.formatAddress(trip.getSource().getAddress()))",
@@ -49,12 +82,12 @@ interface TripMapper {
             target = "residenceAddress")
     @Mapping(ignore = true, target = "carRent")
     @Mapping(ignore = true, target = "flightTicket")
-    TripUserView tripUserView(Trip trip);
+    public abstract TripUserView tripUserView(Trip trip, String userId);
 
     @Mapping(source = "departure", target = "start")
     @Mapping(expression = "java(trip.isReservation()" +
             " ? trip.getReservationBegin()" +
             " : trip.getArrival())", target = "end")
     @Mapping(target = "trip", expression = "java(true)")
-    EventListView toEvent(Trip trip);
+    public abstract EventListView toEvent(Trip trip);
 }

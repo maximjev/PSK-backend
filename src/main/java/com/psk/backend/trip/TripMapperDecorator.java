@@ -1,58 +1,22 @@
 package com.psk.backend.trip;
 
-import com.psk.backend.apartment.ApartmentRepository;
-import com.psk.backend.trip.value.TripCreateForm;
-import com.psk.backend.trip.value.TripForm;
-import com.psk.backend.trip.value.TripUserForm;
-import com.psk.backend.user.UserRepository;
-import org.mapstruct.AfterMapping;
-import org.mapstruct.MappingTarget;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import com.psk.backend.trip.value.TripUserView;
 
-import javax.annotation.Resource;
-
-import static com.psk.backend.common.address.AddressFormatter.formatAddress;
+import static io.atlassian.fugue.Try.successful;
 
 
-public abstract class TripMapperDecorator implements TripMapper{
-
-
-    @Resource
-    private UserRepository userRepository;
-
-    @Resource
-    private ApartmentRepository apartmentRepository;
-
-
+public abstract class TripMapperDecorator extends TripMapper{
 
     @Override
-    public TripUser user(TripUserForm form) {
-        return userRepository
-                .findById(form.getUserId()).map(u ->
-                        this.tripUser(form, this.user(u)))
-                .getOrElse(TripUser::new);
-    }
-
-    @Override
-    public TripApartment apartment(String id) {
-        return apartmentRepository.findById(id)
-                .map(a -> new TripApartment(id, a.getAddress()))
-                .getOrElse(() -> new TripApartment(id));
-    }
-
-    @AfterMapping
-    public void afterMapping(TripCreateForm form, @MappingTarget Trip trip) {
-        trip.getUsers().stream()
-                .filter(TripUser::isInApartment)
-                .forEach(u -> u.setResidenceAddress(formatAddress(trip.getDestination().getAddress())));
-    }
-
-
-    @AfterMapping
-    public void afterMapping(TripForm form, @MappingTarget Trip trip) {
-        trip.getUsers().stream()
-                .filter(TripUser::isInApartment)
-                .forEach(u -> u.setResidenceAddress(formatAddress(trip.getDestination().getAddress())));
+    public TripUserView tripUserView(Trip trip, String userId){
+            var userView = tripUserView(trip, userId);
+            var user = trip.getUsers().stream().filter(u -> u.getId().equals(userId)).findFirst();
+            return user.map(u -> {
+                userView.setCarRent(u.getCarRent());
+                userView.setFlightTicket(u.getFlightTicket());
+                userView.setResidenceAddress(u.getResidenceAddress());
+                userView.setUserStatus(u.getStatus());
+                return userView;
+            }).orElse(userView);
     }
 }

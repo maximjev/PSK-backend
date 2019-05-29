@@ -38,7 +38,7 @@ public class CreateUserService {
 
     public Try<EntityId> create(NewUserForm form) {
         if (userRepository.findByUsername(form.getEmail()).isPresent())
-            return failure(USER_CONFIRMATION_ERROR.entity(User.class.getName(), form.getEmail()));
+            return failure(USER_CONFIRMATION_ERROR.entity(form.getEmail()));
         userRepository.insert(form);
         return resetPassword(form.getEmail());
     }

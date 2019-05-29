@@ -5,12 +5,12 @@ import javax.validation.Payload;
 import java.lang.annotation.*;
 
 @Documented
-@Constraint(validatedBy = ValidEventDatesValidator.class)
+@Constraint(validatedBy = ValidEventFormValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface ValidEventDates {
+public @interface ValidEventForm {
     String message() default "{com.psk.backend.calendar.validation" +
-            ".ValidEventDatesValidator.message}";
+            ".ValidEventForm.message}";
 
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};

@@ -36,7 +36,8 @@ public class UserRepository {
 
 
     public List<UserSelectView> all() {
-        return mongoOperations.findAll(User.class)
+        var conditions = Criteria.where("status").ne(UserStatus.VERIFICATION_PENDING);
+        return mongoOperations.find(query(conditions), User.class)
                 .stream()
                 .map(userMapper::selectView)
                 .collect(Collectors.toList());

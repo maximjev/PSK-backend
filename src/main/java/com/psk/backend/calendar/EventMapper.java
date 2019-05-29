@@ -1,6 +1,9 @@
 package com.psk.backend.calendar;
 
-import com.psk.backend.calendar.value.*;
+import com.psk.backend.calendar.value.EventForm;
+import com.psk.backend.calendar.value.EventListView;
+import com.psk.backend.calendar.value.EventUserView;
+import com.psk.backend.calendar.value.EventView;
 import com.psk.backend.config.BaseMapperConfig;
 import com.psk.backend.user.User;
 import com.psk.backend.user.UserRepository;
@@ -26,9 +29,9 @@ public abstract class EventMapper {
 
     abstract Event update(EventForm form, @MappingTarget Event event);
 
-    public EventUser user(EventUserForm form) {
+    public EventUser user(String id) {
         return userRepository
-                .findById(form.getUserId()).map(this::user)
+                .findById(id).map(this::user)
                 .getOrElse(null);
     }
 

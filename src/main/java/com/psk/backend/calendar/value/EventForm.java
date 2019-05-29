@@ -1,9 +1,9 @@
 package com.psk.backend.calendar.value;
 
+import com.psk.backend.calendar.validation.ValidEventForm;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -11,6 +11,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@ValidEventForm
 public class EventForm {
 
     @NotEmpty
@@ -19,8 +20,7 @@ public class EventForm {
 	@NotEmpty
     private String description;
 
-	@Valid
-    private List<EventUserForm> users;
+    private List<String> users;
 
     @NotNull
     private LocalDateTime start;

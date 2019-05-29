@@ -15,8 +15,10 @@ public class Expenses {
     private boolean isOrdered;
 
     public void merge(Expenses other) {
-        this.count += other.getCount();
-        this.price = this.price.add(other.getPrice());
-        this.isOrdered = this.isOrdered && other.isOrdered();
+        if (other != null) {
+            this.price = this.price.add(other.getPrice());
+            this.count += other.getCount();
+            this.isOrdered = this.isOrdered && other.isOrdered();
+        }
     }
 }

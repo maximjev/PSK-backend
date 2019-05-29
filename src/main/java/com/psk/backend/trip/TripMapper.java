@@ -49,6 +49,7 @@ public abstract class TripMapper {
 
     @Mapping(source = "source.address", target = "source")
     @Mapping(source = "destination.address", target = "destination")
+    @Mapping(source = "destination.id", target = "destinationId")
     abstract TripView view(Trip trip);
 
     @Mapping(source = "id", target = "userId")

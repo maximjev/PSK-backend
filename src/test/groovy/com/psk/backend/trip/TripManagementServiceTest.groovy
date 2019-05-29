@@ -215,7 +215,7 @@ class TripManagementServiceTest extends Specification {
         def reservations = [
                 reservation('1', '2019-07-01 12:00', '2019-07-09 12:00', 'ap-2'),
                 reservation('2', '2019-07-06 12:00', '2019-07-10 12:00', 'ap-2'),
-                reservation('3', '2019-07-03 12:00', '2019-07-05 12:00', 'ap-2'),
+                reservation('3', '2019-07-03 12:00', '2019-07-07 12:00', 'ap-2'),
         ]
         operations.insertAll(reservations)
 

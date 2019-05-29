@@ -43,8 +43,12 @@ public class UserRepository {
                 .collect(Collectors.toList());
     }
 
-    public Page<UserListView> list(Pageable page) {
+    public Page<UserListView> list(Pageable page, boolean active) {
         var conditions = new Criteria();
+
+        if (active) {
+            conditions = Criteria.where("status").ne(UserStatus.VERIFICATION_PENDING);
+        }
 
         var total = mongoOperations.count(query(conditions), User.class);
 
@@ -67,6 +71,7 @@ public class UserRepository {
         mongoOperations.insert(user);
         return successful(entityId(user.getId()));
     }
+
     public Try<EntityId> save(User user) {
         mongoOperations.save(user);
         return successful(entityId(user.getId()));
@@ -75,6 +80,7 @@ public class UserRepository {
     public Optional<User> findByUsername(String username) {
         return ofNullable(mongoOperations.findOne(query(where("email").is(username)), User.class));
     }
+
     public Optional<User> getById(String id) {
         return ofNullable(mongoOperations.findOne(query(where("id").is(id)), User.class));
     }
@@ -87,6 +93,7 @@ public class UserRepository {
                 .map(Try::successful)
                 .orElseGet(() -> failure(USER_NOT_FOUND.entity(User.class.getName(), id)));
     }
+
     public Try<User> findByEmail(String email) {
         return mongoOperations
                 .query(User.class)
@@ -102,6 +109,7 @@ public class UserRepository {
             return entityId(user.getId());
         });
     }
+
     public Try<UserView> get(String id) {
         return findById(id).map(userMapper::view);
     }

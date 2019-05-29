@@ -21,8 +21,8 @@ public class UserControllerService {
         this.userRepository = userRepository;
     }
 
-    public Page<UserListView> users(Pageable page) {
-        return userRepository.list(page);
+    public Page<UserListView> users(Pageable page, boolean active) {
+        return userRepository.list(page, active);
     }
 
     public List<UserSelectView> all() {

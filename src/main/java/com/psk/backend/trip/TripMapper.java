@@ -75,7 +75,7 @@ public abstract class TripMapper {
 
     public abstract AddressView address(Address address);
 
-    @Mapping(target = "tripId", source = "id")
+    @Mapping(target = "tripId", source = "trip.id")
     @Mapping(expression = "java(com.psk.backend.common.address.AddressFormatter.formatAddress(trip.getSource().getAddress()))",
             target = "sourceAddress")
     @Mapping(expression = "java(com.psk.backend.common.address.AddressFormatter.formatAddress(trip.getDestination().getAddress()))",

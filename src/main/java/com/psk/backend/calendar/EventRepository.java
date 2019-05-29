@@ -87,7 +87,7 @@ public class EventRepository {
         );
         return result.getDeletedCount() > 0
                 ? successful(entityId(id))
-                : failure(OBJECT_NOT_FOUND.entity(id));
+                : failure(OBJECT_NOT_FOUND.entity(Event.class.getName(), id));
     }
 
     public Try<Event> findByCriteria(String id, Criteria criteria) {

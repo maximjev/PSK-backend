@@ -132,7 +132,7 @@ public class TripRepository {
         );
         return result.getDeletedCount() > 0
                 ? successful(entityId(id))
-                : failure(OBJECT_NOT_FOUND.entity(id));
+                : failure(OBJECT_NOT_FOUND.entity(Trip.class.getName(), id));
     }
 
     public Try<Trip> findById(String id) {

@@ -83,7 +83,7 @@ public class ApartmentRepository {
         );
         return result.getDeletedCount() > 0
                 ? successful(entityId(id))
-                : failure(OBJECT_NOT_FOUND.entity(id));
+                : failure(OBJECT_NOT_FOUND.entity(Apartment.class.getName(), id));
     }
 
     public Try<Apartment> findById(String id) {

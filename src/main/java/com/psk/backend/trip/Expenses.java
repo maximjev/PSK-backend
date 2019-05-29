@@ -16,8 +16,16 @@ public class Expenses {
 
     public void merge(Expenses other) {
         if (other != null) {
-            this.price = this.price.add(other.getPrice());
-            this.count += other.getCount();
+            if (this.price != null && other.getPrice() != null) {
+                this.price = this.price.add(other.getPrice());
+            } else if (other.getPrice() != null) {
+                this.price = other.getPrice();
+            }
+            if (this.count != null && other.getCount() != null) {
+                this.count += other.getCount();
+            } else if (other.getCount() != null) {
+                this.count = other.getCount();
+            }
             this.isOrdered = this.isOrdered && other.isOrdered();
         }
     }

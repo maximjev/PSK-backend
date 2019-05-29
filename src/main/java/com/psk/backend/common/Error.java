@@ -9,7 +9,7 @@ public enum Error {
     USER_NOT_FOUND {
         @Override
         public String message() {
-            return "User with id %s not found";
+            return "User %s not found";
         }
     },
 

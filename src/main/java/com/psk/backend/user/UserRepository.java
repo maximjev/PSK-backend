@@ -1,9 +1,7 @@
 package com.psk.backend.user;
 
 import com.psk.backend.common.EntityId;
-import com.psk.backend.user.value.NewUserForm;
-import com.psk.backend.user.value.UpdateUserForm;
-import com.psk.backend.user.value.UserListView;
+import com.psk.backend.user.value.*;
 import io.atlassian.fugue.Try;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -12,13 +10,12 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.psk.backend.common.EntityId.entityId;
 import static com.psk.backend.common.Error.USER_NOT_FOUND;
-import static com.psk.backend.user.UserRole.ROLE_ORGANIZER;
-import static com.psk.backend.user.UserRole.ROLE_USER;
 import static io.atlassian.fugue.Try.failure;
 import static io.atlassian.fugue.Try.successful;
 import static java.util.Optional.ofNullable;
@@ -38,17 +35,30 @@ public class UserRepository {
     }
 
 
-    public Page<UserListView> list(Pageable page) {
-        var conditions = new Criteria().orOperator(where("role").is(ROLE_USER), where("role").is(ROLE_ORGANIZER));
+    public List<UserSelectView> all() {
+        var conditions = Criteria.where("status").ne(UserStatus.VERIFICATION_PENDING);
+        return mongoOperations.find(query(conditions), User.class)
+                .stream()
+                .map(userMapper::selectView)
+                .collect(Collectors.toList());
+    }
+
+    public Page<UserListView> list(Pageable page, boolean active) {
+        var conditions = new Criteria();
+
+        if (active) {
+            conditions = Criteria.where("status").ne(UserStatus.VERIFICATION_PENDING);
+        }
 
         var total = mongoOperations.count(query(conditions), User.class);
 
         var users = mongoOperations.find(
                 query(conditions)
-                        .skip(page.getOffset())
+                        .skip(page.getPageSize() * page.getPageNumber())
                         .limit(page.getPageSize()),
                 User.class)
                 .stream()
+//                .sorted(comparing(User::getCreatedAt, reverseOrder()))
                 .map(userMapper::listView)
                 .collect(toList());
 
@@ -61,6 +71,7 @@ public class UserRepository {
         mongoOperations.insert(user);
         return successful(entityId(user.getId()));
     }
+
     public Try<EntityId> save(User user) {
         mongoOperations.save(user);
         return successful(entityId(user.getId()));
@@ -69,6 +80,7 @@ public class UserRepository {
     public Optional<User> findByUsername(String username) {
         return ofNullable(mongoOperations.findOne(query(where("email").is(username)), User.class));
     }
+
     public Optional<User> getById(String id) {
         return ofNullable(mongoOperations.findOne(query(where("id").is(id)), User.class));
     }
@@ -79,8 +91,9 @@ public class UserRepository {
                 .matching(query(where("id").is(id)))
                 .one()
                 .map(Try::successful)
-                .orElseGet(() -> failure(USER_NOT_FOUND.entity(User.class.getName(), id)));
+                .orElseGet(() -> failure(USER_NOT_FOUND.entity(id)));
     }
+
     public Try<User> findByEmail(String email) {
         return mongoOperations
                 .query(User.class)
@@ -90,15 +103,15 @@ public class UserRepository {
                 .orElseGet(() -> failure(USER_NOT_FOUND.entity(email)));
     }
 
-
-
     public Try<EntityId> update(String userId, UpdateUserForm form) {
         return findById(userId).map(user -> {
-            user.setName(form.getName());
-            user.setSurname(form.getSurname());
-            mongoOperations.save(user);
+            mongoOperations.save(userMapper.update(form, user));
             return entityId(user.getId());
         });
+    }
+
+    public Try<UserView> get(String id) {
+        return findById(id).map(userMapper::view);
     }
 
 }

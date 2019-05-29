@@ -6,14 +6,12 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.mongodb.core.MongoOperations
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.test.context.ActiveProfiles
-import spock.lang.Ignore
 import spock.lang.Specification
 
 import javax.annotation.Resource
 
 @SpringBootTest
 @ActiveProfiles("test")
-@Ignore
 class UserRepositoryTest extends Specification {
 
     @Resource
@@ -55,7 +53,7 @@ class UserRepositoryTest extends Specification {
         operations.insert(user)
 
         when:
-        def result = userRepository.list(page)
+        def result = userRepository.list(page, false)
         def loaded = result.getContent().get(0)
 
         then:

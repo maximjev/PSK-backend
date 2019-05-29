@@ -1,17 +1,14 @@
 package com.psk.backend.user;
 
 import com.psk.backend.common.EntityId;
-import com.psk.backend.user.value.NewUserForm;
-import com.psk.backend.user.value.PasswordForm;
-import com.psk.backend.user.value.UpdateUserForm;
-import com.psk.backend.user.value.UserListView;
-import io.atlassian.fugue.Either;
+import com.psk.backend.user.value.*;
 import io.atlassian.fugue.Try;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+
 
 @Service
 public class UserControllerService {
@@ -24,8 +21,12 @@ public class UserControllerService {
         this.userRepository = userRepository;
     }
 
-    public Page<UserListView> users(Pageable page) {
-        return userRepository.list(page);
+    public Page<UserListView> users(Pageable page, boolean active) {
+        return userRepository.list(page, active);
+    }
+
+    public List<UserSelectView> all() {
+        return userRepository.all();
     }
 
     public Try<EntityId> create(NewUserForm form) {
@@ -36,4 +37,5 @@ public class UserControllerService {
     public Try<EntityId> resetPassword(String email) { return createUserService.resetPassword(email); }
     public Try<EntityId> isValid(String token) { return createUserService.isTokenValid(token); }
 
+    public Try<UserView> get(String id) { return userRepository.get(id);}
 }

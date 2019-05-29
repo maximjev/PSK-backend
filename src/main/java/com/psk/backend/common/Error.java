@@ -9,7 +9,7 @@ public enum Error {
     USER_NOT_FOUND {
         @Override
         public String message() {
-            return "User with id %s not found";
+            return "User %s not found";
         }
     },
 
@@ -31,6 +31,20 @@ public enum Error {
         @Override
         public String message() {
             return "Unexpected error";
+        }
+    },
+
+    MERGE_ERROR {
+        @Override
+        public String message() {
+            return "The trips %s and %s cannot be merged";
+        }
+    },
+
+    OPERATION_NOT_ALLOWED {
+        @Override
+        public String message() {
+            return "Operation not allowed. %s";
         }
     };
 

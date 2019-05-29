@@ -2,14 +2,16 @@ version: '3'
 services:
 
   backend:
-    image: pskdev.azurecr.io/backend:latest
+    image: repo.treescale.com/pskdev/backend:latest
     container_name: backend
     environment:
       - SPRING_PROFILES_ACTIVE=prod
     ports:
       - 8080:8080
+    volumes:
+      - /var/log/psk:/var/log
   fe:
-    image: pskdev.azurecr.io/frontend:latest
+    image: repo.treescale.com/pskdev/frontend:latest
     container_name: fe
     ports:
       - 80:80

@@ -39,6 +39,13 @@ public enum Error {
         public String message() {
             return "The trips %s and %s cannot be merged";
         }
+    },
+
+    OPERATION_NOT_ALLOWED {
+        @Override
+        public String message() {
+            return "Operation not allowed. %s";
+        }
     };
 
     private static final Logger LOG = getLogger(ErrorItem.class);

@@ -72,7 +72,8 @@ public class TripRepository {
                             where("status").is(TripStatus.CONFIRMED)
                     ),
                     where("source").is(t.getSource()),
-                    where("destination").is(t.getDestination()));
+                    where("destination").is(t.getDestination()),
+                    where("id").ne(id));
 
             return successful(listView(page, criteria));
         });

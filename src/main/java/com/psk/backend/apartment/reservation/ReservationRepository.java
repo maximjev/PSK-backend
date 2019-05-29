@@ -27,6 +27,7 @@ import static com.psk.backend.common.EntityId.entityId;
 import static com.psk.backend.common.Error.OBJECT_NOT_FOUND;
 import static io.atlassian.fugue.Try.failure;
 import static io.atlassian.fugue.Try.successful;
+import static java.time.LocalDateTime.now;
 import static java.util.Collections.max;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
@@ -77,16 +78,16 @@ public class ReservationRepository {
 
         var intersectionConditions = new Criteria().orOperator(
                 new Criteria().andOperator(
-                        where("from").lt(filter.getFrom()),
-                        where("till").lt(filter.getTill()),
-                        where("till").gt(filter.getFrom())),
+                        where("from").lte(filter.getFrom()),
+                        where("till").lte(filter.getTill()),
+                        where("till").gte(filter.getFrom())),
                 new Criteria().andOperator(
-                        where("from").lt(filter.getTill()),
-                        where("from").gt(filter.getFrom()),
-                        where("till").gt(filter.getTill())),
+                        where("from").lte(filter.getTill()),
+                        where("from").gte(filter.getFrom()),
+                        where("till").gte(filter.getTill())),
                 new Criteria().andOperator(
-                        where("from").gt(filter.getFrom()),
-                        where("till").lt(filter.getTill()))
+                        where("from").gte(filter.getFrom()),
+                        where("till").lte(filter.getTill()))
         );
 
         var fullConditions = new Criteria().orOperator(
@@ -124,6 +125,11 @@ public class ReservationRepository {
             availablePlaces.calculateAvailablePlaces(a.getSize());
             return availablePlaces;
         });
+    }
+
+    public Long calculateApartmentMaxPlace(String id) {
+        var conditions = where("apartmentId").is(id).and("from").gte(now());
+        return calculateTotalPlaces(conditions);
     }
 
     private Long calculateTotalPlaces(Criteria conditions) {
@@ -191,6 +197,13 @@ public class ReservationRepository {
                 .one()
                 .map(Try::successful)
                 .orElseGet(() -> failure(OBJECT_NOT_FOUND.entity(Reservation.class.getName(), id)));
+    }
+
+    public List<Reservation> futureApartmentReservations(String id) {
+        var conditions = new Criteria().andOperator(
+                where("till").gte(now()),
+                where("apartmentId").is(id));
+        return mongoOperations.find(query(conditions), Reservation.class);
     }
 
     public Try<EntityId> update(String id, ReservationForm reservation) {

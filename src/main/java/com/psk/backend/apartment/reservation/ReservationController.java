@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import static org.springframework.http.ResponseEntity.unprocessableEntity;
 
 @RestController
-@RequestMapping("/apartment/{apartmentId}/reservation")
+@RequestMapping("/apartment/{id}/reservation")
 public class ReservationController {
 
     @Autowired
@@ -31,7 +31,7 @@ public class ReservationController {
     @ApiOperation(value = "Get apartment reservation list", response = ReservationListView.class)
     @GetMapping
     public Page<ReservationListView> getAllReservations(
-            @PathVariable("apartmentId") String apartmentId,
+            @PathVariable("id") String apartmentId,
             Pageable page) {
         return service.reservations(apartmentId, page);
     }

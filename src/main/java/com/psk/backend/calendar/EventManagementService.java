@@ -39,6 +39,12 @@ public class EventManagementService {
                 .getOrElse(Collections::emptyList);
     }
 
+    public List<EventListView> forUser(String id) {
+        var list = eventRepository.list(id);
+        list.addAll(tripRepository.eventListView(id));
+        return list;
+    }
+
     public Try<EntityId> create(EventForm form, Authentication authentication) {
         return userRepository.findByEmail(authentication.getName())
                 .flatMap(u -> eventRepository.insert(form, u));

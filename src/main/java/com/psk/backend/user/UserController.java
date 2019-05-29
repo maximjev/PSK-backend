@@ -30,7 +30,14 @@ public class UserController {
     @ApiOperation(value = "Get paged user list", response = UserListView.class)
     @GetMapping
     public Page<UserListView> getAll(Pageable page) {
-        return service.users(page);
+        return service.users(page, false);
+    }
+
+    @CommonErrors
+    @ApiOperation(value = "Get paged active user list", response = UserListView.class)
+    @GetMapping("/active")
+    public Page<UserListView> getAllActive(Pageable page) {
+        return service.users(page, true);
     }
 
 

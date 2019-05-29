@@ -91,7 +91,7 @@ public class UserRepository {
                 .matching(query(where("id").is(id)))
                 .one()
                 .map(Try::successful)
-                .orElseGet(() -> failure(USER_NOT_FOUND.entity(User.class.getName(), id)));
+                .orElseGet(() -> failure(USER_NOT_FOUND.entity(id)));
     }
 
     public Try<User> findByEmail(String email) {

@@ -79,8 +79,10 @@ public class TripController {
 
     @CommonErrors
     @ApiOperation(value = "Get paged user's trip list", response = TripListView.class)
-    @GetMapping("/user/{userId}")
-    public Page<TripListView> getByUser(Pageable page, @PathVariable("userId") String userId) { return service.listByUser(page, userId); }
+    @GetMapping("/user")
+    public Page<TripListView> listByUser(Pageable page, Authentication authentication) {
+        return service.listByUser(page, authentication);
+    }
 
 
     @ApiOperation(value = "Get paged mergable trips", response = TripListView.class)

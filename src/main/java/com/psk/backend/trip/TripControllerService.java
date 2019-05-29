@@ -70,7 +70,9 @@ public class TripControllerService {
         return confirmationService.decline(id, authentication);
     }
 
-    public Page<TripListView> listByUser(Pageable page, String userId) {
-        return repository.listByUser(page, userId);
+    public Page<TripListView> listByUser(Pageable page, Authentication authentication) {
+        return userRepository.findByEmail(authentication.getName())
+                .map(u -> repository.listByUser(page, u.getId()))
+                .getOrElse(Page::empty);
     }
 }

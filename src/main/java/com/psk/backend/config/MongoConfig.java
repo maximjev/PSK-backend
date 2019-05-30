@@ -1,7 +1,7 @@
 package com.psk.backend.config;
 
-import com.psk.backend.user.AuditUser;
-import com.psk.backend.user.UserRepository;
+import com.psk.backend.domain.user.AuditUser;
+import com.psk.backend.domain.user.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;

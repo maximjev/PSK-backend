@@ -8,16 +8,14 @@ import com.psk.backend.config.BaseMapperConfig;
 import com.psk.backend.trip.value.*;
 import com.psk.backend.user.User;
 import com.psk.backend.user.UserRepository;
-import org.mapstruct.AfterMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import org.mapstruct.*;
 
 import javax.annotation.Resource;
 
 import static com.psk.backend.common.address.AddressFormatter.formatAddress;
 
 @Mapper(config = BaseMapperConfig.class)
+@DecoratedWith(TripMapperDecorator.class)
 public abstract class TripMapper {
 
     @Resource
@@ -77,14 +75,14 @@ public abstract class TripMapper {
 
     public abstract AddressView address(Address address);
 
-    @Mapping(target = "tripId", source = "id")
+    @Mapping(target = "tripId", source = "trip.id")
     @Mapping(expression = "java(com.psk.backend.common.address.AddressFormatter.formatAddress(trip.getSource().getAddress()))",
             target = "sourceAddress")
     @Mapping(expression = "java(com.psk.backend.common.address.AddressFormatter.formatAddress(trip.getDestination().getAddress()))",
             target = "residenceAddress")
     @Mapping(ignore = true, target = "carRent")
     @Mapping(ignore = true, target = "flightTicket")
-    public abstract TripUserView tripUserView(Trip trip);
+    public abstract TripUserView tripUserView(Trip trip, String userId);
 
     @Mapping(source = "departure", target = "start")
     @Mapping(expression = "java(trip.isReservation()" +

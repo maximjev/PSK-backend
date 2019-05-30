@@ -80,17 +80,7 @@ public class TripRepository {
     }
 
     public Try<TripUserView> tripUserView(String id, String userId) {
-        return findById(id).flatMap(t -> {
-            var userView = mapper.tripUserView(t);
-            var user = t.getUsers().stream().filter(u -> u.getId().equals(userId)).findFirst();
-            return user.map(u -> {
-                userView.setCarRent(u.getCarRent());
-                userView.setFlightTicket(u.getFlightTicket());
-                userView.setResidenceAddress(u.getResidenceAddress());
-                userView.setUserStatus(u.getStatus());
-                return successful(userView);
-            }).orElse(successful(userView));
-        });
+        return findById(id).flatMap(t -> successful(mapper.tripUserView(t, userId)));
     }
 
     private Page<TripListView> listView(Pageable page, Criteria conditions) {

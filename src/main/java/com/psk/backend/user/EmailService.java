@@ -5,6 +5,7 @@ package com.psk.backend.user;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 
@@ -14,8 +15,8 @@ public class EmailService {
     @Autowired
     private JavaMailSender emailSender;
 
-    public void sendEmail(String subject, String body,
-                                   String address) {
+    @Async
+    public void sendEmail(String subject, String body, String address) {
         SimpleMailMessage email = new SimpleMailMessage();
         email.setSubject(subject);
         email.setText(body);

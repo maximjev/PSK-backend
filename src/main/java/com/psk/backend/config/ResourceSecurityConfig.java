@@ -20,6 +20,7 @@ public class ResourceSecurityConfig extends ResourceServerConfigurerAdapter {
                 .antMatchers("/v2/api-docs").permitAll()
                 .antMatchers("/favicon.ico").permitAll()
                 .antMatchers("/user/resetPassword").permitAll()
+                .antMatchers("/user/token/**").permitAll()
                 .antMatchers("/user/savePassword").permitAll()
                 .anyRequest().authenticated();
     }

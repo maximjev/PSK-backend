@@ -53,6 +53,13 @@ public enum Error {
         public String message() {
             return "Entity with id %s has been updated, please reload the form.";
         }
+    },
+
+    USER_ALREADY_EXISTS {
+        @Override
+        public String message() {
+            return "User with email %s already exists.";
+        }
     };
 
     private static final Logger LOG = getLogger(ErrorItem.class);

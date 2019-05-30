@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Getter
@@ -23,5 +24,6 @@ public class UpdateUserForm {
     @ValidUserRole
     private String role;
 
+    @NotNull
     private LocalDateTime updatedAt;
 }

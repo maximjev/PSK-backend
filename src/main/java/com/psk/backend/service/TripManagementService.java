@@ -1,12 +1,12 @@
 package com.psk.backend.service;
 
-import com.psk.backend.domain.reservation.ReservationMapper;
-import com.psk.backend.domain.reservation.ReservationRepository;
+import com.psk.backend.mapper.ReservationMapper;
+import com.psk.backend.repository.ReservationRepository;
 import com.psk.backend.domain.reservation.value.PlacementFilter;
 import com.psk.backend.domain.reservation.value.PlacementResult;
-import com.psk.backend.domain.calendar.EventRepository;
+import com.psk.backend.repository.EventRepository;
 import com.psk.backend.domain.common.EntityId;
-import com.psk.backend.domain.trip.TripRepository;
+import com.psk.backend.repository.TripRepository;
 import com.psk.backend.domain.trip.value.TripCreateForm;
 import com.psk.backend.domain.trip.value.TripForm;
 import com.psk.backend.domain.trip.value.TripUserForm;

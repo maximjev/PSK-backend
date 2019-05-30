@@ -1,7 +1,7 @@
 package com.psk.backend.controller;
 
 
-import com.psk.backend.service.ApartmentControllerService;
+import com.psk.backend.facade.ApartmentControllerService;
 import com.psk.backend.domain.apartment.value.ApartmentForm;
 import com.psk.backend.domain.apartment.value.ApartmentListView;
 import com.psk.backend.domain.apartment.value.ApartmentSelectView;

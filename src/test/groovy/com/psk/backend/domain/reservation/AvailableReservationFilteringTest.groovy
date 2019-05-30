@@ -3,6 +3,7 @@ package com.psk.backend.domain.reservation
 import com.psk.backend.domain.apartment.Apartment
 import com.psk.backend.domain.reservation.value.PlacementFilter
 import com.psk.backend.domain.reservation.value.PlacementResult
+import com.psk.backend.repository.ReservationRepository
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.mongodb.core.MongoOperations
 import org.springframework.data.mongodb.core.query.Query

@@ -1,7 +1,7 @@
 package com.psk.backend.domain.trip.value;
 
-import com.psk.backend.domain.trip.validation.ValidTripDates;
-import com.psk.backend.domain.trip.validation.ValidTripUsers;
+import com.psk.backend.domain.validation.ValidTripDates;
+import com.psk.backend.domain.validation.ValidTripUsers;
 import lombok.Getter;
 import lombok.Setter;
 

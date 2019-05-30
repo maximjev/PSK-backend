@@ -1,6 +1,6 @@
 package com.psk.backend.auth;
 
-import com.psk.backend.domain.user.UserRepository;
+import com.psk.backend.repository.UserRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;

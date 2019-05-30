@@ -2,8 +2,9 @@ package com.psk.backend.domain.trip
 
 import com.psk.backend.domain.apartment.Apartment
 import com.psk.backend.domain.reservation.Reservation
-import com.psk.backend.domain.reservation.ReservationRepository
+import com.psk.backend.repository.ReservationRepository
 import com.psk.backend.domain.common.address.AddressFormatter
+import com.psk.backend.repository.TripRepository
 import com.psk.backend.service.TripManagementService
 import com.psk.backend.domain.trip.value.TripCreateForm
 import com.psk.backend.domain.trip.value.TripForm

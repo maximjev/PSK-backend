@@ -2,8 +2,8 @@ package com.psk.backend.service;
 
 import com.psk.backend.domain.common.EntityId;
 import com.psk.backend.domain.user.ConfirmationKey;
-import com.psk.backend.domain.user.ConfirmationKeyRepository;
-import com.psk.backend.domain.user.UserRepository;
+import com.psk.backend.repository.ConfirmationKeyRepository;
+import com.psk.backend.repository.UserRepository;
 import com.psk.backend.domain.user.value.NewUserForm;
 import com.psk.backend.domain.user.value.PasswordForm;
 import io.atlassian.fugue.Try;

@@ -3,6 +3,7 @@ package com.psk.backend.domain.apartment
 
 import com.psk.backend.domain.common.address.AddressForm
 import com.psk.backend.domain.apartment.value.ApartmentForm
+import com.psk.backend.repository.ApartmentRepository
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.mongodb.core.MongoOperations
 import org.springframework.data.mongodb.core.query.Query

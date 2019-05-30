@@ -1,8 +1,8 @@
 package com.psk.backend.service;
 
-import com.psk.backend.domain.reservation.ReservationRepository;
+import com.psk.backend.repository.ReservationRepository;
 import com.psk.backend.domain.common.EntityId;
-import com.psk.backend.domain.trip.TripRepository;
+import com.psk.backend.repository.TripRepository;
 import com.psk.backend.domain.trip.value.TripMergeForm;
 import io.atlassian.fugue.Try;
 import org.springframework.stereotype.Service;

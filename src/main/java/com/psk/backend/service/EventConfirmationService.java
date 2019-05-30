@@ -1,9 +1,9 @@
 package com.psk.backend.service;
 
-import com.psk.backend.domain.calendar.EventRepository;
+import com.psk.backend.repository.EventRepository;
 import com.psk.backend.domain.calendar.EventUserStatus;
 import com.psk.backend.domain.common.EntityId;
-import com.psk.backend.domain.user.UserRepository;
+import com.psk.backend.repository.UserRepository;
 import io.atlassian.fugue.Try;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;

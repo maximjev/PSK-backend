@@ -2,7 +2,7 @@ package com.psk.backend.controller;
 
 import com.psk.backend.domain.common.CommonErrors;
 import com.psk.backend.domain.common.EntityId;
-import com.psk.backend.service.TripControllerService;
+import com.psk.backend.facade.TripControllerService;
 import com.psk.backend.domain.trip.value.*;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.Page;

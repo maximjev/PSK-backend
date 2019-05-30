@@ -5,7 +5,7 @@ import com.psk.backend.domain.calendar.value.EventListView;
 import com.psk.backend.domain.calendar.value.EventView;
 import com.psk.backend.domain.common.CommonErrors;
 import com.psk.backend.domain.common.EntityId;
-import com.psk.backend.service.EventControllerService;
+import com.psk.backend.facade.EventControllerService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

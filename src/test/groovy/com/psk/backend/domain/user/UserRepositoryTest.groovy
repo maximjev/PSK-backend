@@ -2,6 +2,7 @@ package com.psk.backend.domain.user
 
 import com.psk.backend.PageableBuilder
 import com.psk.backend.domain.user.value.NewUserForm
+import com.psk.backend.repository.UserRepository
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.mongodb.core.MongoOperations
 import org.springframework.data.mongodb.core.query.Query

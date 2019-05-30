@@ -4,7 +4,7 @@ import com.psk.backend.domain.reservation.value.PlacementFilter;
 import com.psk.backend.domain.reservation.value.PlacementResult;
 import com.psk.backend.domain.reservation.value.ReservationListView;
 import com.psk.backend.domain.common.CommonErrors;
-import com.psk.backend.service.ReservationControllerService;
+import com.psk.backend.facade.ReservationControllerService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

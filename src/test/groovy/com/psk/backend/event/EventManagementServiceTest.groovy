@@ -1,7 +1,7 @@
 package com.psk.backend.event
 
 import com.psk.backend.domain.calendar.value.EventForm
-import com.psk.backend.domain.trip.TripRepository
+import com.psk.backend.repository.TripRepository
 import com.psk.backend.domain.trip.value.TripCreateForm
 import com.psk.backend.domain.trip.value.TripUserForm
 import com.psk.backend.domain.user.User

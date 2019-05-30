@@ -1,10 +1,15 @@
 package com.psk.backend.event
 
+import com.psk.backend.domain.apartment.Apartment
+import com.psk.backend.domain.calendar.Event
+import com.psk.backend.domain.calendar.EventUserStatus
 import com.psk.backend.domain.calendar.value.EventForm
-import com.psk.backend.repository.TripRepository
+import com.psk.backend.domain.trip.Trip
 import com.psk.backend.domain.trip.value.TripCreateForm
 import com.psk.backend.domain.trip.value.TripUserForm
+import com.psk.backend.domain.user.AuditUser
 import com.psk.backend.domain.user.User
+import com.psk.backend.repository.TripRepository
 import com.psk.backend.service.EventManagementService
 import com.psk.backend.service.TripConfirmationService
 import com.psk.backend.service.TripManagementService
@@ -19,7 +24,8 @@ import spock.lang.Specification
 
 import javax.annotation.Resource
 
-
+import static com.psk.backend.domain.apartment.ApartmentBuilder.apartment
+import static com.psk.backend.domain.user.UserBuilder.user
 import static java.time.LocalDateTime.of
 
 @SpringBootTest

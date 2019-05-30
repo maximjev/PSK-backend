@@ -1,8 +1,7 @@
 package com.psk.backend.domain.apartment
 
-
-import com.psk.backend.domain.common.address.AddressForm
 import com.psk.backend.domain.apartment.value.ApartmentForm
+import com.psk.backend.domain.common.address.AddressForm
 import com.psk.backend.repository.ApartmentRepository
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.mongodb.core.MongoOperations
@@ -13,7 +12,7 @@ import spock.lang.Specification
 import javax.annotation.Resource
 
 import static com.psk.backend.PageableBuilder.pageable
-
+import static com.psk.backend.domain.apartment.ApartmentBuilder.apartment
 
 @SpringBootTest
 @ActiveProfiles("test")

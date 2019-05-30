@@ -1,8 +1,8 @@
 package com.psk.backend.auth;
 
 import com.psk.backend.auth.value.CurrentUserView;
-import com.psk.backend.user.UserMapper;
-import com.psk.backend.user.UserRepository;
+import com.psk.backend.mapper.UserMapper;
+import com.psk.backend.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,7 +1,7 @@
 package com.psk.backend.auth.value;
 
 
-import com.psk.backend.user.UserRole;
+import com.psk.backend.domain.user.UserRole;
 import lombok.Getter;
 import lombok.Setter;
 

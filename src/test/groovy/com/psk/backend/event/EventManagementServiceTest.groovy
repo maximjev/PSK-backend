@@ -1,18 +1,13 @@
 package com.psk.backend.event
 
-import com.psk.backend.apartment.Apartment
-import com.psk.backend.calendar.Event
-import com.psk.backend.calendar.EventManagementService
-import com.psk.backend.calendar.EventUserStatus
-import com.psk.backend.calendar.value.EventForm
-import com.psk.backend.trip.Trip
-import com.psk.backend.trip.TripConfirmationService
-import com.psk.backend.trip.TripManagementService
-import com.psk.backend.trip.TripRepository
-import com.psk.backend.trip.value.TripCreateForm
-import com.psk.backend.trip.value.TripUserForm
-import com.psk.backend.user.AuditUser
-import com.psk.backend.user.User
+import com.psk.backend.domain.calendar.value.EventForm
+import com.psk.backend.repository.TripRepository
+import com.psk.backend.domain.trip.value.TripCreateForm
+import com.psk.backend.domain.trip.value.TripUserForm
+import com.psk.backend.domain.user.User
+import com.psk.backend.service.EventManagementService
+import com.psk.backend.service.TripConfirmationService
+import com.psk.backend.service.TripManagementService
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.mongodb.core.MongoOperations
 import org.springframework.data.mongodb.core.query.Query
@@ -24,8 +19,7 @@ import spock.lang.Specification
 
 import javax.annotation.Resource
 
-import static com.psk.backend.apartment.ApartmentBuilder.apartment
-import static com.psk.backend.user.UserBuilder.user
+
 import static java.time.LocalDateTime.of
 
 @SpringBootTest

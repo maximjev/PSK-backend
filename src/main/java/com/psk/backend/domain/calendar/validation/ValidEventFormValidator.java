@@ -1,4 +1,4 @@
-package com.psk.backend.domain.validation;
+package com.psk.backend.domain.calendar.validation;
 
 import com.psk.backend.domain.calendar.value.EventForm;
 import com.psk.backend.repository.UserRepository;

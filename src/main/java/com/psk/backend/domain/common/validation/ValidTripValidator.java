@@ -1,4 +1,4 @@
-package com.psk.backend.domain.validation;
+package com.psk.backend.domain.common.validation;
 
 import com.psk.backend.repository.TripRepository;
 import org.springframework.stereotype.Component;

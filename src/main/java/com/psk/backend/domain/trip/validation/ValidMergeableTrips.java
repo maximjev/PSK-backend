@@ -1,4 +1,4 @@
-package com.psk.backend.domain.validation;
+package com.psk.backend.domain.trip.validation;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -9,7 +9,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface ValidMergeableTrips {
-    String message() default "{com.psk.backend.domain.validation" +
+    String message() default "{com.psk.backend.domain.user.validation" +
             ".ValidMergeableTripsValidator.message}";
 
     Class<?>[] groups() default {};

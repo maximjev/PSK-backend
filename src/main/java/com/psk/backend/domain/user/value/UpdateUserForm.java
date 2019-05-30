@@ -1,6 +1,6 @@
 package com.psk.backend.domain.user.value;
 
-import com.psk.backend.domain.validation.ValidUserRole;
+import com.psk.backend.domain.user.validation.ValidUserRole;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;

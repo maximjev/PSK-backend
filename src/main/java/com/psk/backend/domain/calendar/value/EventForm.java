@@ -1,6 +1,6 @@
 package com.psk.backend.domain.calendar.value;
 
-import com.psk.backend.domain.validation.ValidEventForm;
+import com.psk.backend.domain.calendar.validation.ValidEventForm;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -1,4 +1,4 @@
-package com.psk.backend.domain.validation;
+package com.psk.backend.domain.trip.validation;
 
 import com.psk.backend.repository.ApartmentRepository;
 import com.psk.backend.domain.trip.value.TripCreateForm;

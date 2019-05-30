@@ -1,4 +1,4 @@
-package com.psk.backend.domain.validation;
+package com.psk.backend.domain.user.validation;
 
 
 import com.psk.backend.domain.user.UserRole;

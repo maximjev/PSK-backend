@@ -1,6 +1,6 @@
-package com.psk.backend.domain.validation;
+package com.psk.backend.domain.common.validation;
 
-import com.psk.backend.repository.ApartmentRepository;
+import com.psk.backend.repository.UserRepository;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -9,13 +9,13 @@ import javax.validation.ConstraintValidatorContext;
 
 
 @Component
-public class ValidApartmentValidator implements ConstraintValidator<ValidApartment, String> {
+public class ValidUserValidator implements ConstraintValidator<ValidUser, String> {
 
     @Resource
-    private ApartmentRepository repository;
+    private UserRepository repository;
 
     @Override
-    public void initialize(ValidApartment constraintAnnotation) {
+    public void initialize(ValidUser constraintAnnotation) {
     }
 
     @Override

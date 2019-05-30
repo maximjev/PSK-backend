@@ -1,4 +1,4 @@
-package com.psk.backend.domain.validation;
+package com.psk.backend.domain.trip.validation;
 
 
 import javax.validation.Constraint;
@@ -10,7 +10,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface ValidTripApartments {
-    String message() default "{com.psk.backend.domain.validation" +
+    String message() default "{com.psk.backend.domain.user.validation" +
             ".ValidTripApartmentsValidator.message}";
 
     Class<?>[] groups() default {};

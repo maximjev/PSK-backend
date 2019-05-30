@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Component
 public class CustomRequestLoggingFilter extends CommonsRequestLoggingFilter {
-
+    
     public CustomRequestLoggingFilter() {
         super.setIncludeQueryString(true);
         super.setIncludePayload(true);
@@ -20,9 +20,7 @@ public class CustomRequestLoggingFilter extends CommonsRequestLoggingFilter {
     @Override
     protected void beforeRequest(HttpServletRequest request, String message) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (logger.isDebugEnabled()){
-            logger.debug( message + request.getMethod() + " " + auth.getAuthorities());
-        }
+        logger.debug( message + request.getMethod() + " " + auth.getAuthorities());
     }
     @Override
     protected void afterRequest(HttpServletRequest request, String message) {}

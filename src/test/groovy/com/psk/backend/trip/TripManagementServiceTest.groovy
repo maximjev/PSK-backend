@@ -123,6 +123,10 @@ class TripManagementServiceTest extends Specification {
                 reservationEnd: of(2019, 7, 8, 12, 0),
                 users: [new TripUserForm(userId: '1', inApartment: true), new TripUserForm(userId: '2', inApartment: true)]
         )
+
+        def id = service.create(createForm).getOrElse().id
+        def trip = operations.findById(id, Trip.class)
+        when:
         def updateForm = new TripForm(
                 name: "name-2",
                 description: 'description-2',
@@ -130,11 +134,9 @@ class TripManagementServiceTest extends Specification {
                 departure: of(2019, 8, 1, 12, 0),
                 reservationBegin: of(2019, 8, 5, 12, 0),
                 reservationEnd: of(2019, 8, 9, 12, 0),
-                users: [new TripUserForm(userId: '2', inApartment: true)]
+                users: [new TripUserForm(userId: '2', inApartment: true)],
+                updatedAt: trip.updatedAt
         )
-
-        when:
-        def id = service.create(createForm).getOrElse().id
         def result = service.update(id, updateForm)
 
         then:

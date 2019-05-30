@@ -10,6 +10,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
+
 @Getter
 @Setter
 @Document
@@ -64,7 +66,13 @@ public class Trip {
                 && this.departure.minusDays(1).isBefore(other.getDeparture())
                 && this.source.getId().equals(other.getSource().getId())
                 && this.destination.getId().equals(other.getDestination().getId())
-                && this.status.equals(TripStatus.DRAFT);
+                && this.status.equals(TripStatus.DRAFT)
+                && !hasSameUsers(other);
+    }
+
+    private boolean hasSameUsers(Trip other) {
+        return this.users.stream().map(TripUser::getId)
+                .anyMatch(id -> other.getUsers().stream().map(TripUser::getId).collect(toList()).contains(id));
     }
 
     public Trip merge(Trip other) {

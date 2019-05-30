@@ -18,6 +18,7 @@ import java.util.List;
 
 import static com.psk.backend.common.EntityId.entityId;
 import static com.psk.backend.common.Error.OBJECT_NOT_FOUND;
+import static com.psk.backend.common.Error.OPTIMISTIC_LOCKING;
 import static io.atlassian.fugue.Try.failure;
 import static io.atlassian.fugue.Try.successful;
 import static java.util.Collections.reverseOrder;
@@ -73,7 +74,8 @@ public class TripRepository {
                     ),
                     where("source").is(t.getSource()),
                     where("destination").is(t.getDestination()),
-                    where("id").ne(id));
+                    where("id").ne(id),
+                    where("users").elemMatch(where("id").nin(t.getUsers().stream().map(TripUser::getId).collect(toList()))));
 
             return successful(listView(page, criteria));
         });
@@ -110,9 +112,12 @@ public class TripRepository {
     }
 
     public Try<EntityId> update(String id, TripForm form) {
-        return findById(id).map(a -> {
+        return findById(id).flatMap(a -> {
+            if (!a.getUpdatedAt().equals(form.getUpdatedAt())) {
+                return failure(OPTIMISTIC_LOCKING.entity(a.getId()));
+            }
             mongoOperations.save(mapper.update(form, a));
-            return entityId(a.getId());
+            return successful(entityId(a.getId()));
         });
     }
 

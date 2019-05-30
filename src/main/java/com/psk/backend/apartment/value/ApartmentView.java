@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
+
 @EqualsAndHashCode
 @Getter
 @Setter
@@ -15,4 +17,5 @@ public class ApartmentView {
     private String name;
     private AddressForm address;
     private Long size;
+    private LocalDateTime updatedAt;
 }

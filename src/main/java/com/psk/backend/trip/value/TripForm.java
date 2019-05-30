@@ -47,4 +47,6 @@ public class TripForm {
 
     @PositiveOrZero
     private BigDecimal otherExpenses;
+
+    private LocalDateTime updatedAt;
 }

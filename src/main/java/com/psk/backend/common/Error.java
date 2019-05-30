@@ -46,6 +46,13 @@ public enum Error {
         public String message() {
             return "Operation not allowed. %s";
         }
+    },
+
+    OPTIMISTIC_LOCKING {
+        @Override
+        public String message() {
+            return "Entity with id %s has been updated, please reload the form.";
+        }
     };
 
     private static final Logger LOG = getLogger(ErrorItem.class);

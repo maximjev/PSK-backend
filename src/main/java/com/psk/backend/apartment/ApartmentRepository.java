@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 import static com.psk.backend.common.EntityId.entityId;
 import static com.psk.backend.common.Error.OBJECT_NOT_FOUND;
+import static com.psk.backend.common.Error.OPTIMISTIC_LOCKING;
 import static io.atlassian.fugue.Try.failure;
 import static io.atlassian.fugue.Try.successful;
 import static java.util.Comparator.comparing;
@@ -70,9 +71,12 @@ public class ApartmentRepository {
     }
 
     public Try<EntityId> update(String id, ApartmentForm form) {
-        return findById(id).map(a -> {
+        return findById(id).flatMap(a -> {
+            if (!a.getUpdatedAt().equals(form.getUpdatedAt())) {
+                return failure(OPTIMISTIC_LOCKING.entity(id));
+            }
             mongoOperations.save(apartmentMapper.update(form, a));
-            return entityId(a.getId());
+            return successful(entityId(a.getId()));
         });
     }
 

@@ -76,22 +76,24 @@ class ApartmentRepositoryTest extends Specification {
         def id = '123'
         apartment.id = id
         operations.insert(apartment)
+        def loadedApartment = repository.findById(id)
+
         def form = new ApartmentForm(
                 address: new AddressForm(
                         city: 'Vilnius',
                         street: 'Naugarduko',
                         apartmentNumber: '24'
                 ),
-                size: 5
+                size: 5,
+                updatedAt: loadedApartment.getOrElse().updatedAt
         )
 
         when:
-        repository.update(id, form)
-        def result = repository.findById(id)
+        def updateResult = repository.update(id, form)
 
         then:
-        result.isSuccess()
-        def loaded = operations.findById(result.getOrElse().id, Apartment)
+        updateResult.isSuccess()
+        def loaded = operations.findById(loadedApartment.getOrElse().id, Apartment)
         loaded.size == 5
         loaded.address.street == apartment.address.street
         loaded.address.city == apartment.address.city

@@ -32,4 +32,6 @@ public class TripView {
     private BigDecimal otherExpenses;
 
     private List<TripUserForm> users;
+
+    private LocalDateTime updatedAt;
 }

@@ -15,6 +15,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.psk.backend.common.EntityId.entityId;
+import static com.psk.backend.common.Error.OPTIMISTIC_LOCKING;
 import static com.psk.backend.common.Error.USER_NOT_FOUND;
 import static io.atlassian.fugue.Try.failure;
 import static io.atlassian.fugue.Try.successful;
@@ -104,9 +105,13 @@ public class UserRepository {
     }
 
     public Try<EntityId> update(String userId, UpdateUserForm form) {
-        return findById(userId).map(user -> {
-            mongoOperations.save(userMapper.update(form, user));
-            return entityId(user.getId());
+        return findById(userId).flatMap(user -> {
+            if (user.getUpdatedAt().equals(form.getUpdatedAt())) {
+                mongoOperations.save(userMapper.update(form, user));
+                return successful(entityId(user.getId()));
+            }
+            return failure(OPTIMISTIC_LOCKING.entity(userId));
+
         });
     }
 

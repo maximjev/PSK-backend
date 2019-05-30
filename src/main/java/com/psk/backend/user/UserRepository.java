@@ -15,8 +15,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.psk.backend.common.EntityId.entityId;
-import static com.psk.backend.common.Error.OPTIMISTIC_LOCKING;
-import static com.psk.backend.common.Error.USER_NOT_FOUND;
+import static com.psk.backend.common.Error.*;
 import static io.atlassian.fugue.Try.failure;
 import static io.atlassian.fugue.Try.successful;
 import static java.util.Optional.ofNullable;
@@ -67,8 +66,10 @@ public class UserRepository {
     }
 
     public Try<EntityId> insert(NewUserForm form) {
+        if (findByEmail(form.getEmail()).isSuccess()) {
+            return failure(USER_ALREADY_EXISTS.entity(form.getEmail()));
+        }
         User user = userMapper.create(form);
-
         mongoOperations.insert(user);
         return successful(entityId(user.getId()));
     }

@@ -123,11 +123,11 @@ public class TripRepository {
 
     public Try<EntityId> update(String id, TripForm form) {
         return findById(id).flatMap(a -> {
-            if (!a.getUpdatedAt().equals(form.getUpdatedAt())) {
-                return failure(OPTIMISTIC_LOCKING.entity(a.getId()));
+            if (a.getUpdatedAt().equals(form.getUpdatedAt())) {
+                mongoOperations.save(mapper.update(form, a));
+                return successful(entityId(a.getId()));
             }
-            mongoOperations.save(mapper.update(form, a));
-            return successful(entityId(a.getId()));
+            return failure(OPTIMISTIC_LOCKING.entity(a.getId()));
         });
     }
 

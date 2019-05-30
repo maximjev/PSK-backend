@@ -25,5 +25,6 @@ public class ApartmentForm {
     @Positive
     private Long size;
 
+    @NotNull
     private LocalDateTime updatedAt;
 }

@@ -16,7 +16,6 @@ public class CustomRequestLoggingFilter extends CommonsRequestLoggingFilter {
         super.setIncludePayload(true);
         super.setMaxPayloadLength(10000);
         super.setIncludeClientInfo(true);
-
     }
     @Override
     protected void beforeRequest(HttpServletRequest request, String message) {
@@ -27,5 +26,4 @@ public class CustomRequestLoggingFilter extends CommonsRequestLoggingFilter {
     }
     @Override
     protected void afterRequest(HttpServletRequest request, String message) {}
-
 }

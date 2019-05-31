@@ -81,6 +81,9 @@ dependencies {
     compile('com.sun.xml.bind:jaxb-core:2.3.0')
     compile('javax.activation:activation:1.1')
 
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: '2.1.5.RELEASE'
+    compile group: 'nz.net.ultraq.thymeleaf', name: 'thymeleaf-layout-dialect', version: '2.4.1'
+
     testCompile 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile "org.spockframework:spock-core:${spockVersion}"

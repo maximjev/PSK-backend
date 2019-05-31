@@ -1,10 +1,10 @@
 package com.psk.backend.scheduled;
 
 
-import com.psk.backend.trip.Trip;
-import com.psk.backend.trip.TripRepository;
-import com.psk.backend.trip.TripStatus;
-import com.psk.backend.trip.TripUserStatus;
+import com.psk.backend.domain.trip.Trip;
+import com.psk.backend.repository.TripRepository;
+import com.psk.backend.domain.trip.TripStatus;
+import com.psk.backend.domain.trip.TripUserStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 

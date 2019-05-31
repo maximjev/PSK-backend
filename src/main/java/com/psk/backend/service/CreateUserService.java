@@ -1,17 +1,21 @@
 package com.psk.backend.service;
 
 import com.psk.backend.domain.common.EntityId;
+import com.psk.backend.domain.common.Mail;
 import com.psk.backend.domain.user.ConfirmationKey;
-import com.psk.backend.repository.ConfirmationKeyRepository;
-import com.psk.backend.repository.UserRepository;
 import com.psk.backend.domain.user.value.NewUserForm;
 import com.psk.backend.domain.user.value.PasswordForm;
+import com.psk.backend.repository.ConfirmationKeyRepository;
+import com.psk.backend.repository.UserRepository;
 import io.atlassian.fugue.Try;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import static com.psk.backend.domain.common.EntityId.entityId;
@@ -30,13 +34,20 @@ public class CreateUserService {
     private final UserRepository userRepository;
     private final ConfirmationKeyRepository keyRepository;
     private final EmailService emailService;
+
+    private final SpringTemplateEngine templateEngine;
+
     @Value("${app.url}")
     private String url;
 
-    public CreateUserService(UserRepository userRepository, EmailService emailService, ConfirmationKeyRepository keyRepository) {
+    public CreateUserService(UserRepository userRepository,
+                             ConfirmationKeyRepository keyRepository,
+                             EmailService emailService,
+                             SpringTemplateEngine templateEngine) {
         this.userRepository = userRepository;
-        this.emailService = emailService;
         this.keyRepository = keyRepository;
+        this.emailService = emailService;
+        this.templateEngine = templateEngine;
     }
 
     public Try<EntityId> create(NewUserForm form) {
@@ -65,7 +76,18 @@ public class CreateUserService {
         return userRepository.findByEmail(email).map(user -> {
             ConfirmationKey key = new ConfirmationKey(user.getId());
             keyRepository.save(key);
-            emailService.sendEmail("Password setup", constructResetTokenLink(url, key.getId()), email);
+
+            Mail mail = new Mail();
+            mail.setTo(email);
+            mail.setSubject("Password setup");
+
+            Map<String, Object> model = new HashMap<>();
+            model.put("name", user.getName());
+            model.put("surname", user.getSurname());
+            model.put("url", constructResetTokenLink(url, key.getId()));
+            mail.setModel(model);
+
+            emailService.sendEmail(mail);
             return entityId(user.getId());
         });
     }
